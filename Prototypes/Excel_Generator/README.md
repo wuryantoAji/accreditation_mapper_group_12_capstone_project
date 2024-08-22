@@ -1,4 +1,4 @@
-Esxxcel Generator Prototype
+Excel Generator Prototype
 
 Process Excel knowledge base into Unit, Criterion B and QA tables for each degree.  These are stored in separate files, archived in a zip file.
 
