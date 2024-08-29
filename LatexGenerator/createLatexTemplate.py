@@ -1,6 +1,24 @@
 from pylatex import Package, NoEscape, Section, Subsection, Subsubsection, Tabular, MultiColumn, MultiRow, Document
 
 
+# Constant
+sfiaDictionary = {
+    "PROG":{
+       "skillName":"Programming/Software Development",
+       "skillLink":"https://sfia-online.org/en/sfia-7/skills/programming-software-development",
+       "level":[{
+           3:"Designs, codes, verifies, tests, documents, amends and refactors moderately complex programs/scripts. Applies agreed standards and tools, to achieve a well-engineered result. Collaborates in reviews of work with others as appropriate."
+       }] 
+    },
+    "DESN":{
+       "skillName":"Programming/Software Development",
+       "skillLink":"https://sfia-online.org/en/sfia-7/skills/systems-design",
+       "level":[{
+           4:"Designs components using appropriate modelling techniques following agreed architectures, design standards, patterns and methodology. Identifies and evaluates alternative design options and trade-offs. Creates multiple design views to address the concerns of the different stakeholders of the architecture and to handle both functional and non-functional requirements. Models, simulates or prototypes the behaviour of proposed systems components to enable approval by stakeholders. Produces detailed design specification to form the basis for construction of systems. Reviews, verifies and improves own designs against specifications."
+       }] 
+    },  
+}
+
 # Transform a list of course into tables
 
 # Table 1. Criterion A
@@ -66,16 +84,35 @@ def createCriterionBTable(programName, listOfCourse):
     ## Add subsub section for criterion B
     criterionBSubSubSection = Subsubsection("Criterion B: Professional ICT Role and Skills")
     ### Start loop for each program
-    criterionBSubSubSection.append('Bachelor of Science (Computer Science)\n')
+    # criterionBSubSubSection.append('Bachelor of Science (Computer Science)\n')
+    # criterionBSubSubSection.append(NoEscape(r'\begin{adjustbox}{max width=1\textwidth}'))
+    # criterionBTable = Tabular(table_spec="|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|")
+    # criterionBTable.add_hline()
+    # criterionBTable.add_row(MultiColumn(9, align="|l|", data=MultiRow(2, data="B:ICT Skills for Professional Role")), (MultiColumn(11, align="|l|", data=MultiRow(2, data="Role: Software Developer; Systems Analyst; Project Manager"))))
+    # criterionBTable.add_row(MultiColumn(9, align="|l|", data=""), (MultiColumn(11, align="|l|", data="")))
+    # criterionBTable.add_hline()
+    # criterionBTable.add_row((MultiColumn(9, align="|l|", data="SFIA Skill Code"), (MultiColumn(3, align="|c|", data="Problem Solving")), (MultiColumn(8, align="|l|", data="ICT Professional Knowledge"))))
+    # criterionBTable.add_hline()
+    # criterionBTable.add_row((MultiColumn(9, align="|l|", data="PROG (Programming/Software Development)"), (MultiColumn(3, align="|c|", data="3")), (MultiColumn(8, align="|l|", data=NoEscape(r'\makecell[tl]{CITS1001 Software Engineering with Java \\ CITS2002 Systems Programming \\ CITS2200 Data Structures and Algorithms \\ CITS3001 Algorithms, Agents and Artificial Intelligence \\ CITS3002 Computer Networks \\ CITS3003 Graphics and Animation}')))))
+    # criterionBTable.add_hline()
+    # criterionBSubSubSection.append(criterionBTable)
+    # criterionBSubSubSection.append(NoEscape(r'\end{adjustbox}'))
+    criterionBSubSubSection.append("BSc (Computer Science major)\n")
+    criterionBSubSubSection.append("ICT professional role: Software Developer\n")
+    criterionBSubSubSection.append("SFIA skills: PROG+DESN\n")
     criterionBSubSubSection.append(NoEscape(r'\begin{adjustbox}{max width=1\textwidth}'))
-    criterionBTable = Tabular(table_spec="|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|")
+    criterionBTable = Tabular(table_spec="|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|")
     criterionBTable.add_hline()
-    criterionBTable.add_row(MultiColumn(9, align="|l|", data=MultiRow(2, data="B:ICT Skills for Professional Role")), (MultiColumn(11, align="|l|", data=MultiRow(2, data="Role: Software Developer; Systems Analyst; Project Manager"))))
-    criterionBTable.add_row(MultiColumn(9, align="|l|", data=""), (MultiColumn(11, align="|l|", data="")))
+    criterionBTable.add_row(MultiColumn(2, align="|l|", data=MultiRow(3, data="SFIA Skill")), (MultiColumn(5, align="|l|", data=MultiRow(3, data="Skill Description"))), (MultiColumn(5, align="|l|", data=MultiRow(3, data="Level Description"))), (MultiColumn(2, align="|l|", data=MultiRow(3, data="Code"))), (MultiColumn(1, align="|l|", data=MultiRow(3, data="Level"))), (MultiColumn(5, align="|l|", data=MultiRow(3, data="Units supporting SFIA skill"))))
+    criterionBTable.add_row(MultiColumn(2, align="|l|", data=""), (MultiColumn(5, align="|l|", data="")), (MultiColumn(5, align="|l|", data="")), (MultiColumn(2, align="|l|", data="")), (MultiColumn(1, align="|l|", data="")), (MultiColumn(5, align="|l|", data="")))
+    criterionBTable.add_row(MultiColumn(2, align="|l|", data=""), (MultiColumn(5, align="|l|", data="")), (MultiColumn(5, align="|l|", data="")), (MultiColumn(2, align="|l|", data="")), (MultiColumn(1, align="|l|", data="")), (MultiColumn(5, align="|l|", data="")))    
     criterionBTable.add_hline()
-    criterionBTable.add_row((MultiColumn(9, align="|l|", data="SFIA Skill Code"), (MultiColumn(3, align="|c|", data="Problem Solving")), (MultiColumn(8, align="|l|", data="ICT Professional Knowledge"))))
-    criterionBTable.add_hline()
-    criterionBTable.add_row((MultiColumn(9, align="|l|", data="PROG (Programming/Software Development)"), (MultiColumn(3, align="|c|", data="3")), (MultiColumn(8, align="|l|", data=NoEscape(r'\makecell[tl]{CITS1001 Software Engineering with Java \\ CITS2002 Systems Programming \\ CITS2200 Data Structures and Algorithms \\ CITS3001 Algorithms, Agents and Artificial Intelligence \\ CITS3002 Computer Networks \\ CITS3003 Graphics and Animation}')))))
+    criterionBTable.add_row(MultiColumn(2, align="|l|", data=NoEscape(r'\makecell[tl]{Programming/Software Development}')), 
+                            (MultiColumn(5, align="|l|", data=NoEscape(r'\makecell[tl]{The planning, designing, creation, amending, verification, testing and \\ documentation of new and amended software components in order to deliver agreed value to stakeholders. \\ The identification, creation and application of agreed software development and security standards and processes. \\ Adopting and adapting software development lifecycle models based on the context of the work and \\ selecting appropriately from predictive (plan-driven) approaches or adaptive (iterative/agile) approaches.}'))), 
+                            (MultiColumn(5, align="|l|", data=NoEscape(r'\makecell[tl]{Designs, codes, verifies, tests, documents, amends and \\ refactors moderately complex programs/scripts. \\ Applies agreed standards and tools, to achieve a well-engineered result. \\ Collaborates in reviews of work with others as appropriate.}'))), 
+                            (MultiColumn(2, align="|l|", data="PROG")), 
+                            (MultiColumn(1, align="|l|", data="3")), 
+                            (MultiColumn(5, align="|l|", data=NoEscape(r'\makecell[tl]{Designs, codes, verifies, tests, documents, amends and \\ refactors moderately complex programs/scripts is supported by \\ the sequence CITS1001, CITS2200 and CITS3001 and the capstone CITS3200. \\ Application of standards and tools is developed in the sequence CITS1402, CITS3403, CITS3002.}'))))
     criterionBTable.add_hline()
     criterionBSubSubSection.append(criterionBTable)
     criterionBSubSubSection.append(NoEscape(r'\end{adjustbox}'))
