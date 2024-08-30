@@ -92,8 +92,7 @@ class CriterionE(Criterion):
 
 
     def __check_criterion_e(self):
-        criterion_df = self.criterion_df
-        num_of_criterion_units = criterion_df['Unit Code'].nunique()  
+        num_of_criterion_units = self.criterion_df['Unit Code'].nunique()  
         num_of_units = self.unit_details_dict['Unit Code'].nunique()  
         data = {
             'QA Item': ['Number of units ' +str(num_of_criterion_units) + ' in criterion, expecting 1.' ],
