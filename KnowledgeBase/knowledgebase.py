@@ -14,10 +14,9 @@ class Criterion:
 
 
 class CriterionB(Criterion):
-    def __init__(self, course, sfia, unit_details_dict, outcomes_mappings_df):
+    def __init__(self, course, unit_details_dict, outcomes_mappings_df):
         Criterion.__init__(self, course, unit_details_dict, outcomes_mappings_df)
         self.roles = []
-        self.sfia = sfia
         self.__create_criterion_b()
         self.__check_criterion_b()
         Criterion.columns = [ 'SFIA Skill', 
@@ -40,11 +39,8 @@ class CriterionB(Criterion):
         self.criterion_qa_df = pd.DataFrame(data)
 
     def __create_criterion_b(self):
-        CRITERION_B_ELEMENTS = { 'PROG': 'Programming/Software Development', 
-                            'PRMG': 'Project Management', 
-                            'DESN': 'System Design'}
-
         outcomes_mappings_df_copy = self.outcomes_mappings_df.copy()
+        outcomes_mappings_df_copy = outcomes_mappings_df_copy[outcomes_mappings_df_copy['Outcome Group'] == 'ICT Skills SFIA']
 
         #Remove N/A Level (SFIA/Bloom) and convert the rest to Ints
         outcomes_mappings_df_copy.dropna(subset=['Level (SFIA/Bloom)'], inplace=True)
@@ -66,8 +62,54 @@ class CriterionB(Criterion):
         self.criterion_df = result_df
 
     
+class CriterionD(Criterion):
+    def __init__(self, course, unit_details_dict, outcomes_mappings_df):
+        Criterion.__init__(self, course, unit_details_dict, outcomes_mappings_df)
+        self.__create_criterion_d()
+        self.__check_criterion_d()
 
 
+    def __check_criterion_d(self):
+        return None
+
+    def __create_criterion_d(self):
+        outcomes_mappings_df_copy = self.outcomes_mappings_df.copy()
+
+        outcomes_mappings_df_copy = outcomes_mappings_df_copy[outcomes_mappings_df_copy['Outcome Group'] == 'Advanced']
+
+        merged_df = pd.merge(self.unit_details_dict, outcomes_mappings_df_copy, on='Unit Code', how='inner')
+        merged_df = merged_df[['Unit Code', 'Justification']]
+
+        self.criterion_df = merged_df
+
+
+    
+class CriterionE(Criterion):
+    def __init__(self, course, unit_details_dict, outcomes_mappings_df):
+        Criterion.__init__(self, course, unit_details_dict, outcomes_mappings_df)
+        self.__create_criterion_e()
+        self.__check_criterion_e()
+
+
+    def __check_criterion_e(self):
+        criterion_df = self.criterion_df
+        num_of_criterion_units = criterion_df['Unit Code'].nunique()  
+        num_of_units = self.unit_details_dict['Unit Code'].nunique()  
+        data = {
+            'QA Item': ['Number of units ' +str(num_of_criterion_units) + ' in criterion, expecting 1.' ],
+            'Pass/Fail': [ str(num_of_criterion_units == 1), ]
+        }
+        self.criterion_qa_df = pd.DataFrame(data)
+
+    def __create_criterion_e(self):
+        outcomes_mappings_df_copy = self.outcomes_mappings_df.copy()
+
+        outcomes_mappings_df_copy = outcomes_mappings_df_copy[outcomes_mappings_df_copy['Outcome Group'] == 'Integrated Skills']
+
+        merged_df = pd.merge(self.unit_details_dict, outcomes_mappings_df_copy, on='Unit Code', how='inner')
+        merged_df = merged_df[['Unit Code', 'Justification']]
+
+        self.criterion_df = merged_df
 
 class KnowledgeBase:
     def __init__(self, kb_excel_file, sfia):
@@ -92,10 +134,10 @@ class KnowledgeBase:
 
         for course in self.unit_details_dict.keys():
             self.criterionA[course] = None
-            self.criterionB[course] = CriterionB( course, sfia, self.unit_details_dict[course], outcomes_mappings_df )
+            self.criterionB[course] = CriterionB( course, self.unit_details_dict[course], outcomes_mappings_df )
             self.criterionC[course] = None
-            self.criterionD[course] = None
-            self.criterionE[course] = None
+            self.criterionD[course] = CriterionD( course, self.unit_details_dict[course], outcomes_mappings_df )
+            self.criterionE[course] = CriterionE( course, self.unit_details_dict[course], outcomes_mappings_df )
 
     def __load_unit_details(self, excel):
         # Load the Excel file into a Pandas DataFrame
