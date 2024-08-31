@@ -11,19 +11,47 @@ class Criterion:
         self.outcomes_mappings_df = outcomes_mappings_df
         return
     
+# Missing:
+# - self.code
+# - self.award_title
+# - self.eft
+# - self.first_year_offered
+# - self.program_chair
+# - self.industry_liasion
+# - self.key_academic_staff
+# - self.outcomes
+# - self.justification
+class CriterionA(Criterion):
+    def __init__(self, course, unit_details_dict, outcomes_mappings_df):
+        Criterion.__init__(self, course, unit_details_dict, outcomes_mappings_df)
+        self.code = None
+        self.award_title = None
+        self.eft = None
+        self.first_year_offered = None
+        self.program_chair = [ 'UNKNOWN' ]
+        self.industry_liasion = [ 'UNKNOWN' ]
+        self.key_academic_staff = [ 'UNKNOWN' ]
+        self.outcomes = None
+        self.justification = None
+        
+        self.__create_criterion_a()
+        self.__check_criterion_a()
 
 
+    def __check_criterion_b(self):
+        return None
+
+    def __create_criterion_a(self):
+        self.criterion = self.unit_details_dict
+
+# Missing: Role input
 class CriterionB(Criterion):
     def __init__(self, course, unit_details_dict, outcomes_mappings_df):
         Criterion.__init__(self, course, unit_details_dict, outcomes_mappings_df)
         self.roles = []
         self.__create_criterion_b()
         self.__check_criterion_b()
-        Criterion.columns = [ 'SFIA Skill', 
-                              'Skill Description', 
-                              'Level Description', 
-                              'Code Level', 
-                              'Units supporting SFIA skill' ]
+        self.outcomes = self.criterion_df['Outcome'].unique().tolist()
 
 
     def __check_criterion_b(self):
@@ -132,7 +160,7 @@ class KnowledgeBase:
         self.criterionE = {}
 
         for course in self.unit_details_dict.keys():
-            self.criterionA[course] = None
+            self.criterionA[course] = CriterionA( course, self.unit_details_dict[course], outcomes_mappings_df )
             self.criterionB[course] = CriterionB( course, self.unit_details_dict[course], outcomes_mappings_df )
             self.criterionC[course] = None
             self.criterionD[course] = CriterionD( course, self.unit_details_dict[course], outcomes_mappings_df )
