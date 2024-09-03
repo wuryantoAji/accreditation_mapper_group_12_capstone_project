@@ -160,7 +160,6 @@ class KnowledgeBase:
         self.criterionE = {}
 
         for course in self.unit_details_dict.keys():
-            print(self.unit_details_dict[course])
             self.criterionA[course] = CriterionA( course, self.unit_details_dict[course], outcomes_mappings_df )
             self.criterionB[course] = CriterionB( course, self.unit_details_dict[course], outcomes_mappings_df )
             self.criterionC[course] = None
