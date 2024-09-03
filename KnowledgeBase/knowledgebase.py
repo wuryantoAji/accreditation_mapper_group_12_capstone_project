@@ -7,8 +7,8 @@ class Criterion:
         self.course = course
         self.criterion_df = None
         self.criterion_qa_df = None
-        self.unit_details_dict = unit_details_dict
-        self.outcomes_mappings_df = outcomes_mappings_df
+        self.unit_details_dict = unit_details_dict.copy()
+        self.outcomes_mappings_df = outcomes_mappings_df.copy()
         return
     
 # Missing:
@@ -38,11 +38,11 @@ class CriterionA(Criterion):
         self.__check_criterion_a()
 
 
-    def __check_criterion_b(self):
+    def __check_criterion_a(self):
         return None
 
     def __create_criterion_a(self):
-        self.criterion = self.unit_details_dict
+        self.criterion_df = self.unit_details_dict
 
 # Missing: Role input
 class CriterionB(Criterion):
@@ -160,6 +160,7 @@ class KnowledgeBase:
         self.criterionE = {}
 
         for course in self.unit_details_dict.keys():
+            print(self.unit_details_dict[course])
             self.criterionA[course] = CriterionA( course, self.unit_details_dict[course], outcomes_mappings_df )
             self.criterionB[course] = CriterionB( course, self.unit_details_dict[course], outcomes_mappings_df )
             self.criterionC[course] = None
@@ -179,7 +180,7 @@ class KnowledgeBase:
         # Find indices of start and end columns
         try:
             start_idx = 4
-            end_idx = 13
+            end_idx = len(df.columns)
         except ValueError as e:
             print(f"Column not found: {e}")
             raise
@@ -198,6 +199,7 @@ class KnowledgeBase:
                 filtered_df = df[df[column].notna()]
                 filtered_df[column] = filtered_df[column].astype(str).str.strip()
                 filtered_df = filtered_df[filtered_df[column]!= '']
+                filtered_df = filtered_df.drop(columns=columns_to_check)
 
                 # Store the filtered DataFrame in the dictionary with the column name as the key
                 dataframes_dict[column] = filtered_df
