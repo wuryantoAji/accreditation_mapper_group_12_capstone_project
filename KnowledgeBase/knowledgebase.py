@@ -7,24 +7,51 @@ class Criterion:
         self.course = course
         self.criterion_df = None
         self.criterion_qa_df = None
-        self.unit_details_dict = unit_details_dict
-        self.outcomes_mappings_df = outcomes_mappings_df
+        self.unit_details_dict = unit_details_dict.copy()
+        self.outcomes_mappings_df = outcomes_mappings_df.copy()
         return
     
+# Missing:
+# - self.code
+# - self.award_title
+# - self.eft
+# - self.first_year_offered
+# - self.program_chair
+# - self.industry_liasion
+# - self.key_academic_staff
+# - self.outcomes
+# - self.justification
+class CriterionA(Criterion):
+    def __init__(self, course, unit_details_dict, outcomes_mappings_df):
+        Criterion.__init__(self, course, unit_details_dict, outcomes_mappings_df)
+        self.code = None
+        self.award_title = None
+        self.eft = None
+        self.first_year_offered = None
+        self.program_chair = [ 'UNKNOWN' ]
+        self.industry_liasion = [ 'UNKNOWN' ]
+        self.key_academic_staff = [ 'UNKNOWN' ]
+        self.outcomes = None
+        self.justification = None
+        
+        self.__create_criterion_a()
+        self.__check_criterion_a()
 
 
+    def __check_criterion_a(self):
+        return None
+
+    def __create_criterion_a(self):
+        self.criterion_df = self.unit_details_dict
+
+# Missing: Role input
 class CriterionB(Criterion):
-    def __init__(self, course, sfia, unit_details_dict, outcomes_mappings_df):
+    def __init__(self, course, unit_details_dict, outcomes_mappings_df):
         Criterion.__init__(self, course, unit_details_dict, outcomes_mappings_df)
         self.roles = []
-        self.sfia = sfia
         self.__create_criterion_b()
         self.__check_criterion_b()
-        Criterion.columns = [ 'SFIA Skill', 
-                              'Skill Description', 
-                              'Level Description', 
-                              'Code Level', 
-                              'Units supporting SFIA skill' ]
+        self.outcomes = self.criterion_df['Outcome'].unique().tolist()
 
 
     def __check_criterion_b(self):
@@ -40,11 +67,8 @@ class CriterionB(Criterion):
         self.criterion_qa_df = pd.DataFrame(data)
 
     def __create_criterion_b(self):
-        CRITERION_B_ELEMENTS = { 'PROG': 'Programming/Software Development', 
-                            'PRMG': 'Project Management', 
-                            'DESN': 'System Design'}
-
         outcomes_mappings_df_copy = self.outcomes_mappings_df.copy()
+        outcomes_mappings_df_copy = outcomes_mappings_df_copy[outcomes_mappings_df_copy['Outcome Group'] == 'ICT Skills SFIA']
 
         #Remove N/A Level (SFIA/Bloom) and convert the rest to Ints
         outcomes_mappings_df_copy.dropna(subset=['Level (SFIA/Bloom)'], inplace=True)
@@ -66,8 +90,53 @@ class CriterionB(Criterion):
         self.criterion_df = result_df
 
     
+class CriterionD(Criterion):
+    def __init__(self, course, unit_details_dict, outcomes_mappings_df):
+        Criterion.__init__(self, course, unit_details_dict, outcomes_mappings_df)
+        self.__create_criterion_d()
+        self.__check_criterion_d()
 
 
+    def __check_criterion_d(self):
+        return None
+
+    def __create_criterion_d(self):
+        outcomes_mappings_df_copy = self.outcomes_mappings_df.copy()
+
+        outcomes_mappings_df_copy = outcomes_mappings_df_copy[outcomes_mappings_df_copy['Outcome Group'] == 'Advanced']
+
+        merged_df = pd.merge(self.unit_details_dict, outcomes_mappings_df_copy, on='Unit Code', how='inner')
+        merged_df = merged_df[['Unit Code', 'Justification']]
+
+        self.criterion_df = merged_df
+
+
+    
+class CriterionE(Criterion):
+    def __init__(self, course, unit_details_dict, outcomes_mappings_df):
+        Criterion.__init__(self, course, unit_details_dict, outcomes_mappings_df)
+        self.__create_criterion_e()
+        self.__check_criterion_e()
+
+
+    def __check_criterion_e(self):
+        num_of_criterion_units = self.criterion_df['Unit Code'].nunique()  
+        num_of_units = self.unit_details_dict['Unit Code'].nunique()  
+        data = {
+            'QA Item': ['Number of units ' +str(num_of_criterion_units) + ' in criterion, expecting 1.' ],
+            'Pass/Fail': [ str(num_of_criterion_units == 1), ]
+        }
+        self.criterion_qa_df = pd.DataFrame(data)
+
+    def __create_criterion_e(self):
+        outcomes_mappings_df_copy = self.outcomes_mappings_df.copy()
+
+        outcomes_mappings_df_copy = outcomes_mappings_df_copy[outcomes_mappings_df_copy['Outcome Group'] == 'Integrated Skills']
+
+        merged_df = pd.merge(self.unit_details_dict, outcomes_mappings_df_copy, on='Unit Code', how='inner')
+        merged_df = merged_df[['Unit Code', 'Justification']]
+
+        self.criterion_df = merged_df
 
 class KnowledgeBase:
     def __init__(self, kb_excel_file, sfia):
@@ -91,11 +160,12 @@ class KnowledgeBase:
         self.criterionE = {}
 
         for course in self.unit_details_dict.keys():
-            self.criterionA[course] = None
-            self.criterionB[course] = CriterionB( course, sfia, self.unit_details_dict[course], outcomes_mappings_df )
+            print(self.unit_details_dict[course])
+            self.criterionA[course] = CriterionA( course, self.unit_details_dict[course], outcomes_mappings_df )
+            self.criterionB[course] = CriterionB( course, self.unit_details_dict[course], outcomes_mappings_df )
             self.criterionC[course] = None
-            self.criterionD[course] = None
-            self.criterionE[course] = None
+            self.criterionD[course] = CriterionD( course, self.unit_details_dict[course], outcomes_mappings_df )
+            self.criterionE[course] = CriterionE( course, self.unit_details_dict[course], outcomes_mappings_df )
 
     def __load_unit_details(self, excel):
         # Load the Excel file into a Pandas DataFrame
@@ -110,7 +180,7 @@ class KnowledgeBase:
         # Find indices of start and end columns
         try:
             start_idx = 4
-            end_idx = 13
+            end_idx = len(df.columns)
         except ValueError as e:
             print(f"Column not found: {e}")
             raise
@@ -129,6 +199,7 @@ class KnowledgeBase:
                 filtered_df = df[df[column].notna()]
                 filtered_df[column] = filtered_df[column].astype(str).str.strip()
                 filtered_df = filtered_df[filtered_df[column]!= '']
+                filtered_df = filtered_df.drop(columns=columns_to_check)
 
                 # Store the filtered DataFrame in the dictionary with the column name as the key
                 dataframes_dict[column] = filtered_df
