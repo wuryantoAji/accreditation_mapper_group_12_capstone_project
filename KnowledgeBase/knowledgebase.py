@@ -89,6 +89,28 @@ class CriterionB(Criterion):
 
         self.criterion_df = result_df
 
+# Missing data:
+#     - Level (SFIA/Bloom)
+#     - ...
+class CriterionC(Criterion):
+    def __init__(self, course, unit_details_dict, outcomes_mappings_df):
+        Criterion.__init__(self, course, unit_details_dict, outcomes_mappings_df)
+        self.award_title = None
+        self.code = None
+        self.type = None
+        
+        self.__create_criterion_c()
+        self.__check_criterion_c()
+
+
+    def __check_criterion_c(self):
+        return None
+
+    def __create_criterion_c(self):
+        outcomes_mappings_df_copy = self.outcomes_mappings_df.copy()
+        outcomes_mappings_df_copy = outcomes_mappings_df_copy[outcomes_mappings_df_copy['Outcome Group'] == 'CBoK']
+        
+        
     
 class CriterionD(Criterion):
     def __init__(self, course, unit_details_dict, outcomes_mappings_df):
