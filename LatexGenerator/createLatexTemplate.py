@@ -1,3 +1,4 @@
+##wrong output
 from pylatex import Package, NoEscape, Section, Subsection, Subsubsection, Tabular, MultiColumn, MultiRow, Document, NewLine
 from sfia import SFIA
 from knowledgebase import KnowledgeBase
@@ -167,38 +168,25 @@ def createCriterionCTable(programName, listOfCourse):
 
 
 # Table 4. Criterion D
-def createCriterionDTable(dataDictionary):
-    criterionDSubSubSection = Subsubsection("Criterion D: Advanced ICT Units Addressing Complex Computing")
-    
-    for course, courseData in dataDictionary.items():
-        if courseData:  # Only process courses with data
-            # Add the course title
-            criterionDSubSubSection.append(NoEscape(r'\noindent\textbf{' + course + r'}\\[0.5em]'))
-            
-            # Start the tabular environment directly (no table float)
-            criterionDSubSubSection.append(NoEscape(r'\noindent\begin{tabular}{|p{0.2\textwidth}|p{0.4\textwidth}|p{0.4\textwidth}|}'))
-            criterionDSubSubSection.append(NoEscape(r'\hline'))
-            criterionDSubSubSection.append(NoEscape(r'\multicolumn{3}{|l|}{\textbf{Criterion D: Advanced ICT Units Addressing Complex Computing}} \\'))
-            criterionDSubSubSection.append(NoEscape(r'\hline'))
-            criterionDSubSubSection.append(NoEscape(r'\textbf{Unit Code} & \textbf{Problem Solving} & \textbf{ICT Professional Knowledge} \\'))
-            criterionDSubSubSection.append(NoEscape(r'\hline'))
-            
-            for unit_data in courseData:
-                unit_code = unit_data.get('Unit Code', 'N/A')
-                problem_solving = unit_data.get('Problem Solving', 'N/A')
-                professional_knowledge = unit_data.get('ICT Professional Knowledge', 'N/A')
-                
-                # Ensure proper text wrapping for all columns
-                wrapped_unit_code = NoEscape(r'\parbox[t]{0.19\textwidth}{' + unit_code + '}')
-                wrapped_problem_solving = NoEscape(r'\parbox[t]{0.39\textwidth}{' + problem_solving + '}')
-                wrapped_professional_knowledge = NoEscape(r'\parbox[t]{0.39\textwidth}{' + professional_knowledge + '}')
-                
-                criterionDSubSubSection.append(NoEscape(f"{wrapped_unit_code} & {wrapped_problem_solving} & {wrapped_professional_knowledge} \\\\"))
-                criterionDSubSubSection.append(NoEscape(r'\hline'))
-            
-            criterionDSubSubSection.append(NoEscape(r'\end{tabular}'))
-            criterionDSubSubSection.append(NoEscape(r'\\[1em]'))  # Add some space after each table
-    
+def createCriterionDTable(programName, listOfCourse):
+    ## Add subsub section for criterion D
+    criterionDSubSubSection = Subsubsection("Criterion D: Program Design")
+    ### Start loop for each program
+    criterionDSubSubSection.append('Bachelor of Science (Computer Science)\n')
+    criterionDSubSubSection.append(NoEscape(r'\begin{adjustbox}{max width=1\textwidth}'))
+    criterionDTable = Tabular(table_spec="|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|")
+    criterionDTable.add_hline()
+    criterionDTable.add_row((MultiColumn(20, align="|l|", data=MultiRow(2, data="Criterion D: Advanced ICT Units Addressing Complex Computing")),))
+    criterionDTable.add_row((MultiColumn(20, align="|l|", data=""),))
+    criterionDTable.add_hline()
+    criterionDTable.add_row((MultiColumn(6, align="|l|", data="SFIA Skill Code"), (MultiColumn(7, align="|l|", data="Problem Solving")), (MultiColumn(7, align="|l|", data="ICT Professional Knowledge"))))
+    criterionDTable.add_hline()
+    criterionDTable.add_row((MultiColumn(6, align="|l|", data=NoEscape(r'\makecell[tl]{CITS3001 Algorithms, \\ Agents and Artificial \\ Intelligence}')), (MultiColumn(7, align="|l|", data=NoEscape(r'\makecell[tl]{Group Project (Research, \\ implement and validate game \\ playing AI)}'))), (MultiColumn(7, align="|l|", data=NoEscape(r'\makecell[tl]{Requires students to research (2, 3) and implement \\ novel solutions (5, 9), and validate the solution (4, 8)}')))))
+    criterionDTable.add_hline()
+    criterionDTable.add_row((MultiColumn(6, align="|l|", data="CITS3002 Computer Networks"), (MultiColumn(7, align="|l|", data="Networked communication within a transportation network to solve a scheduling problem")), (MultiColumn(7, align="|l|", data="Has no obvious solution, and requires conceptual thinking and innovative analysis to formulate suitable abstract models (SA2), and is a high-level problem possibly including many component parts or sub-problems (SA8)."))))
+    criterionDTable.add_hline()
+    criterionDSubSubSection.append(criterionDTable)
+    criterionDSubSubSection.append(NoEscape(r'\end{adjustbox}'))
     return criterionDSubSubSection
 
 # Table 5. Criterion E
@@ -210,8 +198,9 @@ def createCriterionETable(dataDictionary):
             # Add the course title
             criterionESubSubSection.append(NoEscape(r'\noindent\textbf{' + course + r'}\\[0.5em]'))
             
-            # Start the tabular environment directly (no table float)
-            criterionESubSubSection.append(NoEscape(r'\noindent\begin{tabular}{|p{0.15\textwidth}|p{0.25\textwidth}|p{0.5\textwidth}|}'))
+            # Start the table immediately after the course title
+            criterionESubSubSection.append(NoEscape(r'\begin{table}[H]'))  # [H] forces the table to be placed here
+            criterionESubSubSection.append(NoEscape(r'\begin{tabular}{|p{0.15\textwidth}|p{0.25\textwidth}|p{0.5\textwidth}|}'))
             criterionESubSubSection.append(NoEscape(r'\hline'))
             criterionESubSubSection.append(NoEscape(r'\multicolumn{3}{|l|}{\textbf{Criterion E: Integrated and Applied ICT Knowledge}} \\'))
             criterionESubSubSection.append(NoEscape(r'\hline'))
@@ -232,6 +221,7 @@ def createCriterionETable(dataDictionary):
                 criterionESubSubSection.append(NoEscape(r'\hline'))
             
             criterionESubSubSection.append(NoEscape(r'\end{tabular}'))
+            criterionESubSubSection.append(NoEscape(r'\end{table}'))
             criterionESubSubSection.append(NoEscape(r'\\[1em]'))  # Add some space after each table
     
     return criterionESubSubSection
