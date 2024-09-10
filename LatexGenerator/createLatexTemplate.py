@@ -1,4 +1,3 @@
-##wrong output
 from pylatex import Package, NoEscape, Section, Subsection, Subsubsection, Tabular, MultiColumn, MultiRow, Document, NewLine
 from sfia import SFIA
 from knowledgebase import KnowledgeBase
@@ -198,9 +197,8 @@ def createCriterionETable(dataDictionary):
             # Add the course title
             criterionESubSubSection.append(NoEscape(r'\noindent\textbf{' + course + r'}\\[0.5em]'))
             
-            # Start the table immediately after the course title
-            criterionESubSubSection.append(NoEscape(r'\begin{table}[H]'))  # [H] forces the table to be placed here
-            criterionESubSubSection.append(NoEscape(r'\begin{tabular}{|p{0.15\textwidth}|p{0.25\textwidth}|p{0.5\textwidth}|}'))
+            # Start the tabular environment directly (no table float)
+            criterionESubSubSection.append(NoEscape(r'\noindent\begin{tabular}{|p{0.15\textwidth}|p{0.25\textwidth}|p{0.5\textwidth}|}'))
             criterionESubSubSection.append(NoEscape(r'\hline'))
             criterionESubSubSection.append(NoEscape(r'\multicolumn{3}{|l|}{\textbf{Criterion E: Integrated and Applied ICT Knowledge}} \\'))
             criterionESubSubSection.append(NoEscape(r'\hline'))
@@ -221,7 +219,6 @@ def createCriterionETable(dataDictionary):
                 criterionESubSubSection.append(NoEscape(r'\hline'))
             
             criterionESubSubSection.append(NoEscape(r'\end{tabular}'))
-            criterionESubSubSection.append(NoEscape(r'\end{table}'))
             criterionESubSubSection.append(NoEscape(r'\\[1em]'))  # Add some space after each table
     
     return criterionESubSubSection
@@ -239,7 +236,7 @@ def generateLatex():
     kb = KnowledgeBase('CSSE-allprograms-outcome-mappings-20240821.xlsx', sfia)
     criterionBList = {}
     criterionEList = {}
-    # debugSet = []/opt/anaconda3/bin/python3 "/Users/phoebus/Downloads/UWA codes/temp_dev_folder/createLatexTemplate.py"
+    
     #Criterion B
     for course, criterionB in kb.criterionB.items():
         courseName = course
