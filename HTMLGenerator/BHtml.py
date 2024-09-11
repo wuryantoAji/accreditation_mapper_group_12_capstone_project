@@ -30,18 +30,45 @@ html_content = """
             padding: 8px;
         }
         th {
-            background-color: #f2f2f2;
+            background-color: #DCE6F1;
             text-align: left;
+            cursor: pointer;
+        }
+        .collapsible {
+            width: 50%; /* Limit the width */
+            margin: 20px 0; /* Center the element horizontally */
+            cursor: pointer;
+            background-color: #B7CDE2;
+            padding: 10px;
+            text-align: left;
+            font-weight: bold;
+            border: 1px solid #ccc;
+        }
+        .content {
+            display: none;
+        }
+        .active {
+            display: table;
+        }
+        input[type="text"] {
+            margin-bottom: 15px;
+            padding: 5px;
+            width: 30%;
+            font-size: 16px;
         }
     </style>
 </head>
 <body>
-    <h1>Course Information</h1>
+    <h1>Criterion B</h1>
+
+    <!-- Add a search box to filter the table -->
+    <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Search for SFIA skills..">
 """
 
 # Loop through the courses and add the titles, outcomes, levels, and justifications to the HTML content
-for course, criterionB in kb.criterionB.items():
-    course_title = f"<h2>{course}</h2>"
+for course_index, (course, criterionB) in enumerate(kb.criterionB.items()):
+    course_id = f"section{course_index + 1}"
+    course_title = f"<h2 class='collapsible' onclick='toggleCollapse(\"{course_id}\")'>{course}</h2>"
     
     # Add the course title to the HTML content
     html_content += course_title
@@ -50,16 +77,19 @@ for course, criterionB in kb.criterionB.items():
     unique_df = criterionB.criterion_df.drop_duplicates(subset=['Outcome', 'Level (SFIA/Bloom)', 'Justification'])
 
     # Start a table for outcomes, levels, and justifications with renamed headers
-    html_content += """
-    <table>
-        <tr>
-            <th>SFIA Skill</th>
-            <th>Skill Description</th>
-            <th>Level Description</th>
-            <th>Code</th>
-            <th>Level</th>
-            <th>Units Supporting SFIA Skill</th>
-        </tr>
+    html_content += f"""
+    <table id="{course_id}" class="content">
+        <thead>
+            <tr>
+                <th onclick="sortTable(0, '{course_id}')">SFIA Skill</th>
+                <th onclick="sortTable(1, '{course_id}')">Skill Description</th>
+                <th onclick="sortTable(2, '{course_id}')">Level Description</th>
+                <th onclick="sortTable(3, '{course_id}')">Code</th>
+                <th onclick="sortTable(4, '{course_id}')">Level</th>
+                <th onclick="sortTable(5, '{course_id}')">Units Supporting SFIA Skill</th>
+            </tr>
+        </thead>
+        <tbody>
     """
 
     # Loop through each unique row in the criterion DataFrame to get outcomes, levels, and justifications
@@ -75,11 +105,6 @@ for course, criterionB in kb.criterionB.items():
         skill = sfia_info.get('Skill', 'N/A')
         description = sfia_info.get('description', 'N/A')
         description2 = sfia_info.get('description22', 'N/A')
-       
-
-        
-
-        
 
         # Add a row to the table with outcome, level, justification, and SFIA skill information
         html_content += f"""
@@ -94,16 +119,92 @@ for course, criterionB in kb.criterionB.items():
         """
     
     # Close the table for this course
-    html_content += "</table>"
+    html_content += """
+        </tbody>
+    </table>
+    """
 
 # Close the HTML content
 html_content += """
+<script>
+// Function to toggle collapsible sections by ID
+function toggleCollapse(sectionId) {
+    var element = document.getElementById(sectionId);
+    if (element.style.display === "none" || element.style.display === "") {
+        element.style.display = "table";
+    } else {
+        element.style.display = "none";
+    }
+}
+
+// Function to sort the table by column within a specific table
+function sortTable(n, tableId) {
+    var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+    table = document.getElementById(tableId);
+    switching = true;
+    dir = "asc"; 
+    while (switching) {
+        switching = false;
+        rows = table.rows;
+        for (i = 1; i < (rows.length - 1); i++) {
+            shouldSwitch = false;
+            x = rows[i].getElementsByTagName("TD")[n];
+            y = rows[i + 1].getElementsByTagName("TD")[n];
+            if (dir == "asc") {
+                if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                    shouldSwitch = true;
+                    break;
+                }
+            } else if (dir == "desc") {
+                if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                    shouldSwitch = true;
+                    break;
+                }
+            }
+        }
+        if (shouldSwitch) {
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+            switchcount++;
+        } else {
+            if (switchcount == 0 && dir == "asc") {
+                dir = "desc";
+                switching = true;
+            }
+        }
+    }
+}
+
+// Function to filter/search through the table
+function searchTable() {
+    var input, filter, table, tr, td, i, j, txtValue;
+    input = document.getElementById("searchInput");
+    filter = input.value.toLowerCase();
+    table = document.querySelectorAll("table");
+    table.forEach(tbl => {
+        tr = tbl.getElementsByTagName("tr");
+        for (i = 1; i < tr.length; i++) {
+            tr[i].style.display = "none"; 
+            td = tr[i].getElementsByTagName("td");
+            for (j = 0; j < td.length; j++) {
+                if (td[j]) {
+                    txtValue = td[j].textContent || td[j].innerText;
+                    if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                        break;
+                    }
+                }
+            }
+        }
+    });
+}
+</script>
 </body>
 </html>
 """
 
 # Write the HTML content to a new file
-output_html_path = 'course_outcomes_filtered_by_sfia.html'
+output_html_path = 'course_outcomes_filtered_by_sfia_navi_1.html'
 with open(output_html_path, 'w') as f:
     f.write(html_content)
 
