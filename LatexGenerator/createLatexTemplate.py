@@ -1,4 +1,3 @@
-# good format, no data for 3rd column
 from pylatex import Package, NoEscape, Section, Subsection, Subsubsection, Tabular, MultiColumn, MultiRow, Document, NewLine
 from sfia import SFIA
 from knowledgebase import KnowledgeBase
@@ -172,57 +171,65 @@ def createCriterionDTable(dataDictionary):
     criterionDSubSubSection = Subsubsection("Criterion D: Advanced ICT Units Addressing Complex Computing")
 
     for course, criterionD in dataDictionary.items():
-        # Add program title without "Bachelor of Science"
-        criterionDSubSubSection.append(NoEscape(r'\noindent\textbf{' + course + r'}'))
-        criterionDSubSubSection.append(NewLine())
-
-        # Start longtable
-        criterionDSubSubSection.append(NoEscape(r'\begin{longtable}{|p{0.2\textwidth}|p{0.3\textwidth}|p{0.45\textwidth}|}'))
-        
-        # Table header
-        criterionDSubSubSection.append(NoEscape(r'\hline'))
-        criterionDSubSubSection.append(NoEscape(r'\multicolumn{3}{|c|}{\textbf{Criterion D: Advanced ICT Units Addressing Complex Computing}} \\'))
-        criterionDSubSubSection.append(NoEscape(r'\hline'))
-        criterionDSubSubSection.append(NoEscape(r'\textbf{Unit Code \& Title} & \textbf{Assessment Item} & \textbf{Complex Computing Criteria met} \\'))
-        criterionDSubSubSection.append(NoEscape(r'\hline'))
-        criterionDSubSubSection.append(NoEscape(r'\endfirsthead'))
-
-        # Continuation header for subsequent pages
-        criterionDSubSubSection.append(NoEscape(r'\multicolumn{3}{|c|}{\textbf{Criterion D: Advanced ICT Units Addressing Complex Computing (continued)}} \\'))
-        criterionDSubSubSection.append(NoEscape(r'\hline'))
-        criterionDSubSubSection.append(NoEscape(r'\textbf{Unit Code \& Title} & \textbf{Assessment Item} & \textbf{Complex Computing Criteria met} \\'))
-        criterionDSubSubSection.append(NoEscape(r'\hline'))
-        criterionDSubSubSection.append(NoEscape(r'\endhead'))
-
         if criterionD and hasattr(criterionD, 'criterion_df'):
+            table_content = []
             for _, row in criterionD.criterion_df.iterrows():
-                unit_code = row.get('Unit Code', '')
-                unit_name = row.get('Unit Name', '')
-                justification = row.get('Justification', '')
+                unit_code = row.get('Unit Code', '').strip()
+                unit_name = row.get('Unit Name', '').strip()
+                assessment_item = row.get('Assessment Item', '').strip()
+                justification = row.get('Justification', '').strip()
                 
-                unit_code_and_name = f"{unit_code} {unit_name}"
+                # Skip this row if all fields are empty
+                if not (unit_code or unit_name or assessment_item or justification):
+                    continue
+                
+                unit_code_and_name = f"{unit_code} {unit_name}".strip()
                 
                 # Escape special LaTeX characters
                 justification = justification.replace('&', r'\&').replace('%', r'\%').replace('#', r'\#').replace('_', r'\_')
+                assessment_item = assessment_item.replace('&', r'\&').replace('%', r'\%').replace('#', r'\#').replace('_', r'\_')
                 
-                criterionDSubSubSection.append(NoEscape(
-                    unit_code_and_name + 
-                    r' & ' +  # Empty Assessment Item column
-                    r' & ' + justification +
-                    r' \\'
-                ))
+                table_content.append((unit_code_and_name, assessment_item, justification))
+
+            # Only create the table if there's content
+            if table_content:
+                # Add program title
+                criterionDSubSubSection.append(NoEscape(r'\noindent\textbf{' + course + r'}'))
+                criterionDSubSubSection.append(NewLine())
+
+                # Start longtable
+                criterionDSubSubSection.append(NoEscape(r'\begin{longtable}{|p{0.2\textwidth}|p{0.3\textwidth}|p{0.45\textwidth}|}'))
+                
+                # Table header
                 criterionDSubSubSection.append(NoEscape(r'\hline'))
-        else:
-            criterionDSubSubSection.append(NoEscape(r'\multicolumn{3}{|c|}{No data available for this course} \\'))
-            criterionDSubSubSection.append(NoEscape(r'\hline'))
+                criterionDSubSubSection.append(NoEscape(r'\multicolumn{3}{|l|}{Criterion D: Advanced ICT Units Addressing Complex Computing} \\'))
+                criterionDSubSubSection.append(NoEscape(r'\hline'))
+                criterionDSubSubSection.append(NoEscape(r'Unit Code \& Title & Assessment Item & Complex Computing Criteria met \\'))
+                criterionDSubSubSection.append(NoEscape(r'\hline'))
+                criterionDSubSubSection.append(NoEscape(r'\endfirsthead'))
 
-        criterionDSubSubSection.append(NoEscape(r'\end{longtable}'))
-        criterionDSubSubSection.append(NewLine())
+                # Continuation header for subsequent pages
+                criterionDSubSubSection.append(NoEscape(r'\hline'))
+                criterionDSubSubSection.append(NoEscape(r'\multicolumn{3}{|l|}{Criterion D: Advanced ICT Units Addressing Complex Computing (continued)} \\'))
+                criterionDSubSubSection.append(NoEscape(r'\hline'))
+                criterionDSubSubSection.append(NoEscape(r'Unit Code \& Title & Assessment Item & Complex Computing Criteria met \\'))
+                criterionDSubSubSection.append(NoEscape(r'\hline'))
+                criterionDSubSubSection.append(NoEscape(r'\endhead'))
 
-        # Add some vertical space between tables
-        criterionDSubSubSection.append(NoEscape(r'\vspace{1em}'))
-        
-        criterionDSubSubSection.append(NewLine())
+                # Add table content
+                for row in table_content:
+                    criterionDSubSubSection.append(NoEscape(
+                        row[0] + r' & ' + row[1] + r' & ' + row[2] + r' \\'
+                    ))
+                    criterionDSubSubSection.append(NoEscape(r'\hline'))
+
+                criterionDSubSubSection.append(NoEscape(r'\end{longtable}'))
+                criterionDSubSubSection.append(NewLine())
+
+                # Add some vertical space between tables
+                criterionDSubSubSection.append(NoEscape(r'\vspace{1em}'))
+                
+                criterionDSubSubSection.append(NewLine())
 
     return criterionDSubSubSection
 
