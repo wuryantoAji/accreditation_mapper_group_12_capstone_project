@@ -53,17 +53,18 @@ for course, criterionB in kb.criterionB.items():
     html_content += """
     <table>
         <tr>
+            <th>SFIA Skill</th>
+            <th>Skill Description</th>
+            <th>Level Description</th>
             <th>Code</th>
             <th>Level</th>
             <th>Units Supporting SFIA Skill</th>
-            <th>Skill</th>
-            <th>Description</th>
-            <th>Description2</th>
         </tr>
     """
 
     # Loop through each unique row in the criterion DataFrame to get outcomes, levels, and justifications
     for _, row in unique_df.iterrows():
+
         outcome = row['Outcome']  # Renamed as "Code" in the table
         level = row['Level (SFIA/Bloom)']
         justification = row['Justification']  # Renamed as "Units Supporting SFIA Skill"
@@ -74,16 +75,21 @@ for course, criterionB in kb.criterionB.items():
         skill = sfia_info.get('Skill', 'N/A')
         description = sfia_info.get('description', 'N/A')
         description2 = sfia_info.get('description22', 'N/A')
+       
+
+        
+
+        
 
         # Add a row to the table with outcome, level, justification, and SFIA skill information
         html_content += f"""
         <tr>
-            <td>{outcome}</td>
-            <td>{level}</td>
-            <td>{justification}</td>
             <td>{skill}</td>
             <td>{description}</td>
             <td>{description2}</td>
+            <td>{outcome}</td>
+            <td>{level}</td>
+            <td>{justification}</td>
         </tr>
         """
     
