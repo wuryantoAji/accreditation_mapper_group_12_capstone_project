@@ -1,3 +1,4 @@
+# 2 column criterion E
 from pylatex import Package, NoEscape, Section, Subsection, Subsubsection, Tabular, MultiColumn, MultiRow, Document, NewLine
 from sfia import SFIA
 from knowledgebase import KnowledgeBase
@@ -243,24 +244,26 @@ def createCriterionETable(dataDictionary):
             criterionESubSubSection.append(NoEscape(r'\noindent\textbf{' + course + r'}\\[0.5em]'))
             
             # Start the tabular environment directly (no table float)
-            criterionESubSubSection.append(NoEscape(r'\noindent\begin{tabular}{|p{0.15\textwidth}|p{0.25\textwidth}|p{0.5\textwidth}|}'))
+            criterionESubSubSection.append(NoEscape(r'\noindent\begin{tabular}{|p{0.20\textwidth}|p{0.77\textwidth}|}'))
             criterionESubSubSection.append(NoEscape(r'\hline'))
-            criterionESubSubSection.append(NoEscape(r'\multicolumn{3}{|l|}{\textbf{Criterion E: Integrated and Applied ICT Knowledge}} \\'))
+            criterionESubSubSection.append(NoEscape(r'\multicolumn{2}{|l|}{\textbf{Criterion E: Integrated and Applied ICT Knowledge}} \\'))
             criterionESubSubSection.append(NoEscape(r'\hline'))
-            criterionESubSubSection.append(NoEscape(r'\textbf{Unit Code} & \textbf{Unit Name} & \textbf{Justification} \\'))
+            criterionESubSubSection.append(NoEscape(r'\textbf{Unit Code \& Title} & \textbf{Notes in support of Claim} \\'))
             criterionESubSubSection.append(NoEscape(r'\hline'))
             
-            for unit_data in courseData:
-                unit_code = unit_data.get('Unit Code', 'N/A')
-                unit_name = unit_data.get('Unit Name', 'N/A')
-                justification = unit_data.get('Justification', 'N/A')
+            for row in courseData:
+                unit_code = row.get('Unit Code', '')
+                unit_name = row.get('Unit Name', '')
+                justification = row.get('Justification', '')
+                
+                # Combine Unit Code and Unit Name
+                unit_code_and_name = f"{unit_code} {unit_name}"
                 
                 # Ensure proper text wrapping for all columns
-                wrapped_unit_code = NoEscape(r'\parbox[t]{0.14\textwidth}{' + unit_code + '}')
-                wrapped_unit_name = NoEscape(r'\parbox[t]{0.24\textwidth}{' + unit_name + '}')
-                wrapped_justification = NoEscape(r'\parbox[t]{0.49\textwidth}{' + justification + '}')
+                wrapped_unit_code_and_name = NoEscape(r'\parbox[t]{0.20\textwidth}{' + unit_code_and_name + '}')
+                wrapped_justification = NoEscape(r'\parbox[t]{0.77\textwidth}{' + justification + '}')
                 
-                criterionESubSubSection.append(NoEscape(f"{wrapped_unit_code} & {wrapped_unit_name} & {wrapped_justification} \\\\"))
+                criterionESubSubSection.append(NoEscape(f"{wrapped_unit_code_and_name} & {wrapped_justification} \\\\"))
                 criterionESubSubSection.append(NoEscape(r'\hline'))
             
             criterionESubSubSection.append(NoEscape(r'\end{tabular}'))
@@ -301,7 +304,7 @@ def generateLatex():
                 value[(outcomeCode, sfiaLevel)] = [x[1]['Unit Code'], joinedJustification, sfiaSkillName, sfiaSkillDescription, sfiaLevelDescription]
         criterionBList[f"{courseName}"] = value
 
-    # New Criterion D code
+    #Criterion D 
     for course, criterionD in kb.criterionD.items():
         if hasattr(criterionD, 'criterion_df'):
             # Ensure all necessary columns are present
@@ -313,7 +316,10 @@ def generateLatex():
     
     #Criterion E
     for course, criterionE in kb.criterionE.items():
-        if hasattr(criterionE, 'criterion_df'):
+        if criterionE.criterion_df is not None and not criterionE.criterion_df.empty:
+            # Ensure 'Justification' column exists, if not, add an empty one
+            if 'Justification' not in criterionE.criterion_df.columns:
+                criterionE.criterion_df['Justification'] = ''
             criterionEList[course] = criterionE.criterion_df.to_dict('records')
         else:
             criterionEList[course] = []
