@@ -1,4 +1,3 @@
-# 2 column criterion E
 from pylatex import Package, NoEscape, Section, Subsection, Subsubsection, Tabular, MultiColumn, MultiRow, Document, NewLine
 from sfia import SFIA
 from knowledgebase import KnowledgeBase
@@ -34,7 +33,7 @@ def createCriterionATable(programName, listOfCourse):
     criterionASubSubSection.append(NoEscape(r'\begin{adjustbox}{max width=1\textwidth}'))
     criterionATable = Tabular(table_spec="|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|")
     criterionATable.add_hline()
-    criterionATable.add_row((MultiColumn(20, align="|l|", data=MultiRow(2, data="Program Details")),))
+    criterionATable.add_row((MultiColumn(20, align="|l|", data=NoEscape(r'\cellcolor{header1} \textbf{Program Details}')),))
     criterionATable.add_row((MultiColumn(20, align="|l|", data=""),))
     criterionATable.add_hline()
     criterionATable.add_row((MultiColumn(9, align="|l|", data="Code"), (MultiColumn(11, align="|l|", data="MJD-CMPSC"))))
@@ -45,7 +44,7 @@ def createCriterionATable(programName, listOfCourse):
     criterionATable.add_hline()
     criterionATable.add_row((MultiColumn(9, align="|l|", data="First Year of Offer"), (MultiColumn(11, align="|l|", data="2012"))))
     criterionATable.add_hline()
-    criterionATable.add_row((MultiColumn(20, align="|l|", data=MultiRow(2, data="Personnel")),))
+    criterionATable.add_row((MultiColumn(20, align="|l|", data=MultiRow(2, data=NoEscape(r'\cellcolor{header1} \textbf{Personnel}'))),))
     criterionATable.add_row((MultiColumn(20, align="|l|", data=""),))
     criterionATable.add_hline()
     criterionATable.add_row((MultiColumn(9, align="|l|", data="Program Chair"), (MultiColumn(11, align="|l|", data="Dr Chris McDonald"))))
@@ -54,7 +53,7 @@ def createCriterionATable(programName, listOfCourse):
     criterionATable.add_hline()
     criterionATable.add_row((MultiColumn(9, align="|l|", data="Key Academic Staff"), (MultiColumn(11, align="|l|", data="Amitava Datta, Lyndon While, Chris McDonald, Rachel Cardell-Oliver"))))
     criterionATable.add_hline()
-    criterionATable.add_row((MultiColumn(20, align="|l|", data=MultiRow(2, data="Outcomes")),))
+    criterionATable.add_row((MultiColumn(20, align="|l|", data=MultiRow(2, data=NoEscape(r'\cellcolor{header1} \textbf{Outcomes}'))),))
     criterionATable.add_row((MultiColumn(20, align="|l|", data=""),))
     criterionATable.add_hline()
     criterionATable.add_row((MultiColumn(20, align="|l|", data=NoEscape(r'\makecell[tl]{Students are able to: \\ 1. develop and implement systems level software in the procedural language C; \\ 2. understand software engineering principles of problem decomposition, and design and implement solutions in the \\ object oriented language Java; \\ 3. understand the role played by databases for persistent storage in networked systems; \\ 4. design appropriate schemas for storing information in databases, and access, sort and join data using query languages; \\ 5. understand the mechanics of, and be able to implement, the primary data structures and associated algorithms that \\ underly computer solutions; \\ 6. understand the computational complexity and correctness of algorithms and operations on data structures, and use \\ this knowledge to be able to choose algorithms and structures appropriate to the task; \\ 7. understand how algorithms can be extended with heuristics to solve problems, the issues of algorithms interacting \\ autonomously with the environment, and the complexity and correctness of those algorithms; \\ 8. understand how those algorithms form the basis of search, problem solving, learning and decision-making in intelligent \\ agents, and be able to implement examples of those agents; \\ 9. understand the interconnected components that comprise computing systems and networks, the principles and \\ standards through which they interact, and alternative algorithms and their trade-offs for controlling the interactions; \\ 10. understand the technologies that allow humans and computers to interact through the medium of visual data, \\ including graphics and animation that underpin the computer games and multimedia industries; \\ 11. work in teams to carry out projects in a professional setting for an industry or third party client, including requirements \\ analysis, design, implementation, testing and documentation; \\ 12. appreciate the ethical responsibilities of professional practice in computing; \\ 13. communicate effectively in various media, including writing and oral presentations; and \\ 14. demonstrate basic research skills that can be applied in higher level studies.}')),))
@@ -98,7 +97,7 @@ def createCriterionBTable(dataDictionary):
         criterionBSubSubSection.append(NoEscape(r'\begin{adjustbox}{max width=1\textwidth}'))
         criterionBTable = Tabular(table_spec="|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|")
         criterionBTable.add_hline()
-        # table header
+        # table header1
         criterionBTable.add_row(MultiColumn(2, align="|l|", data=MultiRow(3, data="SFIA Skill")), (MultiColumn(5, align="|l|", data=MultiRow(3, data="Skill Description"))), (MultiColumn(5, align="|l|", data=MultiRow(3, data="Level Description"))), (MultiColumn(2, align="|l|", data=MultiRow(3, data="Code"))), (MultiColumn(1, align="|l|", data=MultiRow(3, data="Level"))), (MultiColumn(5, align="|l|", data=MultiRow(3, data="Units supporting SFIA skill"))))
         criterionBTable.add_row(MultiColumn(2, align="|l|", data=""), (MultiColumn(5, align="|l|", data="")), (MultiColumn(5, align="|l|", data="")), (MultiColumn(2, align="|l|", data="")), (MultiColumn(1, align="|l|", data="")), (MultiColumn(5, align="|l|", data="")))
         criterionBTable.add_row(MultiColumn(2, align="|l|", data=""), (MultiColumn(5, align="|l|", data="")), (MultiColumn(5, align="|l|", data="")), (MultiColumn(2, align="|l|", data="")), (MultiColumn(1, align="|l|", data="")), (MultiColumn(5, align="|l|", data="")))
@@ -201,21 +200,14 @@ def createCriterionDTable(dataDictionary):
                 # Start longtable
                 criterionDSubSubSection.append(NoEscape(r'\begin{longtable}{|p{0.2\textwidth}|p{0.3\textwidth}|p{0.45\textwidth}|}'))
                 
-                # Table header
+                # Table header1
                 criterionDSubSubSection.append(NoEscape(r'\hline'))
-                criterionDSubSubSection.append(NoEscape(r'\multicolumn{3}{|l|}{Criterion D: Advanced ICT Units Addressing Complex Computing} \\'))
+                criterionDSubSubSection.append(NoEscape(r'\multicolumn{3}{|l|}{\cellcolor{header1} \textbf{Criterion D: Advanced ICT Units Addressing Complex Computing}} \\'))
                 criterionDSubSubSection.append(NoEscape(r'\hline'))
-                criterionDSubSubSection.append(NoEscape(r'Unit Code \& Title & Assessment Item & Complex Computing Criteria met \\'))
+                criterionDSubSubSection.append(NoEscape(r'\cellcolor{header2} \textit{Unit Code \& Title} & \cellcolor{header2} \textit{Assessment Item} & \cellcolor{header2} \textit{Complex Computing Criteria met} \\'))
                 criterionDSubSubSection.append(NoEscape(r'\hline'))
                 criterionDSubSubSection.append(NoEscape(r'\endfirsthead'))
 
-                # Continuation header for subsequent pages
-                criterionDSubSubSection.append(NoEscape(r'\hline'))
-                criterionDSubSubSection.append(NoEscape(r'\multicolumn{3}{|l|}{Criterion D: Advanced ICT Units Addressing Complex Computing (continued)} \\'))
-                criterionDSubSubSection.append(NoEscape(r'\hline'))
-                criterionDSubSubSection.append(NoEscape(r'Unit Code \& Title & Assessment Item & Complex Computing Criteria met \\'))
-                criterionDSubSubSection.append(NoEscape(r'\hline'))
-                criterionDSubSubSection.append(NoEscape(r'\endhead'))
 
                 # Add table content
                 for row in table_content:
@@ -246,9 +238,9 @@ def createCriterionETable(dataDictionary):
             # Start the tabular environment directly (no table float)
             criterionESubSubSection.append(NoEscape(r'\noindent\begin{tabular}{|p{0.20\textwidth}|p{0.77\textwidth}|}'))
             criterionESubSubSection.append(NoEscape(r'\hline'))
-            criterionESubSubSection.append(NoEscape(r'\multicolumn{2}{|l|}{\textbf{Criterion E: Integrated and Applied ICT Knowledge}} \\'))
+            criterionESubSubSection.append(NoEscape(r'\multicolumn{2}{|l|}{\cellcolor{header1} \textbf{Criterion E: Integrated and Applied ICT Knowledge}} \\'))
             criterionESubSubSection.append(NoEscape(r'\hline'))
-            criterionESubSubSection.append(NoEscape(r'\textbf{Unit Code \& Title} & \textbf{Notes in support of Claim} \\'))
+            criterionESubSubSection.append(NoEscape(r'\cellcolor{header2} \textit{Unit Code \& Title} & \cellcolor{header2} \textit{Notes in support of Claim} \\'))
             criterionESubSubSection.append(NoEscape(r'\hline'))
             
             for row in courseData:
@@ -333,6 +325,11 @@ def generateLatex():
     doc.packages.append(Package('latexStyleSheet'))
     doc.packages.append(Package('longtable'))
     doc.preamble.append(NoEscape(r'\newcommand{\myrotcell}[1]{\rotcell{\makebox[0pt][l]{#1}}}'))
+    doc.preamble.append(NoEscape(r'\usepackage[table]{xcolor}'))
+    doc.preamble.append(NoEscape(r'\definecolor{header1}{RGB}{174,192,216}'))
+    doc.preamble.append(NoEscape(r'\definecolor{header2}{RGB}{219,229,241}'))
+    doc.preamble.append(NoEscape(r'\definecolor{header3}{RGB}{211,211,211}'))
+
     
 
     # Add Section for ICT Program Specification and Implementation
