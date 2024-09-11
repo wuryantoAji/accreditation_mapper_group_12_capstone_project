@@ -1,3 +1,4 @@
+# good format, no data for 3rd column
 from pylatex import Package, NoEscape, Section, Subsection, Subsubsection, Tabular, MultiColumn, MultiRow, Document, NewLine
 from sfia import SFIA
 from knowledgebase import KnowledgeBase
@@ -167,25 +168,62 @@ def createCriterionCTable(programName, listOfCourse):
 
 
 # Table 4. Criterion D
-def createCriterionDTable(programName, listOfCourse):
-    ## Add subsub section for criterion D
-    criterionDSubSubSection = Subsubsection("Criterion D: Program Design")
-    ### Start loop for each program
-    criterionDSubSubSection.append('Bachelor of Science (Computer Science)\n')
-    criterionDSubSubSection.append(NoEscape(r'\begin{adjustbox}{max width=1\textwidth}'))
-    criterionDTable = Tabular(table_spec="|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|")
-    criterionDTable.add_hline()
-    criterionDTable.add_row((MultiColumn(20, align="|l|", data=MultiRow(2, data="Criterion D: Advanced ICT Units Addressing Complex Computing")),))
-    criterionDTable.add_row((MultiColumn(20, align="|l|", data=""),))
-    criterionDTable.add_hline()
-    criterionDTable.add_row((MultiColumn(6, align="|l|", data="SFIA Skill Code"), (MultiColumn(7, align="|l|", data="Problem Solving")), (MultiColumn(7, align="|l|", data="ICT Professional Knowledge"))))
-    criterionDTable.add_hline()
-    criterionDTable.add_row((MultiColumn(6, align="|l|", data=NoEscape(r'\makecell[tl]{CITS3001 Algorithms, \\ Agents and Artificial \\ Intelligence}')), (MultiColumn(7, align="|l|", data=NoEscape(r'\makecell[tl]{Group Project (Research, \\ implement and validate game \\ playing AI)}'))), (MultiColumn(7, align="|l|", data=NoEscape(r'\makecell[tl]{Requires students to research (2, 3) and implement \\ novel solutions (5, 9), and validate the solution (4, 8)}')))))
-    criterionDTable.add_hline()
-    criterionDTable.add_row((MultiColumn(6, align="|l|", data="CITS3002 Computer Networks"), (MultiColumn(7, align="|l|", data="Networked communication within a transportation network to solve a scheduling problem")), (MultiColumn(7, align="|l|", data="Has no obvious solution, and requires conceptual thinking and innovative analysis to formulate suitable abstract models (SA2), and is a high-level problem possibly including many component parts or sub-problems (SA8)."))))
-    criterionDTable.add_hline()
-    criterionDSubSubSection.append(criterionDTable)
-    criterionDSubSubSection.append(NoEscape(r'\end{adjustbox}'))
+def createCriterionDTable(dataDictionary):
+    criterionDSubSubSection = Subsubsection("Criterion D: Advanced ICT Units Addressing Complex Computing")
+
+    for course, criterionD in dataDictionary.items():
+        # Add program title without "Bachelor of Science"
+        criterionDSubSubSection.append(NoEscape(r'\noindent\textbf{' + course + r'}'))
+        criterionDSubSubSection.append(NewLine())
+
+        # Start longtable
+        criterionDSubSubSection.append(NoEscape(r'\begin{longtable}{|p{0.2\textwidth}|p{0.3\textwidth}|p{0.45\textwidth}|}'))
+        
+        # Table header
+        criterionDSubSubSection.append(NoEscape(r'\hline'))
+        criterionDSubSubSection.append(NoEscape(r'\multicolumn{3}{|c|}{\textbf{Criterion D: Advanced ICT Units Addressing Complex Computing}} \\'))
+        criterionDSubSubSection.append(NoEscape(r'\hline'))
+        criterionDSubSubSection.append(NoEscape(r'\textbf{Unit Code \& Title} & \textbf{Assessment Item} & \textbf{Complex Computing Criteria met} \\'))
+        criterionDSubSubSection.append(NoEscape(r'\hline'))
+        criterionDSubSubSection.append(NoEscape(r'\endfirsthead'))
+
+        # Continuation header for subsequent pages
+        criterionDSubSubSection.append(NoEscape(r'\multicolumn{3}{|c|}{\textbf{Criterion D: Advanced ICT Units Addressing Complex Computing (continued)}} \\'))
+        criterionDSubSubSection.append(NoEscape(r'\hline'))
+        criterionDSubSubSection.append(NoEscape(r'\textbf{Unit Code \& Title} & \textbf{Assessment Item} & \textbf{Complex Computing Criteria met} \\'))
+        criterionDSubSubSection.append(NoEscape(r'\hline'))
+        criterionDSubSubSection.append(NoEscape(r'\endhead'))
+
+        if criterionD and hasattr(criterionD, 'criterion_df'):
+            for _, row in criterionD.criterion_df.iterrows():
+                unit_code = row.get('Unit Code', '')
+                unit_name = row.get('Unit Name', '')
+                justification = row.get('Justification', '')
+                
+                unit_code_and_name = f"{unit_code} {unit_name}"
+                
+                # Escape special LaTeX characters
+                justification = justification.replace('&', r'\&').replace('%', r'\%').replace('#', r'\#').replace('_', r'\_')
+                
+                criterionDSubSubSection.append(NoEscape(
+                    unit_code_and_name + 
+                    r' & ' +  # Empty Assessment Item column
+                    r' & ' + justification +
+                    r' \\'
+                ))
+                criterionDSubSubSection.append(NoEscape(r'\hline'))
+        else:
+            criterionDSubSubSection.append(NoEscape(r'\multicolumn{3}{|c|}{No data available for this course} \\'))
+            criterionDSubSubSection.append(NoEscape(r'\hline'))
+
+        criterionDSubSubSection.append(NoEscape(r'\end{longtable}'))
+        criterionDSubSubSection.append(NewLine())
+
+        # Add some vertical space between tables
+        criterionDSubSubSection.append(NoEscape(r'\vspace{1em}'))
+        
+        criterionDSubSubSection.append(NewLine())
+
     return criterionDSubSubSection
 
 # Table 5. Criterion E
@@ -235,6 +273,7 @@ def generateLatex():
     sfia = SFIA('sfiaskills.6.3.en.1.xlsx')
     kb = KnowledgeBase('CSSE-allprograms-outcome-mappings-20240821.xlsx', sfia)
     criterionBList = {}
+    criterionDList = {}
     criterionEList = {}
     
     #Criterion B
@@ -255,6 +294,16 @@ def generateLatex():
                 value[(outcomeCode, sfiaLevel)] = [x[1]['Unit Code'], joinedJustification, sfiaSkillName, sfiaSkillDescription, sfiaLevelDescription]
         criterionBList[f"{courseName}"] = value
 
+    # New Criterion D code
+    for course, criterionD in kb.criterionD.items():
+        if hasattr(criterionD, 'criterion_df'):
+            # Ensure all necessary columns are present
+            required_columns = ['Unit Code', 'Unit Title', 'Assessment Item', 'Complex Computing Criteria met']
+            for col in required_columns:
+                if col not in criterionD.criterion_df.columns:
+                    criterionD.criterion_df[col] = ''
+            criterionDList[course] = criterionD
+    
     #Criterion E
     for course, criterionE in kb.criterionE.items():
         if hasattr(criterionE, 'criterion_df'):
@@ -269,7 +318,9 @@ def generateLatex():
     doc.packages.append(Package('rotating'))
     doc.packages.append(Package('adjustbox'))
     doc.packages.append(Package('latexStyleSheet'))
+    doc.packages.append(Package('longtable'))
     doc.preamble.append(NoEscape(r'\newcommand{\myrotcell}[1]{\rotcell{\makebox[0pt][l]{#1}}}'))
+    
 
     # Add Section for ICT Program Specification and Implementation
     programSpecificationAndImplementationICTSection = Section("ICT Program Specification and Implementation")
@@ -280,7 +331,7 @@ def generateLatex():
     programSpecICTSubsection.append(createCriterionATable("MIT",["CITS4401"]))
     programSpecICTSubsection.append(createCriterionBTable(criterionBList))
     programSpecICTSubsection.append(createCriterionCTable("MIT",["CITS4401"]))
-    programSpecICTSubsection.append(createCriterionDTable("MIT",["CITS4401"]))
+    programSpecICTSubsection.append(createCriterionDTable(criterionDList))
     programSpecICTSubsection.append(createCriterionETable(criterionEList))
     programSpecICTSubsection.append(createCriterionFTable("MIT",["CITS4401"]))
 
