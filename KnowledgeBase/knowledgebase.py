@@ -37,10 +37,9 @@ class CriterionA(Criterion):
         self.__create_criterion_a()
         self.__check_criterion_a()
 
-
     def __check_criterion_a(self):
         return None
-
+      
     def __create_criterion_a(self):
         self.criterion_df = self.unit_details_dict
 

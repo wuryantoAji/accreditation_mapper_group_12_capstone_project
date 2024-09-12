@@ -1,6 +1,7 @@
-\newcommand{\headerstyle}{\cellcolor{header1}}
-\newcommand{\subheaderstyle}{\cellcolor{header2}}
+\RequirePackage{xcolor}
+\definecolor{colorDarkBlue}{RGB}{174,192,216}
+\definecolor{colorLightBlue}{RGB}{219,229,241}
+\definecolor{header3}{RGB}{211,211,211}
 
-% Example color definitions (you can customize the colors)
-\definecolor{header1}{RGB}{174,192,216} % dark blue color
-\definecolor{header2}{RGB}{219,229,241} % light blue color
+\newcommand{\colorcelldarkblue}{\cellcolor{colorDarkBlue}\color{black}}
+\newcommand{\colorcelllightblue}{\cellcolor{colorLightBlue}\color{black}}
