@@ -20,7 +20,7 @@ class SFIA:
         for index, row in filtered_df.iterrows():
             self.language = row['lang']
             self.version = row['version']
-            entry =   { 'Description' : row['description'], 'Description22':row['description22'] } 
+            entry =   { 'Description' : row['description'], 'Description22':row['description22'], 'Skill':row['Skill'] } 
             outer_key = row['code']
             inner_key = row['level']
             if outer_key not in self.data:
