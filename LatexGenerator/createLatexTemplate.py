@@ -95,34 +95,36 @@ def createCriterionBTable(dataDictionary):
             sfiaSkills = sfiaSkills+"+"+sfiaComponent[0]
         criterionBSubSubSection.append(f"SFIA skills: {sfiaSkills[1:]}\n")
         criterionBSubSubSection.append(NoEscape(r'\begin{adjustbox}{max width=1\textwidth}'))
-        criterionBTable = Tabular(table_spec="|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|")
+        criterionBTable = Tabular(table_spec=NoEscape(r'|p{0.2\textwidth}|p{0.3\textwidth}|p{0.3\textwidth}|p{0.1\textwidth}|p{0.1\textwidth}|p{0.3\textwidth}|'))
         criterionBTable.add_hline()
         # table header
-        criterionBTable.add_row(MultiColumn(2, align="|l|", data=MultiRow(3, data="SFIA Skill")), (MultiColumn(5, align="|l|", data=MultiRow(3, data="Skill Description"))), (MultiColumn(5, align="|l|", data=MultiRow(3, data="Level Description"))), (MultiColumn(2, align="|l|", data=MultiRow(3, data="Code"))), (MultiColumn(1, align="|l|", data=MultiRow(3, data="Level"))), (MultiColumn(5, align="|l|", data=MultiRow(3, data="Units supporting SFIA skill"))))
-        criterionBTable.add_row(MultiColumn(2, align="|l|", data=""), (MultiColumn(5, align="|l|", data="")), (MultiColumn(5, align="|l|", data="")), (MultiColumn(2, align="|l|", data="")), (MultiColumn(1, align="|l|", data="")), (MultiColumn(5, align="|l|", data="")))
-        criterionBTable.add_row(MultiColumn(2, align="|l|", data=""), (MultiColumn(5, align="|l|", data="")), (MultiColumn(5, align="|l|", data="")), (MultiColumn(2, align="|l|", data="")), (MultiColumn(1, align="|l|", data="")), (MultiColumn(5, align="|l|", data="")))
-        criterionBTable.add_row(MultiColumn(2, align="|l|", data=""), (MultiColumn(5, align="|l|", data="")), (MultiColumn(5, align="|l|", data="")), (MultiColumn(2, align="|l|", data="")), (MultiColumn(1, align="|l|", data="")), (MultiColumn(5, align="|l|", data="")))
-        criterionBTable.add_row(MultiColumn(2, align="|l|", data=""), (MultiColumn(5, align="|l|", data="")), (MultiColumn(5, align="|l|", data="")), (MultiColumn(2, align="|l|", data="")), (MultiColumn(1, align="|l|", data="")), (MultiColumn(5, align="|l|", data="")))    
+        criterionBTable.add_row("","","","","","", color=r'colorDarkBlue')
+        criterionBTable.add_row("","","","","","", color=r'colorDarkBlue')
+        criterionBTable.add_row(MultiRow(NoEscape(-3), data=NoEscape(r'\textit{SFIA Skill}')), 
+                        MultiRow(NoEscape(-3), data=NoEscape(r'\textit{Skill Description}')), 
+                        MultiRow(NoEscape(-3), data=NoEscape(r'\textit{Level Description}')), 
+                        MultiRow(NoEscape(-3), data=NoEscape(r'\textit{Code}')), 
+                        MultiRow(NoEscape(-3), data=NoEscape(r'\textit{Level}')), 
+                        MultiRow(NoEscape(-3), data=NoEscape(r'\textit{Units supporting SFIA skill}')), color=r'colorDarkBlue')
         criterionBTable.add_hline()
         # table content
         for sfiaComponent in dataDictionary[key].keys():
             sfiaCode = sfiaComponent[0]
             sfiaLevel = sfiaComponent[1]
             unitList = dataDictionary[key][sfiaComponent][0]
-            unitsSupportingSFIASkill = putNewLine(dataDictionary[key][sfiaComponent][1])
+            unitsSupportingSFIASkill = dataDictionary[key][sfiaComponent][1]
             sfiaSkill = dataDictionary[key][sfiaComponent][2]
-            skillDescription = putNewLine(dataDictionary[key][sfiaComponent][3])
-            levelDescription = putNewLine(dataDictionary[key][sfiaComponent][4])
-            criterionBTable.add_row(MultiColumn(2, align="|l|", data=NoEscape(r'\makecell[tl]{%s}' % sfiaSkill)),
-                            (MultiColumn(5, align="|l|", data=NoEscape(r'\makecell[tl]{%s}' %skillDescription))),
-                            (MultiColumn(5, align="|l|", data=NoEscape(r'\makecell[tl]{%s}' %levelDescription))), 
-                            (MultiColumn(2, align="|l|", data=f"{sfiaCode}")), 
-                            (MultiColumn(1, align="|l|", data=f"{sfiaLevel}")), 
-                            (MultiColumn(5, align="|l|", data=NoEscape(r'\makecell[tl]{%s}' %unitsSupportingSFIASkill))))
+            skillDescription = dataDictionary[key][sfiaComponent][3]
+            levelDescription = dataDictionary[key][sfiaComponent][4]
+            criterionBTable.add_row(NoEscape(r'{%s}' % sfiaSkill),
+                        NoEscape(r'{%s}' %skillDescription), 
+                        NoEscape(r'{%s}' %levelDescription), 
+                        f"{sfiaCode}", 
+                        f"{sfiaLevel}", 
+                        NoEscape(r'{%s}' %unitsSupportingSFIASkill))
             criterionBTable.add_hline()
         criterionBSubSubSection.append(criterionBTable)
         criterionBSubSubSection.append(NoEscape(r'\end{adjustbox}'))
-        criterionBSubSubSection.append(NewLine())
         criterionBSubSubSection.append(NewLine())
         criterionBSubSubSection.append(NewLine())
         criterionBSubSubSection.append(NewLine())
@@ -238,13 +240,16 @@ def generateLatex():
         criterionBList[f"{courseName}"] = value        
 
     geometry_options = {"tmargin": "0.5in", "lmargin": "0.5in", "bmargin": "0.5in", "rmargin": "0.5in"}
-    doc = Document(geometry_options=geometry_options)
+    doc = Document(documentclass="report",geometry_options=geometry_options)
     doc.packages.append(Package('multirow'))
     doc.packages.append(Package('makecell'))
     doc.packages.append(Package('rotating'))
     doc.packages.append(Package('adjustbox'))
     doc.packages.append(Package('latexStyleSheet'))
+    doc.packages.append(Package('longtable'))
     doc.preamble.append(NoEscape(r'\newcommand{\myrotcell}[1]{\rotcell{\makebox[0pt][l]{#1}}}'))
+    doc.preamble.append(NoEscape(r'\usepackage[table]{xcolor}'))
+    doc.preamble.append(NoEscape(r'\definecolor{header3}{RGB}{211,211,211}'))
 
     # Add Section for ICT Program Specification and Implementation
     programSpecificationAndImplementationICTSection = Section("ICT Program Specification and Implementation")
