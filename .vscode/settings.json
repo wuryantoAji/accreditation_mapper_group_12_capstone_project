@@ -1,0 +1,6 @@
+{
+    "python.analysis.extraPaths": [
+        "./KnowledgeBase"
+    ],
+    "liveServer.settings.port": 5501
+}

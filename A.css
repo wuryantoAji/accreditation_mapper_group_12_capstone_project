@@ -1,0 +1,49 @@
+/* styles.css */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+table, th, td {
+    border: 1px solid black;
+}
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+.section-title {
+    background-color: #a2bde6;
+    font-weight: bold;
+    padding: 10px;
+    text-transform: uppercase;
+}
+
+.back_color {
+    background-color: #90bad944;
+}
+
+.space {
+    width: 20%;
+}
+
+body {
+    margin: 60px;
+}
+
+
+/* rotate text */
+.rotate-text {
+    transform: rotate(-90deg);
+    writing-mode: vertical-lr;
+    text-align: center;
+}
+
+
+/* level cells */
+.level-cell {
+    background-color: #d3d3d3; 
+    padding: 10px;
+}
+
+.program-details {
+    margin-top: 60px;  
+}
