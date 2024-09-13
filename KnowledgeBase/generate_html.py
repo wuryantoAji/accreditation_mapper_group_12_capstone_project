@@ -35,104 +35,120 @@ if data_frames:
 
     html_template = """
     <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Program Details Table</title>
-        <link rel="stylesheet" href="A.css">
-    </head>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Program Details Table</title>
+    <link rel="stylesheet" href="A.css">
+</head>
 
-    <body style="margin: 150px;">
-        {% for course_code, course_data in courses.items() %}
-        <div class="program-details">
-            <div class="section-title">Program Details</div>
-            <table border="1" cellpadding="10">
-                <tr>
-                    <td class="back_color space">Code</td>
-                    <td>{{ course_data.code }}</td>  
-                </tr>
-                <tr>
-                    <td class="back_color">Award Title on Transcript/Testamur</td>
-                    <td>{{ course_data.title }}</td>  
-                </tr>
-                <tr>
-                    <td class="back_color">EFT Years of Study</td>
-                    <td>{{ course_data.eft_years }}</td>  
-                </tr>
-                <tr>
-                    <td class="back_color">First Year of Offer</td>
-                    <td>{{ course_data.first_year }}</td> 
-                </tr>
-            </table>
-        </div>
+<body style="margin: 150px;">
+    {% for course_code, course_data in courses.items() %}
+    <div class="program-details">
+        <div class="section-title">Program Details</div>
+        <table border="1" cellpadding="10">
+            <tr>
+                <td class="back_color space">Code</td>
+                <td>{{ course_data.code }}</td>  
+            </tr>
+            <tr>
+                <td class="back_color">Award Title on Transcript/Testamur</td>
+                <td>{{ course_data.title }}</td>  
+            </tr>
+            <tr>
+                <td class="back_color">EFT Years of Study</td>
+                <td>{{ course_data.eft_years }}</td>  
+            </tr>
+            <tr>
+                <td class="back_color">First Year of Offer</td>
+                <td>{{ course_data.first_year }}</td> 
+            </tr>
+        </table>
+    </div>
 
-        <div class="personnel">
-            <div class="section-title">Personnel</div>
-            <table border="1" cellpadding="10">
-                <tr>
-                    <td class="back_color space">Program Chair</td>
-                    <td>{{ course_data.program_chair }}</td> 
-                </tr>
-                <tr>
-                    <td class="back_color">ICT Industry Liaison</td>
-                    <td>{{ course_data.ict_industry_liaison }}</td> 
-                </tr>
-                <tr>
-                    <td class="back_color">Key Academic Staff</td>
-                    <td>{{ course_data.key_academic_staff }}</td> 
-                </tr>
-            </table>
-        </div>
+    <div class="personnel">
+        <div class="section-title">Personnel</div>
+        <table border="1" cellpadding="10">
+            <tr>
+                <td class="back_color space">Program Chair</td>
+                <td>{{ course_data.program_chair }}</td> 
+            </tr>
+            <tr>
+                <td class="back_color">ICT Industry Liaison</td>
+                <td>{{ course_data.ict_industry_liaison }}</td> 
+            </tr>
+            <tr>
+                <td class="back_color">Key Academic Staff</td>
+                <td>{{ course_data.key_academic_staff }}</td> 
+            </tr>
+        </table>
+    </div>
 
-        <div class="outcomes">
-            <div class="section-title">Outcomes</div>
-            <table border="1" cellpadding="10">
-                <tr>
-                    <td>
-                        <ol>
-                            <li>{{ course_data.outcome_1 }}</li>
-                            <li>{{ course_data.outcome_2 }}</li>
-                            <li>{{ course_data.outcome_3 }}</li>
-                        </ol>
-                    </td>
-                </tr>
-            </table>
-        </div>
+    <div class="outcomes">
+        <div class="section-title">Outcomes</div>
+        <table border="1" cellpadding="10">
+            <tr>
+                <td>
+                    <ol>
+                        <li>{{ course_data.outcome_1 }}</li>
+                        <li>{{ course_data.outcome_2 }}</li>
+                        <li>{{ course_data.outcome_3 }}</li>
+                    </ol>
+                </td>
+            </tr>
+        </table>
+    </div>
 
-        <div class="unit-sequence">
-            <div class="section-title">Unit Sequence</div>
-            <table border="1" cellpadding="10">
-                <thead>
-                    <tr class="back_color">
-                        <th></th>
-                        <th>Code</th>
-                        <th>Title</th>
-                        <th>Unit Coordinator(s)</th>
-                        <th>File #</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Dynamically display different levels for each course -->
-                    {% for level, units in course_data.levels.items() %}
-                    <tr>
-                        <td rowspan="{{ units|length + 1 }}" style="writing-mode: vertical-lr; text-align: center; background-color: #90bad944;">LEVEL {{ level }}</td>
-                    </tr>
-                    {% for unit in units %}
-                    <tr>
-                        <td>{{ unit['Unit Code'] }}</td>
-                        <td>{{ unit['Unit Name'] }}</td>
-                        <td>{{ unit['Coordinator'] }}</td>
-                        <td>{{ unit['File'] }}</td>
-                    </tr>
-                    {% endfor %}
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        {% endfor %}
-    </body>
-    </html>
+    <div class="unit-sequence">
+        <div class="section-title">Unit Sequence</div>
+        <table border="1" cellpadding="10">
+            <thead>
+                <tr class="back_color">
+                    <th></th>
+                    <th>Code</th>
+                    <th>Title</th>
+                    <th>Unit Coordinator(s)</th>
+                    <th>File #</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Dynamically display different levels for each course -->
+                {% for level, units in course_data.levels.items() %}
+                <tr>
+                    <td rowspan="{{ units|length + 1 }}" style="writing-mode: vertical-lr; text-align: center; background-color: #90bad944;">LEVEL {{ level }}</td>
+                </tr>
+                {% for unit in units %}
+                <tr>
+                    <td>{{ unit['Unit Code'] }}</td>
+                    <td>{{ unit['Unit Name'] }}</td>
+                    <td>{{ unit['Coordinator'] }}</td>
+                    <td>{{ unit['File'] }}</td>
+                </tr>
+                {% endfor %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Justification of Program Design -->
+    <div class="justification">
+        <div class="section-title">Justification of Program Design</div>
+        <table border="1" cellpadding="10" width="100%">
+            <tr>
+                <td>
+                    <!-- Your Justification of Program Design text here -->
+                    <p>
+                        placeholder text
+                    </p>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    {% endfor %}
+</body>
+</html>
     """
 
     # render Jinja2 template with data
