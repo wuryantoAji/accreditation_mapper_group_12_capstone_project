@@ -88,16 +88,17 @@ class CriterionB(Criterion):
 
         self.criterion_df = result_df
 
-# Missing data:
-#     - Level (SFIA/Bloom)
-#     - ...
+
 class CriterionC(Criterion):
     def __init__(self, course, unit_details_dict, outcomes_mappings_df):
         Criterion.__init__(self, course, unit_details_dict, outcomes_mappings_df)
-        self.award_title = None
-        self.code = None
-        self.type = None
         
+        # Create three dataframes for each of the three tables for Criterion C
+        self.table_1_df = None
+        self.table_2_df = None
+        self.table_3_df = None
+        
+        # Call the functions to create and check Criterion C
         self.__create_criterion_c()
         self.__check_criterion_c()
 
@@ -107,8 +108,94 @@ class CriterionC(Criterion):
 
     def __create_criterion_c(self):
         outcomes_mappings_df_copy = self.outcomes_mappings_df.copy()
-        outcomes_mappings_df_copy = outcomes_mappings_df_copy[outcomes_mappings_df_copy['Outcome Group'] == 'CBoK']
+        outcomes_mappings_df_copy = outcomes_mappings_df_copy[outcomes_mappings_df_copy['Outcome Group'].isin(['CBoK-Core', 'CBoK-Professional', 'CBoK-Depth'])]
         
+        # -- Create Table 1
+        # Create a fixed list of ICT Knowledge Types and Outcome
+        knowledge_types_outcomes = [
+            ('Professional', 'ICT Ethics'),
+            ('Professional', 'Impacts of ICT'),
+            ('Professional', 'Working Individually & Teamwork'),
+            ('Professional', 'Professional Communication'),
+            ('Professional', 'The Professional Practitioner'),
+            ('Core', 'ICT Fundamentals'),
+            ('Core', 'ICT Infrastructure'),
+            ('Core', 'Information & Data Science & Engineering'),
+            ('Core', 'Computational Science & Engineering'),
+            ('Core', 'Application Systems'),
+            ('Core', 'Cyber Security'),
+            ('Core', 'ICT Project Management'),
+            ('Core', 'ICT management & governance'),
+            ('In-depth', '')
+        ]
+        
+        # Create a list to append the data for Table 1
+        table_1_data = []
+
+        # Iterate over the ICT Knowledge Types and Outcome
+        for knowledge_type, outcome in knowledge_types_outcomes:
+            # Filter the DataFrame to get the rows that match the Outcome and Outcome Group
+            matching_rows = outcomes_mappings_df_copy[
+                (outcomes_mappings_df_copy['Outcome'] == outcome) & 
+                (outcomes_mappings_df_copy['Outcome Group'].str.contains(knowledge_type, case=False))
+            ]
+            
+            # Check if there are any matching rows, and if so, create a string of Unit Code + Unit Name
+            if not matching_rows.empty:
+                unit_code_name_list = matching_rows.apply(
+                    lambda row: f"{row['Unit Code']} {row['Unit Name']}", axis=1
+                ).tolist()
+                unit_code_name = ', '.join(unit_code_name_list)
+            else:
+                unit_code_name = ""  # Set to empty string if no matching rows are found
+            
+            # Append the data to the list
+            table_1_data.append([knowledge_type, outcome, unit_code_name])
+
+        self.table_1_df = pd.DataFrame(table_1_data, columns=['ICT Knowledge Types', 'Outcome', 'Unit Code + Unit Name'])
+        
+        # -- Create Table 2
+        # Create multiindex columns for the pivot table
+        columns_table_2 = pd.MultiIndex.from_tuples[
+            ('Professional', 'ICT Ethics'),
+            ('Professional', 'Impacts of ICT'),
+            ('Professional', 'Working Individually & Teamwork'),
+            ('Professional', 'Professional Communication'),
+            ('Professional', 'The Professional Practitioner'),
+            ('Core', 'ICT Fundamentals'),
+            ('Core', 'ICT Infrastructure'),
+            ('Core', 'Information & Data Science & Engineering'),
+            ('Core', 'Computational Science & Engineering'),
+            ('Core', 'Application Systems'),
+            ('Core', 'Cyber Security'),
+            ('Core', 'ICT Project Management'),
+            ('Core', 'ICT management & governance'),
+            ('In-depth', '')
+        ]
+        
+        # Create rows for the pivot table
+        index_table_2 = outcomes_mappings_df_copy['Unit Code'].unique() + ":" + outcomes_mappings_df_copy['Unit Name'].unique()
+        index_table_2 = index_table_2.dropduplicate().tolist()
+        
+        # Fill the pivot table with the Level (SFIA/Bloom) values
+        data_table_2 = pd.DataFrame(index=index_table_2, columns=columns_table_2)
+        
+        for idx, row in outcomes_mappings_df_copy.iterrows():
+            subject_name = f"{row['Unit Code']}: {row['Unit Name']}"
+            
+            # Iterate over the columns in the table
+            for (knowledge_type, outcome_type) in columns_table_2:
+                if outcome_type == row['Outcome'] and knowledge_type in row['Outcome Group']:
+                    # Fill the cell with the Level (SFIA/Bloom) value
+                    data_table_2.loc[subject_name, (knowledge_type, outcome_type)] = row['Level (SFIA/Bloom)']
+        
+
+        # Create a DataFrame from the list
+        self.table_1_df = pd.DataFrame(table_1_data, columns=['ICT Knowledge Types', 'Outcome', 'Unit Code + Unit Name'])
+        
+        self.table_2_df = data_table_2
+        
+        # -- Create Table 3
         
     
 class CriterionD(Criterion):
