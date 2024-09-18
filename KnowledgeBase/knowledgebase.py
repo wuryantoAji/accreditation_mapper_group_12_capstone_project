@@ -37,10 +37,9 @@ class CriterionA(Criterion):
         self.__create_criterion_a()
         self.__check_criterion_a()
 
-
     def __check_criterion_a(self):
         return None
-
+      
     def __create_criterion_a(self):
         self.criterion_df = self.unit_details_dict
 
@@ -96,20 +95,23 @@ class CriterionD(Criterion):
         self.__create_criterion_d()
         self.__check_criterion_d()
 
-
     def __check_criterion_d(self):
         return None
 
     def __create_criterion_d(self):
         outcomes_mappings_df_copy = self.outcomes_mappings_df.copy()
-
         outcomes_mappings_df_copy = outcomes_mappings_df_copy[outcomes_mappings_df_copy['Outcome Group'] == 'Advanced']
 
-        merged_df = pd.merge(self.unit_details_dict, outcomes_mappings_df_copy, on='Unit Code', how='inner')
-        merged_df = merged_df[['Unit Code', 'Justification']]
-
-        self.criterion_df = merged_df
-
+        # Merge with unit_details_dict to get the Unit Name
+        merged_df = pd.merge(outcomes_mappings_df_copy, self.unit_details_dict, on='Unit Code', how='inner')
+        
+        # Ensure we have the Unit Name and Justification columns
+        if 'Unit Name' not in merged_df.columns:
+            merged_df['Unit Name'] = merged_df['Unit Code'].map(self.unit_details_dict.set_index('Unit Code')['Unit Name'])
+        if 'Justification' not in merged_df.columns:
+            merged_df['Justification'] = ''
+        
+        self.criterion_df = merged_df[['Unit Code', 'Unit Name', 'Justification']]
 
     
 class CriterionE(Criterion):
@@ -118,25 +120,36 @@ class CriterionE(Criterion):
         self.__create_criterion_e()
         self.__check_criterion_e()
 
-
     def __check_criterion_e(self):
-        num_of_criterion_units = self.criterion_df['Unit Code'].nunique()  
-        num_of_units = self.unit_details_dict['Unit Code'].nunique()  
-        data = {
-            'QA Item': ['Number of units ' +str(num_of_criterion_units) + ' in criterion, expecting 1.' ],
-            'Pass/Fail': [ str(num_of_criterion_units == 1), ]
-        }
-        self.criterion_qa_df = pd.DataFrame(data)
+        if self.criterion_df is not None and not self.criterion_df.empty:
+            num_of_criterion_units = self.criterion_df['Unit Code'].nunique()  
+            num_of_units = self.unit_details_dict['Unit Code'].nunique()  
+            data = {
+                'QA Item': ['Number of units ' + str(num_of_criterion_units) + ' in criterion, expecting 1.' ],
+                'Pass/Fail': [ str(num_of_criterion_units == 1), ]
+            }
+            self.criterion_qa_df = pd.DataFrame(data)
+        else:
+            self.criterion_qa_df = pd.DataFrame({
+                'QA Item': ['No units found for Criterion E'],
+                'Pass/Fail': ['Fail']
+            })
 
     def __create_criterion_e(self):
         outcomes_mappings_df_copy = self.outcomes_mappings_df.copy()
-
         outcomes_mappings_df_copy = outcomes_mappings_df_copy[outcomes_mappings_df_copy['Outcome Group'] == 'Integrated Skills']
 
         merged_df = pd.merge(self.unit_details_dict, outcomes_mappings_df_copy, on='Unit Code', how='inner')
-        merged_df = merged_df[['Unit Code', 'Justification']]
-
-        self.criterion_df = merged_df
+        
+        if not merged_df.empty:
+            if 'Unit Name' not in merged_df.columns:
+                # Add 'Unit Name' from unit_details_dict
+                unit_name_dict = self.unit_details_dict.set_index('Unit Code')['Unit Name'].to_dict()
+                merged_df['Unit Name'] = merged_df['Unit Code'].map(unit_name_dict)
+            
+            self.criterion_df = merged_df[['Unit Code', 'Unit Name', 'Justification']]
+        else:
+            self.criterion_df = pd.DataFrame(columns=['Unit Code', 'Unit Name', 'Justification'])
 
 class KnowledgeBase:
     def __init__(self, kb_excel_file, sfia):
