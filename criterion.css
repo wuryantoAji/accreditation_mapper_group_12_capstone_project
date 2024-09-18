@@ -47,3 +47,16 @@ body {
 .program-details {
     margin-top: 60px;  
 }
+
+
+/* criterion D style */
+
+th {
+    background-color: #90bad944;
+}
+.title-row td {
+    text-align: center;
+    font-weight: bold;
+    background-color: #a2bde6
+}
+

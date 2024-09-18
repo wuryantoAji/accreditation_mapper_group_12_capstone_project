@@ -12,7 +12,7 @@ kb = KnowledgeBase('KnowledgeBase/CSSE-allprograms-outcome-mappings-20240821.xls
 data_frames = []
 
 # loop through course data and save DataFrame
-for course, criterion in kb.criterionA.items():
+for course, criterion in kb.criterionD.items():
     print(f"Processing course: {course}")
     
     df = criterion.criterion_df
