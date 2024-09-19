@@ -94,9 +94,9 @@ class CriterionC(Criterion):
         Criterion.__init__(self, course, unit_details_dict, outcomes_mappings_df)
         
         # Create three dataframes for each of the three tables for Criterion C
-        self.table_1_df = None
-        self.table_2_df = None
-        self.table_3_df = None
+        # self.table_1_df = None
+        # self.table_2_df = None
+        # self.table_3_df = None
         
         # Call the functions to create and check Criterion C
         self.__create_criterion_c()
@@ -131,7 +131,7 @@ class CriterionC(Criterion):
         
         # Create a list to append the data for Table 1
         table_1_data = []
-
+        
         # Iterate over the ICT Knowledge Types and Outcome
         for knowledge_type, outcome in knowledge_types_outcomes:
             # Filter the DataFrame to get the rows that match the Outcome and Outcome Group
@@ -154,9 +154,10 @@ class CriterionC(Criterion):
 
         self.table_1_df = pd.DataFrame(table_1_data, columns=['ICT Knowledge Types', 'Outcome', 'Unit Code + Unit Name'])
         
+        print(self.table_1_df)
         # -- Create Table 2
         # Create multiindex columns for the pivot table
-        columns_table_2 = pd.MultiIndex.from_tuples[
+        columns_table_2 = pd.MultiIndex.from_tuples([
             ('Professional', 'ICT Ethics'),
             ('Professional', 'Impacts of ICT'),
             ('Professional', 'Working Individually & Teamwork'),
@@ -171,11 +172,15 @@ class CriterionC(Criterion):
             ('Core', 'ICT Project Management'),
             ('Core', 'ICT management & governance'),
             ('In-depth', '')
-        ]
+        ])
         
         # Create rows for the pivot table
-        index_table_2 = outcomes_mappings_df_copy['Unit Code'].unique() + ":" + outcomes_mappings_df_copy['Unit Name'].unique()
-        index_table_2 = index_table_2.dropduplicate().tolist()
+        outcomes_mappings_df_copy['Unit Code + Unit Name'] = outcomes_mappings_df_copy.apply(
+            lambda row: f"{row['Unit Code']}: {row['Unit Name']}", axis=1
+        )
+
+        index_table_2 = outcomes_mappings_df_copy[['Unit Code', 'Unit Name']].drop_duplicates()
+        index_table_2 = index_table_2.apply(lambda row: f"{row['Unit Code']}: {row['Unit Name']}", axis=1)
         
         # Fill the pivot table with the Level (SFIA/Bloom) values
         data_table_2 = pd.DataFrame(index=index_table_2, columns=columns_table_2)
@@ -191,7 +196,6 @@ class CriterionC(Criterion):
         
 
         # Create a DataFrame from the list
-        self.table_1_df = pd.DataFrame(table_1_data, columns=['ICT Knowledge Types', 'Outcome', 'Unit Code + Unit Name'])
         
         self.table_2_df = data_table_2
         
@@ -284,13 +288,13 @@ class KnowledgeBase:
         for course in self.unit_details_dict.keys():
             self.criterionA[course] = CriterionA( course, self.unit_details_dict[course], outcomes_mappings_df )
             self.criterionB[course] = CriterionB( course, self.unit_details_dict[course], outcomes_mappings_df )
-            self.criterionC[course] = None
+            self.criterionC[course] = CriterionC( course, self.unit_details_dict[course], outcomes_mappings_df )
             self.criterionD[course] = CriterionD( course, self.unit_details_dict[course], outcomes_mappings_df )
             self.criterionE[course] = CriterionE( course, self.unit_details_dict[course], outcomes_mappings_df )
 
     def __load_unit_details(self, excel):
         # Load the Excel file into a Pandas DataFrame
-        df = pd.read_excel(excel, header=0, sheet_name='Unit Details')
+        df = pd.read_excel(excel, header=0, sheet_name='Programs Details')
 
         # Drop columns where the name starts with 'Unnamed'
         df = df.loc[:, ~df.columns.str.startswith('Unnamed')]
