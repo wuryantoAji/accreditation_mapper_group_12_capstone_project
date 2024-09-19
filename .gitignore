@@ -1,1 +1,6 @@
 venv/
+__pycache__/
+.pybuilder/
+target/
+temp_dev_folder/
+virtualenv/
