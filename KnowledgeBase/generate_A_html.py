@@ -40,7 +40,7 @@ if data_frames:
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Program Details Table</title>
-    <link rel="stylesheet" href="A.css">
+    <link rel="stylesheet" href="criterion.css">
 </head>
 
 <body style="margin: 150px;">
