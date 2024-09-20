@@ -11,42 +11,42 @@ sfia = SFIA('KnowledgeBase/sfiaskills.6.3.en.1.xlsx')
 # KnowledgeBase - processes the input from the client
 kb = KnowledgeBase('KnowledgeBase/CSSE-allprograms-outcome-mappings-20240821.xlsx', sfia)
 
-# 假设你的 KnowledgeBase 对象和数据处理部分已经初始化
+# Assume your KnowledgeBase object and data processing part have been initialized
 data_frames = []
 
-# 遍历 criterionD 数据并提取 DataFrame
+# Iterate over criterionD data and extract DataFrame
 for course, criterion in kb.criterionD.items():
     print(f"Processing course: {course}")
     
     df = criterion.criterion_df
     if df is not None and not df.empty:
-        df['Course Title'] = course  # 为 DataFrame 添加课程标题列
-        df['Unit Code & Title'] = df['Unit Code'] + ' ' + df['Unit Name']  # 合并 Unit Code 和 Unit Name
+        df['Course Title'] = course  # Add a 'Course Title' column to the DataFrame
+        df['Unit Code & Title'] = df['Unit Code'] + ' ' + df['Unit Name']  # Combine 'Unit Code' and 'Unit Name'
         
-        # 根据句号分割 Justification 成 Complex Computing Criteria met 和 Assessment Item
+        # Split 'Justification' by period into 'Complex Computing Criteria met' and 'Assessment Item'
         def split_justification(justification):
             if '.' in justification:
                 parts = justification.split('.', 1)
-                complex_computing = parts[0].strip()  # 句号前的部分
-                assessment_item = parts[1].strip()  # 句号后的部分
+                complex_computing = parts[0].strip()  # Part before the period
+                assessment_item = parts[1].strip()  # Part after the period
                 return complex_computing, assessment_item
             else:
-                return "", justification  # 如果只有一个句子，则Complex Computing Criteria met为空，整个句子是Assessment Item
-        
+                return "", justification  # If only one sentence, 'Complex Computing Criteria met' is empty, entire sentence is 'Assessment Item'
+            
         df[['Complex Computing Criteria met', 'Assessment Item']] = df['Justification'].apply(
             lambda x: pd.Series(split_justification(x))
         )
         
         data_frames.append(df)
 
-# 合并所有 DataFrame
+# Combine all DataFrames
 if data_frames:
     combined_df = pd.concat(data_frames)
 
-    # 按 Course Title 进行分组
+    # Group by 'Course Title'
     grouped = combined_df.groupby('Course Title')
 
-    # Jinja2 HTML 模板
+    # Jinja2 HTML template
     html_template = """
     <!DOCTYPE html>
 <html lang="en">
@@ -88,16 +88,16 @@ if data_frames:
 </html>
     """
 
-    # 数据准备：按 Course Title 分组，生成用于渲染的数据结构
+    # Data preparation: group by 'Course Title', generate data structure for rendering
     courses = {}
     for course_title, group in grouped:
         courses[course_title] = group.to_dict(orient='records')
 
-    # 渲染 HTML 模板
+    # Render HTML template
     template = Template(html_template)
     html_output = template.render(courses=courses)
 
-    # 将 HTML 写入文件
+    # Write HTML to file
     with open("output_criterion_D.html", "w") as f:
         f.write(html_output)
 
