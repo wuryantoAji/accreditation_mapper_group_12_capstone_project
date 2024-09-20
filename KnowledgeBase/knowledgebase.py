@@ -6,7 +6,7 @@ class Criterion:
     def __init__(self, course, unit_details_dict, outcomes_mappings_df):
         self.course = course
         self.criterion_df = None
-        self.criterion_qa_df = None
+        self.criterion_qa_df = pd.DataFrame()
         self.unit_details_dict = unit_details_dict.copy()
         self.outcomes_mappings_df = outcomes_mappings_df.copy()
         return
@@ -181,7 +181,9 @@ class KnowledgeBase:
 
     def __load_unit_details(self, excel):
         # Load the Excel file into a Pandas DataFrame
-        df = pd.read_excel(excel, header=0, sheet_name='Unit Details')
+        #df = pd.read_excel(excel, header=0, sheet_name='Unit Details')
+        # Changed to Programs Details by client 11/9
+        df = pd.read_excel(excel, header=0, sheet_name='Programs Details')
 
         # Drop columns where the name starts with 'Unnamed'
         df = df.loc[:, ~df.columns.str.startswith('Unnamed')]
