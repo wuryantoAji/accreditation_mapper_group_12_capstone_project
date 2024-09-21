@@ -192,14 +192,21 @@ def createCriterionDTable(dataDictionary):
                 # Start longtable
                 criterionDSubSubSection.append(NoEscape(r'\begin{longtable}{|p{0.2\textwidth}|p{0.3\textwidth}|p{0.45\textwidth}|}'))
                 
-                # Table header1
+                # Table header
                 criterionDSubSubSection.append(NoEscape(r'\hline'))
-                criterionDSubSubSection.append(NoEscape(r'\multicolumn{3}{|l|}{\cellcolor{colorDarkBlue} \textbf{Criterion D: Advanced ICT Units Addressing Complex Computing}} \\'))
+                criterionDSubSubSection.append(NoEscape(r'\multicolumn{3}{|l|}{\colorcelldarkbluebold Criterion D: Advanced ICT Units Addressing Complex Computing} \\'))
                 criterionDSubSubSection.append(NoEscape(r'\hline'))
-                criterionDSubSubSection.append(NoEscape(r'\cellcolor{colorLightBlue} \textit{Unit Code \& Title} & \cellcolor{colorLightBlue} \textit{Assessment Item} & \cellcolor{colorLightBlue} \textit{Complex Computing Criteria met} \\'))
+                criterionDSubSubSection.append(NoEscape(r'\colorcelllightblueitalic Unit Code \& Title & \colorcelllightblueitalic Assessment Item & \colorcelllightblueitalic Complex Computing Criteria met \\'))
                 criterionDSubSubSection.append(NoEscape(r'\hline'))
                 criterionDSubSubSection.append(NoEscape(r'\endfirsthead'))
 
+                # Continuation header
+                criterionDSubSubSection.append(NoEscape(r'\hline'))
+                criterionDSubSubSection.append(NoEscape(r'\multicolumn{3}{|l|}{\colorcelldarkbluebold Criterion D: Advanced ICT Units Addressing Complex Computing (continued)} \\'))
+                criterionDSubSubSection.append(NoEscape(r'\hline'))
+                criterionDSubSubSection.append(NoEscape(r'\colorcelllightblueitalic Unit Code \& Title & \colorcelllightblueitalic Assessment Item & \colorcelllightblueitalic Complex Computing Criteria met \\'))
+                criterionDSubSubSection.append(NoEscape(r'\hline'))
+                criterionDSubSubSection.append(NoEscape(r'\endhead'))
 
                 # Add table content
                 for row in table_content:
@@ -230,9 +237,9 @@ def createCriterionETable(dataDictionary):
             # Start the tabular environment directly (no table float)
             criterionESubSubSection.append(NoEscape(r'\noindent\begin{tabular}{|p{0.20\textwidth}|p{0.77\textwidth}|}'))
             criterionESubSubSection.append(NoEscape(r'\hline'))
-            criterionESubSubSection.append(NoEscape(r'\multicolumn{2}{|l|}{\colorcelldarkblue\headerstyle \textbf{Criterion E: Integrated and Applied ICT Knowledge}} \\'))
+            criterionESubSubSection.append(NoEscape(r'\multicolumn{2}{|l|}{\colorcelldarkbluebold Criterion E: Integrated and Applied ICT Knowledge} \\'))
             criterionESubSubSection.append(NoEscape(r'\hline'))
-            criterionESubSubSection.append(NoEscape(r'\colorcelllightblue \textit{Unit Code \& Title} & \colorcelllightblue\subheaderstyle \textit{Notes in support of Claim} \\'))
+            criterionESubSubSection.append(NoEscape(r'\colorcelllightblueitalic Unit Code \& Title & \colorcelllightblueitalic Notes in support of Claim \\'))
             criterionESubSubSection.append(NoEscape(r'\hline'))
             
             for row in courseData:
