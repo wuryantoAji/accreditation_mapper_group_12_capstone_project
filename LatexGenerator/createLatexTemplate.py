@@ -1,3 +1,5 @@
+## start
+
 from pylatex import Package, NoEscape, Section, Subsection, Subsubsection, Tabular, MultiColumn, MultiRow, Document, NewLine
 from sfia import SFIA
 from knowledgebase import KnowledgeBase
@@ -30,32 +32,6 @@ def createCriterionATable(programName, listOfCourse):
     criterionASubSubSection = Subsubsection("Criterion A: Program Design")
     
     ### Start loop for each program
-    # criterionASubSubSection.append('Bachelor of Science (Computer Science)\\n')
-    # criterionASubSubSection.append(NoEscape(r'\\begin{adjustbox}{max width=1\\textwidth}'))
-    
-    # criterionATable = Tabular(table_spec="|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|")
-    # criterionATable.add_hline()
-    # criterionATable.add_row((MultiColumn(20, align="|l|", data=NoEscape(r'\\headerstyle \\textbf{Program Details}')),))
-    # criterionATable.add_row((MultiColumn(20, align="|l|", data=""),))
-    # criterionATable.add_hline()
-    # criterionATable.add_row((MultiColumn(9, align="|l|", data="Code"), MultiColumn(11, align="|l|", data="MJD-CMPSC")))
-    # criterionATable.add_hline()
-    # criterionATable.add_row((MultiColumn(9, align="|l|", data="Award title on Transcript/Testamur"), MultiColumn(11, align="|l|", data="Bachelor of Science (Computer Science)")))
-    # criterionATable.add_hline()
-    # criterionATable.add_row((MultiColumn(9, align="|l|", data="EFT Years of Study"), MultiColumn(11, align="|l|", data="3 Years")))
-    # criterionATable.add_hline()
-    # criterionATable.add_row((MultiColumn(9, align="|l|", data="First Year of Offer"), MultiColumn(11, align="|l|", data="2012")))
-    # criterionATable.add_hline()
-    # criterionATable.add_row((MultiColumn(20, align="|l|", data=MultiRow(2, data=NoEscape(r'\\headerstyle \\textbf{Personnel}'))),))
-    # criterionATable.add_row((MultiColumn(20, align="|l|", data=""),))
-    # criterionATable.add_hline()
-    # criterionATable.add_row((MultiColumn(9, align="|l|", data="Program Chair"), MultiColumn(11, align="|l|", data="Dr Chris McDonald")))
-    # criterionATable.add_row((MultiColumn(1, align="|l|", data=""),MultiColumn(3, align="|l|", data="Code"),MultiColumn(8, align="|l|", data="Title"),MultiColumn(6, align="|l|", data="Unit Coordinator(s)"),MultiColumn(2, align="|l|", data="File #"),))
-    # criterionATable.add_hline()
-    # criterionASubSubSection.append(criterionATable)
-    # criterionASubSubSection.append(NoEscape(r'\end{adjustbox}'))
-    # return criterionASubSubSection
-     ### Start loop for each program
     criterionASubSubSection.append('Program Name\n')
     criterionASubSubSection.append(NoEscape(r'\begin{adjustbox}{max width=\textwidth}'))
     criterionATable = Tabular(table_spec="|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|")
@@ -63,22 +39,22 @@ def createCriterionATable(programName, listOfCourse):
     criterionATable.add_row((MultiColumn(20, align="|l|", data=MultiRow(2, data="Program Details")),))
     criterionATable.add_row((MultiColumn(20, align="|l|", data=""),))
     criterionATable.add_hline()
-    criterionATable.add_row((MultiColumn(9, align="|l|", data="Code"), (MultiColumn(11, align="|l|", data="code-name"))))
+    criterionATable.add_row((MultiColumn(9, align="|l|", data=NoEscape(r'\colorcelllightblueitalic Code')), (MultiColumn(11, align="|l|", data="code-name"))))
     criterionATable.add_hline()
-    criterionATable.add_row((MultiColumn(9, align="|l|", data="Award title on Transcript/Testamur"), (MultiColumn(11, align="|l|", data="award-name"))))
+    criterionATable.add_row((MultiColumn(9, align="|l|", data=NoEscape(r'\colorcelllightblueitalic Award title on Transcript/Testamur')), (MultiColumn(11, align="|l|", data="award-name"))))
     criterionATable.add_hline()
-    criterionATable.add_row((MultiColumn(9, align="|l|", data="EFT Years of Study"), (MultiColumn(11, align="|l|", data="study-duration"))))
+    criterionATable.add_row((MultiColumn(9, align="|l|", data=NoEscape(r'\colorcelllightblueitalic EFT Years of Study')), (MultiColumn(11, align="|l|", data="study-duration"))))
     criterionATable.add_hline()
-    criterionATable.add_row((MultiColumn(9, align="|l|", data="First Year of Offer"), (MultiColumn(11, align="|l|", data="year-name"))))
+    criterionATable.add_row((MultiColumn(9, align="|l|", data=NoEscape(r'\colorcelllightblueitalic First Year of Offer')), (MultiColumn(11, align="|l|", data="year-name"))))
     criterionATable.add_hline()
     criterionATable.add_row((MultiColumn(20, align="|l|", data=MultiRow(2, data="Personnel")),))
     criterionATable.add_row((MultiColumn(20, align="|l|", data=""),))
     criterionATable.add_hline()
-    criterionATable.add_row((MultiColumn(9, align="|l|", data="Program Chair"), (MultiColumn(11, align="|l|", data="chair-name"))))
+    criterionATable.add_row((MultiColumn(9, align="|l|", data=NoEscape(r'\colorcelllightblueitalic Program Chair')), (MultiColumn(11, align="|l|", data="chair-name"))))
     criterionATable.add_hline()
-    criterionATable.add_row((MultiColumn(9, align="|l|", data="ICT Industry Liaison"), (MultiColumn(11, align="|l|", data="liaison-name"))))
+    criterionATable.add_row((MultiColumn(9, align="|l|", data=NoEscape(r'\colorcelllightblueitalic ICT Industry Liaison')), (MultiColumn(11, align="|l|", data="liaison-name"))))
     criterionATable.add_hline()
-    criterionATable.add_row((MultiColumn(9, align="|l|", data="Key Academic Staff"), (MultiColumn(11, align="|l|", data="[list-of-staff-name]"))))
+    criterionATable.add_row((MultiColumn(9, align="|l|", data=NoEscape(r'\colorcelllightblueitalic Key Academic Staff')), (MultiColumn(11, align="|l|", data="[list-of-staff-name]"))))
     criterionATable.add_hline()
     criterionATable.add_row((MultiColumn(20, align="|l|", data=MultiRow(2, data="Outcomes")),))
     criterionATable.add_row((MultiColumn(20, align="|l|", data=""),))
@@ -254,9 +230,9 @@ def createCriterionETable(dataDictionary):
             # Start the tabular environment directly (no table float)
             criterionESubSubSection.append(NoEscape(r'\noindent\begin{tabular}{|p{0.20\textwidth}|p{0.77\textwidth}|}'))
             criterionESubSubSection.append(NoEscape(r'\hline'))
-            criterionESubSubSection.append(NoEscape(r'\multicolumn{2}{|l|}{\colorcelldarkblue \textbf{Criterion E: Integrated and Applied ICT Knowledge}} \\'))
+            criterionESubSubSection.append(NoEscape(r'\multicolumn{2}{|l|}{\colorcelldarkblue\headerstyle \textbf{Criterion E: Integrated and Applied ICT Knowledge}} \\'))
             criterionESubSubSection.append(NoEscape(r'\hline'))
-            criterionESubSubSection.append(NoEscape(r'\colorcelllightblue \textit{Unit Code \& Title} & \colorcelllightblue \textit{Notes in support of Claim} \\'))
+            criterionESubSubSection.append(NoEscape(r'\colorcelllightblue \textit{Unit Code \& Title} & \colorcelllightblue\subheaderstyle \textit{Notes in support of Claim} \\'))
             criterionESubSubSection.append(NoEscape(r'\hline'))
             
             for row in courseData:
