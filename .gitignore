@@ -4,3 +4,5 @@ __pycache__/
 target/
 temp_dev_folder/
 virtualenv/
+ClientInput/
+latexFiles/

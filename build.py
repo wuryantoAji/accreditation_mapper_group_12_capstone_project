@@ -22,7 +22,7 @@ def create_temp_folder():
 
 def copy_constant_files(temp_dir):
     # TODO change to fetch the latest file by sort from new to old
-    input_excel_file = os.path.join(client_input, "CSSE-allprograms-outcome-mappings-20240821.xlsx")
+    input_excel_file = os.path.join(client_input, "CSSE-allprograms-outcome-mappings-20240913.xlsx")
     # TODO change to fetch the latest file by sort from new to old also filter by .xlsx
     sfia_excel_file = os.path.join(knowledge_base, "sfiaskills.6.3.en.1.xlsx")
     knowledge_base_python_file = os.path.join(knowledge_base, "knowledgebase.py")
@@ -55,10 +55,24 @@ def run_python_program(temp_dir):
 
 def copy_generated_files_to_output(temp_dir):
     latex_stylesheet_file = os.path.join(temp_dir, "latexStyleSheet.sty")
-    latex_generated_file = os.path.join(temp_dir, "criterionAtoFTable.tex")
+    latex_main_file = os.path.join(temp_dir, "main.tex")
+    latex_criterionA_file = os.path.join(temp_dir, "criterionA.tex")
+    latex_criterionB_file = os.path.join(temp_dir, "criterionB.tex")
+    latex_criterionC_file = os.path.join(temp_dir, "criterionC.tex")
+    latex_criterionD_file = os.path.join(temp_dir, "criterionD.tex")
+    # latex_criterionE_file = os.path.join(temp_dir, "criterionE.tex")
+    
+    latexDirectoryPath = os.path.join('.', 'latexFiles')
+    latexDirectory = os.mkdir(latexDirectoryPath)
 
-    shutil.copy(latex_stylesheet_file, ".")
-    shutil.copy(latex_generated_file, ".")
+    shutil.copy(latex_stylesheet_file, latexDirectoryPath)
+    shutil.copy(latex_main_file, latexDirectoryPath)
+    shutil.copy(latex_criterionA_file, latexDirectoryPath)
+    shutil.copy(latex_criterionB_file, latexDirectoryPath)
+    shutil.copy(latex_criterionC_file, latexDirectoryPath)
+    shutil.copy(latex_criterionD_file, latexDirectoryPath)
+    # shutil.copy(latex_criterionE_file, latexDirectoryPath))
+    
 
 def clean_up(temp_dir):
     # Remove the temporary directory
