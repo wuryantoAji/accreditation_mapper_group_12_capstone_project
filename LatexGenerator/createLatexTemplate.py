@@ -171,26 +171,23 @@ def createCriterionDTable(dataDictionary):
                 assessment_item = row.get('Assessment Item', '').strip()
                 justification = row.get('Justification', '').strip()
                 
-                # Skip this row if all fields are empty
                 if not (unit_code or unit_name or assessment_item or justification):
                     continue
                 
                 unit_code_and_name = f"{unit_code} {unit_name}".strip()
                 
-                # Escape special LaTeX characters
                 justification = justification.replace('&', r'\&').replace('%', r'\%').replace('#', r'\#').replace('_', r'\_')
                 assessment_item = assessment_item.replace('&', r'\&').replace('%', r'\%').replace('#', r'\#').replace('_', r'\_')
                 
                 table_content.append((unit_code_and_name, assessment_item, justification))
 
-            # Only create the table if there's content
             if table_content:
-                # Add program title
-                criterionDSubSubSection.append(NoEscape(r'\noindent\textbf{' + course + r'}'))
+                # Add program title using the new command
+                criterionDSubSubSection.append(NoEscape(r'\criterionDcoursetitle{' + course + r'}'))
                 criterionDSubSubSection.append(NewLine())
 
-                # Start longtable
-                criterionDSubSubSection.append(NoEscape(r'\begin{longtable}{|p{0.2\textwidth}|p{0.3\textwidth}|p{0.45\textwidth}|}'))
+                # Start longtable using the new command
+                criterionDSubSubSection.append(NoEscape(r'\criterionDtable'))
                 
                 # Table header
                 criterionDSubSubSection.append(NoEscape(r'\hline'))
@@ -208,17 +205,16 @@ def createCriterionDTable(dataDictionary):
                 criterionDSubSubSection.append(NoEscape(r'\hline'))
                 criterionDSubSubSection.append(NoEscape(r'\endhead'))
 
-                # Add table content
+                # Add table content using the new column commands
                 for row in table_content:
                     criterionDSubSubSection.append(NoEscape(
-                        row[0] + r' & ' + row[1] + r' & ' + row[2] + r' \\'
+                        r'\unitcolumn{' + row[0] + r'} & \assessmentcolumn{' + row[1] + r'} & \complexcomputingcolumn{' + row[2] + r'} \\'
                     ))
                     criterionDSubSubSection.append(NoEscape(r'\hline'))
 
                 criterionDSubSubSection.append(NoEscape(r'\end{longtable}'))
                 criterionDSubSubSection.append(NewLine())
 
-                # Add some vertical space between tables
                 criterionDSubSubSection.append(NoEscape(r'\vspace{1em}'))
                 
                 criterionDSubSubSection.append(NewLine())
@@ -231,11 +227,11 @@ def createCriterionETable(dataDictionary):
     
     for course, courseData in dataDictionary.items():
         if courseData:  # Only process courses with data
-            # Add the course title
-            criterionESubSubSection.append(NoEscape(r'\noindent\textbf{' + course + r'}\\[0.5em]'))
+            # Add the course title using the command
+            criterionESubSubSection.append(NoEscape(r'\coursetitle{' + course + '}'))
             
-            # Start the tabular environment directly (no table float)
-            criterionESubSubSection.append(NoEscape(r'\noindent\begin{tabular}{|p{0.20\textwidth}|p{0.77\textwidth}|}'))
+            # Start the tabular environment using the command
+            criterionESubSubSection.append(NoEscape(r'\criterionTable'))
             criterionESubSubSection.append(NoEscape(r'\hline'))
             criterionESubSubSection.append(NoEscape(r'\multicolumn{2}{|l|}{\colorcelldarkbluebold Criterion E: Integrated and Applied ICT Knowledge} \\'))
             criterionESubSubSection.append(NoEscape(r'\hline'))
@@ -250,9 +246,9 @@ def createCriterionETable(dataDictionary):
                 # Combine Unit Code and Unit Name
                 unit_code_and_name = f"{unit_code} {unit_name}"
                 
-                # Ensure proper text wrapping for all columns
-                wrapped_unit_code_and_name = NoEscape(r'\parbox[t]{0.20\textwidth}{' + unit_code_and_name + '}')
-                wrapped_justification = NoEscape(r'\parbox[t]{0.77\textwidth}{' + justification + '}')
+                # Use the new specific column commands
+                wrapped_unit_code_and_name = NoEscape(r'\unitcodecolumn{' + unit_code_and_name + '}')
+                wrapped_justification = NoEscape(r'\justificationcolumn{' + justification + '}')
                 
                 criterionESubSubSection.append(NoEscape(f"{wrapped_unit_code_and_name} & {wrapped_justification} \\\\"))
                 criterionESubSubSection.append(NoEscape(r'\hline'))
