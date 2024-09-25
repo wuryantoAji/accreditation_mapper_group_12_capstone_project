@@ -3,13 +3,13 @@ from sfia import SFIA
 from knowledgebase import KnowledgeBase
 
 # Load Skills For the Information Age (SFIA) database from Excel
-sfia_data = pd.read_excel('sfiaskills.6.3.en.1.xlsx', usecols=['Skill', 'description', 'description22', 'code', 'level'])
+sfia_data = pd.read_excel('sfia_v8_custom.xlsx', usecols=['Skill', 'description', 'description22', 'code', 'level'])
 
 # Drop duplicates based on the 'code' and 'level' columns (keep the first occurrence)
 sfia_data_unique = sfia_data.drop_duplicates(subset=['code', 'level'], keep='first')
 
 # Load KnowledgeBase - this processes the input from the client
-kb = KnowledgeBase('CSSE-allprograms-outcome-mappings-20240821.xlsx', SFIA('sfiaskills.6.3.en.1.xlsx'))
+kb = KnowledgeBase('CSSE-allprograms-outcome-mappings-20240913.xlsx', SFIA('sfia_v8_custom.xlsx'))
 
 # Create a dictionary to map SFIA skills to their descriptions (Skill, Description, and Description2)
 sfia_skill_data = sfia_data_unique.set_index(['code', 'level']).to_dict(orient='index')
