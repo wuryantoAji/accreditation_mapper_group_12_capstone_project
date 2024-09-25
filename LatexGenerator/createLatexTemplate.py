@@ -326,7 +326,7 @@ def populateCriterionEDictionary(criterionEItems):
 
 # main function
 def generateLatex():
-    sfia = SFIA('sfiaskills.6.3.en.1.xlsx')
+    sfia = SFIA('sfia_v8_custom.xlsx')
     kb = KnowledgeBase('CSSE-allprograms-outcome-mappings-20240913.xlsx', sfia)
     #sort by criterion
     criterionBList = populateCriterionBDictionary(kb.criterionB.items(), sfia)
