@@ -92,6 +92,7 @@ def createCriterionATable(programName, listOfCourse):
     criterionATable.add_hline()
     criterionASubSubSection.append(criterionATable)
     criterionASubSubSection.append(NoEscape(r'\end{adjustbox}'))
+    criterionASubSubSection.append(NewLine())
     criterionASubSubSection.append(NoEscape(r'\rubric{Criterion A Rubric}'))
     criterionASubSubSection.generate_tex("criterionA")
 
@@ -140,8 +141,8 @@ def createCriterionBTable(dataDictionary):
             criterionBTable.add_hline()
         criterionBSubSubSection.append(criterionBTable)
         criterionBSubSubSection.append(NoEscape(r'\end{adjustbox}'))
-        criterionBSubSubSection.append(NoEscape(r'\rubric{Criterion B Rubric}'))
         criterionBSubSubSection.append(NewLine())
+        criterionBSubSubSection.append(NoEscape(r'\rubric{Criterion B Rubric}'))
         criterionBSubSubSection.append(NewLine())
         criterionBSubSubSection.append(NewLine())
     criterionBSubSubSection.generate_tex("criterionB")
@@ -181,6 +182,7 @@ def createCriterionCTable(programName, listOfCourse):
     criterionCTable.add_hline()
     criterionCSubSubSection.append(criterionCTable)
     criterionCSubSubSection.append(NoEscape(r'\end{adjustbox}'))
+    criterionCSubSubSection.append(NewLine())
     criterionCSubSubSection.append(NoEscape(r'\rubric{Criterion C Rubric}'))
     criterionCSubSubSection.generate_tex("criterionC")
 
@@ -287,11 +289,6 @@ def populateCriterionBDictionary(criterionBItems, sfia):
             joinedJustification = ';'.join(str(element) for element in cleanUpJustification)
             outcomeCode = tableElement[0][0]
             sfiaLevel = tableElement[0][1]
-            # TODO don't forget to delete this if
-            if(outcomeCode == 'HPCC'):
-                continue
-            if(outcomeCode == 'MLNG'):
-                continue
             sfiaSkillName = sfia[outcomeCode][sfiaLevel]['Skill']
             sfiaSkillDescription = sfia[outcomeCode][sfiaLevel]['Description']
             sfiaLevelDescription = sfia[outcomeCode][sfiaLevel]['Description22']
