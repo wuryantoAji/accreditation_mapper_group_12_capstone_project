@@ -30,65 +30,51 @@ def createCriterionATable(programName, listOfCourse):
     criterionASubSubSection = Subsubsection("Criterion A: Program Design")
     
     ### Start loop for each program
-    # criterionASubSubSection.append('Bachelor of Science (Computer Science)\\n')
-    # criterionASubSubSection.append(NoEscape(r'\\begin{adjustbox}{max width=1\\textwidth}'))
-    
-    # criterionATable = Tabular(table_spec="|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|")
-    # criterionATable.add_hline()
-    # criterionATable.add_row((MultiColumn(20, align="|l|", data=NoEscape(r'\\headerstyle \\textbf{Program Details}')),))
-    # criterionATable.add_row((MultiColumn(20, align="|l|", data=""),))
-    # criterionATable.add_hline()
-    # criterionATable.add_row((MultiColumn(9, align="|l|", data="Code"), MultiColumn(11, align="|l|", data="MJD-CMPSC")))
-    # criterionATable.add_hline()
-    # criterionATable.add_row((MultiColumn(9, align="|l|", data="Award title on Transcript/Testamur"), MultiColumn(11, align="|l|", data="Bachelor of Science (Computer Science)")))
-    # criterionATable.add_hline()
-    # criterionATable.add_row((MultiColumn(9, align="|l|", data="EFT Years of Study"), MultiColumn(11, align="|l|", data="3 Years")))
-    # criterionATable.add_hline()
-    # criterionATable.add_row((MultiColumn(9, align="|l|", data="First Year of Offer"), MultiColumn(11, align="|l|", data="2012")))
-    # criterionATable.add_hline()
-    # criterionATable.add_row((MultiColumn(20, align="|l|", data=MultiRow(2, data=NoEscape(r'\\headerstyle \\textbf{Personnel}'))),))
-    # criterionATable.add_row((MultiColumn(20, align="|l|", data=""),))
-    # criterionATable.add_hline()
-    # criterionATable.add_row((MultiColumn(9, align="|l|", data="Program Chair"), MultiColumn(11, align="|l|", data="Dr Chris McDonald")))
-    # criterionATable.add_row((MultiColumn(1, align="|l|", data=""),MultiColumn(3, align="|l|", data="Code"),MultiColumn(8, align="|l|", data="Title"),MultiColumn(6, align="|l|", data="Unit Coordinator(s)"),MultiColumn(2, align="|l|", data="File #"),))
-    # criterionATable.add_hline()
-    # criterionASubSubSection.append(criterionATable)
-    # criterionASubSubSection.append(NoEscape(r'\end{adjustbox}'))
-    # return criterionASubSubSection
-     ### Start loop for each program
     criterionASubSubSection.append('Program Name\n')
     criterionASubSubSection.append(NoEscape(r'\begin{adjustbox}{max width=\textwidth}'))
-    criterionATable = Tabular(table_spec="|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|")
+    criterionATable = Tabular(table_spec="|p{\criterionAEmptyCol}|p{\criterionACodeCol}|p{\criterionATitleCol}|p{\criterionACoordinatorCol}|p{\criterionAFileCol}|")
     criterionATable.add_hline()
-    criterionATable.add_row((MultiColumn(20, align="|l|", data=MultiRow(2, data="Program Details")),))
-    criterionATable.add_row((MultiColumn(20, align="|l|", data=""),))
+    criterionATable.add_row((MultiColumn(5, align="|l|", data=NoEscape(r'\cellcolor{colorDarkBlue}')),))
+    criterionATable.add_row((MultiColumn(5, align="|l|", data=NoEscape(r'\criterionAHeader{Program Details}')),))
     criterionATable.add_hline()
-    criterionATable.add_row((MultiColumn(9, align="|l|", data="Code"), (MultiColumn(11, align="|l|", data="code-name"))))
+    criterionATable.add_row((MultiColumn(2, align="|l|", data=NoEscape(r'\colorcelllightblueitalic Code')), (MultiColumn(3, align="|l|", data="code-name"))))
     criterionATable.add_hline()
-    criterionATable.add_row((MultiColumn(9, align="|l|", data="Award title on Transcript/Testamur"), (MultiColumn(11, align="|l|", data="award-name"))))
+    criterionATable.add_row((MultiColumn(2, align="|l|", data=NoEscape(r'\colorcelllightblueitalic Award title on Transcript/Testamur')), (MultiColumn(3, align="|l|", data="award-name"))))
     criterionATable.add_hline()
-    criterionATable.add_row((MultiColumn(9, align="|l|", data="EFT Years of Study"), (MultiColumn(11, align="|l|", data="study-duration"))))
+    criterionATable.add_row((MultiColumn(2, align="|l|", data=NoEscape(r'\colorcelllightblueitalic EFT Years of Study')), (MultiColumn(3, align="|l|", data="study-duration"))))
     criterionATable.add_hline()
-    criterionATable.add_row((MultiColumn(9, align="|l|", data="First Year of Offer"), (MultiColumn(11, align="|l|", data="year-name"))))
+    criterionATable.add_row((MultiColumn(2, align="|l|", data=NoEscape(r'\colorcelllightblueitalic First Year of Offer')), (MultiColumn(3, align="|l|", data="year-name"))))
     criterionATable.add_hline()
-    criterionATable.add_row((MultiColumn(20, align="|l|", data=MultiRow(2, data="Personnel")),))
-    criterionATable.add_row((MultiColumn(20, align="|l|", data=""),))
+    criterionATable.add_row((MultiColumn(5, align="|l|", data=NoEscape(r'\cellcolor{colorDarkBlue}')),))
+    criterionATable.add_row((MultiColumn(5, align="|l|", data=NoEscape(r'\criterionAHeader{Personnel}')),))
     criterionATable.add_hline()
-    criterionATable.add_row((MultiColumn(9, align="|l|", data="Program Chair"), (MultiColumn(11, align="|l|", data="chair-name"))))
+    criterionATable.add_row((MultiColumn(2, align="|l|", data=NoEscape(r'\colorcelllightblueitalic Program Chair')), (MultiColumn(3, align="|l|", data="chair-name"))))
     criterionATable.add_hline()
-    criterionATable.add_row((MultiColumn(9, align="|l|", data="ICT Industry Liaison"), (MultiColumn(11, align="|l|", data="liaison-name"))))
+    criterionATable.add_row((MultiColumn(2, align="|l|", data=NoEscape(r'\colorcelllightblueitalic ICT Industry Liaison')), (MultiColumn(3, align="|l|", data="liaison-name"))))
     criterionATable.add_hline()
-    criterionATable.add_row((MultiColumn(9, align="|l|", data="Key Academic Staff"), (MultiColumn(11, align="|l|", data="[list-of-staff-name]"))))
+    criterionATable.add_row((MultiColumn(2, align="|l|", data=NoEscape(r'\colorcelllightblueitalic Key Academic Staff')), (MultiColumn(3, align="|l|", data="[list-of-staff-name]"))))
     criterionATable.add_hline()
-    criterionATable.add_row((MultiColumn(20, align="|l|", data=MultiRow(2, data="Outcomes")),))
-    criterionATable.add_row((MultiColumn(20, align="|l|", data=""),))
+    criterionATable.add_row((MultiColumn(5, align="|l|", data=NoEscape(r'\cellcolor{colorDarkBlue}')),))
+    criterionATable.add_row((MultiColumn(5, align="|l|", data=NoEscape(r'\criterionAHeader{Outcomes}')),))
     criterionATable.add_hline()
-    criterionATable.add_row((MultiColumn(20, align="|l|", data="Lorem Ipsum"),))
+    criterionATable.add_row((MultiColumn(5, align="|l|", data="Lorem Ipsum"),))
     criterionATable.add_hline()
-    criterionATable.add_row((MultiColumn(8, align="|l", data=MultiRow(2, data="Unit Sequence")), MultiColumn(12, align="l|", data=MultiRow(2, data="Key: *advanced units (Criterion D) and ^integrated and applied units (Criterion E)"))))
-    criterionATable.add_row((MultiColumn(20, align="|l|", data=""),))
+    criterionATable.add_row((
+        MultiColumn(2, align="|l", data=NoEscape(r'\cellcolor{colorDarkBlue}')),
+        MultiColumn(3, align="l|", data=NoEscape(r'\cellcolor{colorDarkBlue}'))
+    ))
+    criterionATable.add_row((
+        MultiColumn(2, align="|l", data=NoEscape(r'\criterionAUnitSequence')),
+        MultiColumn(3, align="l|", data=NoEscape(r'\cellcolor{colorDarkBlue}\multirow{-2}{*}{\criterionAKey}'))
+    ))
     criterionATable.add_hline()
-    criterionATable.add_row((MultiColumn(1, align="|l|", data=""),MultiColumn(3, align="|l|", data="Code"),MultiColumn(8, align="|l|", data="Title"),MultiColumn(6, align="|l|", data="Unit Coordinator(s)"),MultiColumn(2, align="|l|", data="File #"),))
+    criterionATable.add_row((
+        NoEscape(r'\cellcolor{colorLightBlue}\textbf{}'),
+        NoEscape(r'\cellcolor{colorLightBlue}\textbf{Code}'),
+        NoEscape(r'\cellcolor{colorLightBlue}\textbf{Title}'),
+        NoEscape(r'\cellcolor{colorLightBlue}\textbf{Unit Coordinator(s)}'),
+        NoEscape(r'\cellcolor{colorLightBlue}\textbf{File \#}'),
+    ))
     criterionATable.add_hline()
     criterionASubSubSection.append(criterionATable)
     criterionASubSubSection.append(NoEscape(r'\end{adjustbox}'))
@@ -113,14 +99,14 @@ def createCriterionBTable(dataDictionary):
         criterionBTable.add_hline()
 
         # table header
-        criterionBTable.add_row("","","","","","", color=r'colorDarkBlue')
-        criterionBTable.add_row("","","","","","", color=r'colorDarkBlue')
-        criterionBTable.add_row(MultiRow(NoEscape(-3), data=NoEscape(r'\textit{SFIA Skill}')), 
-                        MultiRow(NoEscape(-3), data=NoEscape(r'\textit{Skill Description}')), 
-                        MultiRow(NoEscape(-3), data=NoEscape(r'\textit{Level Description}')), 
-                        MultiRow(NoEscape(-3), data=NoEscape(r'\textit{Code}')), 
-                        MultiRow(NoEscape(-3), data=NoEscape(r'\textit{Level}')), 
-                        MultiRow(NoEscape(-3), data=NoEscape(r'\textit{Units supporting SFIA skill}')), color=r'colorDarkBlue')
+        criterionBTable.append(NoEscape(r'\criterionBEmptyColoredRow'))
+        criterionBTable.append(NoEscape(r'\criterionBEmptyColoredRow'))
+        criterionBTable.add_row(MultiRow(NoEscape(-3), data=NoEscape(r'\criterionBHeaderCellColored{SFIA Skill}')), 
+                        MultiRow(NoEscape(-3), data=NoEscape(r'\criterionBHeaderCellColored{Skill Description}')), 
+                        MultiRow(NoEscape(-3), data=NoEscape(r'\criterionBHeaderCellColored{Level Description}')), 
+                        MultiRow(NoEscape(-3), data=NoEscape(r'\criterionBHeaderCellColored{Code}')), 
+                        MultiRow(NoEscape(-3), data=NoEscape(r'\criterionBHeaderCellColored{Level}')), 
+                        MultiRow(NoEscape(-3), data=NoEscape(r'\criterionBHeaderCellColored{Units supporting SFIA skill}')))
 
         criterionBTable.add_hline()
         # table content
@@ -186,7 +172,6 @@ def createCriterionCTable(programName, listOfCourse):
     criterionCSubSubSection.append(NoEscape(r'\rubric{Criterion C Rubric}'))
     criterionCSubSubSection.generate_tex("criterionC")
 
-
 # Table 4. Criterion D
 def createCriterionDTable(dataDictionary):
     criterionDSubSubSection = Subsubsection("Criterion D: Advanced ICT Units Addressing Complex Computing")
@@ -200,40 +185,44 @@ def createCriterionDTable(dataDictionary):
                 assessment_item = row.get('Assessment Item (for D: Advanced Algorithms and C: CBoK mapping)', '').strip()
                 justification = row.get('Justification', '').strip()
                 
-                # Skip this row if all fields are empty
                 if not (unit_code or unit_name or assessment_item or justification):
                     continue
                 
                 unit_code_and_name = f"{unit_code} {unit_name}".strip()
                 
-                # Escape special LaTeX characters
                 justification = justification.replace('&', r'\&').replace('%', r'\%').replace('#', r'\#').replace('_', r'\_')
                 assessment_item = assessment_item.replace('&', r'\&').replace('%', r'\%').replace('#', r'\#').replace('_', r'\_')
                 
                 table_content.append((unit_code_and_name, assessment_item, justification))
 
-            # Only create the table if there's content
             if table_content:
-                # Add program title
-                criterionDSubSubSection.append(NoEscape(r'\noindent\textbf{' + course + r'}'))
+                # Add program title using the new command
+                criterionDSubSubSection.append(NoEscape(r'\criterionDcoursetitle{' + course + r'}'))
                 criterionDSubSubSection.append(NewLine())
 
-                # Start longtable
-                criterionDSubSubSection.append(NoEscape(r'\begin{longtable}{|p{0.2\textwidth}|p{0.3\textwidth}|p{0.45\textwidth}|}'))
+                # Start longtable using the new command
+                criterionDSubSubSection.append(NoEscape(r'\criterionDtable'))
                 
-                # Table header1
+                # Table header
                 criterionDSubSubSection.append(NoEscape(r'\hline'))
-                criterionDSubSubSection.append(NoEscape(r'\multicolumn{3}{|l|}{\cellcolor{colorDarkBlue} \textbf{Criterion D: Advanced ICT Units Addressing Complex Computing}} \\'))
+                criterionDSubSubSection.append(NoEscape(r'\multicolumn{3}{|l|}{\colorcelldarkbluebold Criterion D: Advanced ICT Units Addressing Complex Computing} \\'))
                 criterionDSubSubSection.append(NoEscape(r'\hline'))
-                criterionDSubSubSection.append(NoEscape(r'\cellcolor{colorLightBlue} \textit{Unit Code \& Title} & \cellcolor{colorLightBlue} \textit{Assessment Item} & \cellcolor{colorLightBlue} \textit{Complex Computing Criteria met} \\'))
+                criterionDSubSubSection.append(NoEscape(r'\colorcelllightblueitalic Unit Code \& Title & \colorcelllightblueitalic Assessment Item & \colorcelllightblueitalic Complex Computing Criteria met \\'))
                 criterionDSubSubSection.append(NoEscape(r'\hline'))
                 criterionDSubSubSection.append(NoEscape(r'\endfirsthead'))
 
+                # Continuation header
+                criterionDSubSubSection.append(NoEscape(r'\hline'))
+                criterionDSubSubSection.append(NoEscape(r'\multicolumn{3}{|l|}{\colorcelldarkbluebold Criterion D: Advanced ICT Units Addressing Complex Computing (continued)} \\'))
+                criterionDSubSubSection.append(NoEscape(r'\hline'))
+                criterionDSubSubSection.append(NoEscape(r'\colorcelllightblueitalic Unit Code \& Title & \colorcelllightblueitalic Assessment Item & \colorcelllightblueitalic Complex Computing Criteria met \\'))
+                criterionDSubSubSection.append(NoEscape(r'\hline'))
+                criterionDSubSubSection.append(NoEscape(r'\endhead'))
 
-                # Add table content
+                # Add table content using the new column commands
                 for row in table_content:
                     criterionDSubSubSection.append(NoEscape(
-                        row[0] + r' & ' + row[1] + r' & ' + row[2] + r' \\'
+                        r'\unitcolumn{' + row[0] + r'} & \assessmentcolumn{' + row[1] + r'} & \complexcomputingcolumn{' + row[2] + r'} \\'
                     ))
                     criterionDSubSubSection.append(NoEscape(r'\hline'))
 
@@ -251,16 +240,16 @@ def createCriterionETable(dataDictionary):
     
     for course, courseData in dataDictionary.items():
         if courseData:  # Only process courses with data
-            # Add the course title
-            criterionESubSubSection.append(NoEscape(r'\\noindent\\textbf{' + course + r'}\\\\[0.5em]'))
+            # Add the course title using the command
+            criterionESubSubSection.append(NoEscape(r'\coursetitle{' + course + '}'))
             
-            # Start the tabular environment directly (no table float)
-            criterionESubSubSection.append(NoEscape(r'\\noindent\\begin{tabular}{|p{0.20\\textwidth}|p{0.77\\textwidth}|}'))
-            criterionESubSubSection.append(NoEscape(r'\\hline'))
-            criterionESubSubSection.append(NoEscape(r'\\multicolumn{2}{|l|}{\\headerstyle \\textbf{Criterion E: Integrated and Applied ICT Knowledge}} \\\\'))
-            criterionESubSubSection.append(NoEscape(r'\\hline'))
-            criterionESubSubSection.append(NoEscape(r'\\subheaderstyle \\textit{Unit Code \\& Title} & \\subheaderstyle \\textit{Notes in support of Claim} \\\\'))
-            criterionESubSubSection.append(NoEscape(r'\\hline'))
+            # Start the tabular environment using the command
+            criterionESubSubSection.append(NoEscape(r'\criterionTable'))
+            criterionESubSubSection.append(NoEscape(r'\hline'))
+            criterionESubSubSection.append(NoEscape(r'\multicolumn{2}{|l|}{\colorcelldarkbluebold Criterion E: Integrated and Applied ICT Knowledge} \\'))
+            criterionESubSubSection.append(NoEscape(r'\hline'))
+            criterionESubSubSection.append(NoEscape(r'\colorcelllightblueitalic Unit Code \& Title & \colorcelllightblueitalic Notes in support of Claim \\'))
+            criterionESubSubSection.append(NoEscape(r'\hline'))
             
             for row in courseData:
                 unit_code = row.get('Unit Code', '')
@@ -270,15 +259,22 @@ def createCriterionETable(dataDictionary):
                 # Combine Unit Code and Unit Name
                 unit_code_and_name = f"{unit_code} {unit_name}"
                 
-                # Ensure proper text wrapping for all columns
-                wrapped_unit_code_and_name = NoEscape(r'\\parbox[t]{0.20\\textwidth}{' + unit_code_and_name + '}')
-                wrapped_justification = NoEscape(r'\\parbox[t]{0.77\\textwidth}{' + justification + '}')
+                # Use the new specific column commands
+                wrapped_unit_code_and_name = NoEscape(r'\unitcodecolumn{' + unit_code_and_name + '}')
+                wrapped_justification = NoEscape(r'\justificationcolumn{' + justification + '}')
                 
-                criterionESubSubSection.append(NoEscape(f"{wrapped_unit_code_and_name} & {wrapped_justification} \\\\\\\\"))
-                criterionESubSubSection.append(NoEscape(r'\\hline'))
+                criterionESubSubSection.append(NoEscape(f"{wrapped_unit_code_and_name} & {wrapped_justification} \\\\"))
+                criterionESubSubSection.append(NoEscape(r'\hline'))
+            
+            criterionESubSubSection.append(NoEscape(r'\end{tabular}'))
+            criterionESubSubSection.append(NoEscape(r'\\[1em]'))  # Add some space after each table
+    
+    criterionESubSubSection.generate_tex("criterionE")
 
+# main function
 def populateCriterionBDictionary(criterionBItems, sfia):
     criterionBList = {}
+    
     #Criterion B
     for course, criterionB in criterionBItems:
         courseName = course
@@ -296,9 +292,9 @@ def populateCriterionBDictionary(criterionBItems, sfia):
         criterionBList[f"{courseName}"] = value
     return criterionBList
 
+    #Criterion D 
 def populateCriterionDDictionary(criterionDItems):
     criterionDList = {}
-    #Criterion D 
     for course, criterionD in criterionDItems:
         if hasattr(criterionD, 'criterion_df'):
             # Ensure all necessary columns are present
@@ -308,10 +304,10 @@ def populateCriterionDDictionary(criterionDItems):
                     criterionD.criterion_df[col] = ''
             criterionDList[course] = criterionD
     return criterionDList
-
+    
+    #Criterion E
 def populateCriterionEDictionary(criterionEItems):
     criterionEList = {}
-    #Criterion E
     for course, criterionE in criterionEItems:
         if criterionE.criterion_df is not None and not criterionE.criterion_df.empty:
             # Ensure 'Justification' column exists, if not, add an empty one
@@ -322,7 +318,6 @@ def populateCriterionEDictionary(criterionEItems):
             criterionEList[course] = []
     return criterionEList
 
-# main function
 def generateLatex():
     sfia = SFIA('sfia_v8_custom.xlsx')
     kb = KnowledgeBase('CSSE-allprograms-outcome-mappings-20240913.xlsx', sfia)
@@ -330,9 +325,6 @@ def generateLatex():
     criterionBList = populateCriterionBDictionary(kb.criterionB.items(), sfia)
     criterionDList = populateCriterionDDictionary(kb.criterionD.items())
     criterionEList = populateCriterionEDictionary(kb.criterionE.items())
-    
-    #sort by course
-
     geometry_options = {"tmargin": "0.5in", "lmargin": "0.5in", "bmargin": "0.5in", "rmargin": "0.5in"}
     doc = Document(documentclass="report",geometry_options=geometry_options)
     doc.packages.append(Package('multirow'))
@@ -357,10 +349,12 @@ def generateLatex():
     createCriterionCTable("MIT",["CITS4401"])
     programSpecificationAndImplementationICTSection.append(NoEscape(r'\include{criterionC}'))
     createCriterionDTable(criterionDList)
-    programSpecificationAndImplementationICTSection.append(NoEscape(r'\include{criterionD}'))
-    programSpecificationAndImplementationICTSection.append(createCriterionETable(criterionEList))
-    # createCriterionETable(criterionEList)
-    # programSpecICTSubsection.append(NoEscape(r'\include{criterionE}'))
+    programSpecICTSubsection.append(NoEscape(r'\include{criterionD}'))
+    createCriterionETable(criterionEList)
+    programSpecICTSubsection.append(NoEscape(r'\include{criterionE}'))
+
+    # Add sub section part to section
+    programSpecificationAndImplementationICTSection.append(programSpecICTSubsection)
 
     # Add section to the document
     doc.append(programSpecificationAndImplementationICTSection)
