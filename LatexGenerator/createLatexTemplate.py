@@ -92,6 +92,7 @@ def createCriterionATable(programName, listOfCourse):
     criterionATable.add_hline()
     criterionASubSubSection.append(criterionATable)
     criterionASubSubSection.append(NoEscape(r'\end{adjustbox}'))
+    criterionASubSubSection.append(NoEscape(r'\rubric{Criterion A Rubric}'))
     criterionASubSubSection.generate_tex("criterionA")
 
 # Table 2. Criterion B
@@ -129,7 +130,7 @@ def createCriterionBTable(dataDictionary):
             unitsSupportingSFIASkill = dataDictionary[key][sfiaComponent][1]
             sfiaSkill = dataDictionary[key][sfiaComponent][2]
             skillDescription = dataDictionary[key][sfiaComponent][3]
-            levelDescription = dataDictionary[key][sfiaComponent][4]
+            levelDescription = dataDictionary[key][sfiaComponent][4].replace('_x000D_', '\n')
             criterionBTable.add_row(NoEscape(r'{%s}' % sfiaSkill),
                         NoEscape(r'{%s}' %skillDescription), 
                         NoEscape(r'{%s}' %levelDescription), 
@@ -139,6 +140,7 @@ def createCriterionBTable(dataDictionary):
             criterionBTable.add_hline()
         criterionBSubSubSection.append(criterionBTable)
         criterionBSubSubSection.append(NoEscape(r'\end{adjustbox}'))
+        criterionBSubSubSection.append(NoEscape(r'\rubric{Criterion B Rubric}'))
         criterionBSubSubSection.append(NewLine())
         criterionBSubSubSection.append(NewLine())
         criterionBSubSubSection.append(NewLine())
@@ -179,6 +181,7 @@ def createCriterionCTable(programName, listOfCourse):
     criterionCTable.add_hline()
     criterionCSubSubSection.append(criterionCTable)
     criterionCSubSubSection.append(NoEscape(r'\end{adjustbox}'))
+    criterionCSubSubSection.append(NoEscape(r'\rubric{Criterion C Rubric}'))
     criterionCSubSubSection.generate_tex("criterionC")
 
 
@@ -192,7 +195,7 @@ def createCriterionDTable(dataDictionary):
             for _, row in criterionD.criterion_df.iterrows():
                 unit_code = row.get('Unit Code', '').strip()
                 unit_name = row.get('Unit Name', '').strip()
-                assessment_item = row.get('Assessment Item', '').strip()
+                assessment_item = row.get('Assessment Item (for D: Advanced Algorithms and C: CBoK mapping)', '').strip()
                 justification = row.get('Justification', '').strip()
                 
                 # Skip this row if all fields are empty
@@ -233,12 +236,10 @@ def createCriterionDTable(dataDictionary):
                     criterionDSubSubSection.append(NoEscape(r'\hline'))
 
                 criterionDSubSubSection.append(NoEscape(r'\end{longtable}'))
-                criterionDSubSubSection.append(NewLine())
-
+                criterionDSubSubSection.append(NoEscape(r'\rubric{Criterion D Rubric}'))
+                
                 # Add some vertical space between tables
                 criterionDSubSubSection.append(NoEscape(r'\vspace{1em}'))
-                
-                criterionDSubSubSection.append(NewLine())
 
     criterionDSubSubSection.generate_tex("criterionD")
 
@@ -298,13 +299,13 @@ def populateCriterionBDictionary(criterionBItems, sfia):
         criterionBList[f"{courseName}"] = value
     return criterionBList
 
-def populateCriterionCDictionary(criterionDItems):
+def populateCriterionDDictionary(criterionDItems):
     criterionDList = {}
     #Criterion D 
     for course, criterionD in criterionDItems:
         if hasattr(criterionD, 'criterion_df'):
             # Ensure all necessary columns are present
-            required_columns = ['Unit Code', 'Unit Title', 'Assessment Item', 'Complex Computing Criteria met']
+            required_columns = ['Unit Code', 'Unit Title', 'Assessment Item (for D: Advanced Algorithms and C: CBoK mapping)', 'Complex Computing Criteria met']
             for col in required_columns:
                 if col not in criterionD.criterion_df.columns:
                     criterionD.criterion_df[col] = ''
@@ -330,7 +331,7 @@ def generateLatex():
     kb = KnowledgeBase('CSSE-allprograms-outcome-mappings-20240913.xlsx', sfia)
     #sort by criterion
     criterionBList = populateCriterionBDictionary(kb.criterionB.items(), sfia)
-    criterionDList = populateCriterionCDictionary(kb.criterionD.items())
+    criterionDList = populateCriterionDDictionary(kb.criterionD.items())
     criterionEList = populateCriterionEDictionary(kb.criterionE.items())
     
     #sort by course
@@ -345,28 +346,24 @@ def generateLatex():
     doc.packages.append(Package('longtable'))
     doc.preamble.append(NoEscape(r'\newcommand{\myrotcell}[1]{\rotcell{\makebox[0pt][l]{#1}}}'))
     doc.preamble.append(NoEscape(r'\usepackage[table]{xcolor}'))
-    doc.preamble.append(NoEscape(r'\definecolor{header3}{RGB}{211,211,211}'))
+    doc.preamble.append(NoEscape(r'\newcommand{\rubric}[1]{{\color{red}#1}}'))
+    doc.preamble.append(NoEscape(r'%\newcommand{\rubric}[1]{}'))
 
     # Add Section for ICT Program Specification and Implementation
     programSpecificationAndImplementationICTSection = Section("ICT Program Specification and Implementation")
-    ## Add subsection for ICT Program Specification
-    programSpecICTSubsection = Subsection("ICT Program Specification")
-    programSpecICTSubsection.append("Lorem Ipsum")
+    
     # Add all subsub section part to sub section
     createCriterionATable("MIT",["CITS4401"])
-    programSpecICTSubsection.append(NoEscape(r'\include{criterionA}'))
+    programSpecificationAndImplementationICTSection.append(NoEscape(r'\include{criterionA}'))
     createCriterionBTable(criterionBList)
-    programSpecICTSubsection.append(NoEscape(r'\include{criterionB}'))
+    programSpecificationAndImplementationICTSection.append(NoEscape(r'\include{criterionB}'))
     createCriterionCTable("MIT",["CITS4401"])
-    programSpecICTSubsection.append(NoEscape(r'\include{criterionC}'))
+    programSpecificationAndImplementationICTSection.append(NoEscape(r'\include{criterionC}'))
     createCriterionDTable(criterionDList)
-    programSpecICTSubsection.append(NoEscape(r'\include{criterionD}'))
-    programSpecICTSubsection.append(createCriterionETable(criterionEList))
+    programSpecificationAndImplementationICTSection.append(NoEscape(r'\include{criterionD}'))
+    programSpecificationAndImplementationICTSection.append(createCriterionETable(criterionEList))
     # createCriterionETable(criterionEList)
     # programSpecICTSubsection.append(NoEscape(r'\include{criterionE}'))
-
-    # Add sub section part to section
-    programSpecificationAndImplementationICTSection.append(programSpecICTSubsection)
 
     # Add section to the document
     doc.append(programSpecificationAndImplementationICTSection)
