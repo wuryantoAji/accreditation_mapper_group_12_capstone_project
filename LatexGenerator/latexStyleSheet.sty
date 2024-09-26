@@ -3,33 +3,53 @@
 \definecolor{colorLightBlue}{RGB}{219,229,241}
 \definecolor{header3}{RGB}{211,211,211}
 
+% Cell colors
 \newcommand{\colorcelldarkblue}{\cellcolor{colorDarkBlue}\color{black}}
 \newcommand{\colorcelllightblue}{\cellcolor{colorLightBlue}\color{black}}
 
+% Header colors
 % Light blue cells with italics and bold fonts
 \newcommand{\colorcelllightblueitalic}{\cellcolor{colorLightBlue}\color{black}\itshape}
 \newcommand{\colorcelllightbluebold}{\cellcolor{colorLightBlue}\color{black}\bfseries}
+\newcommand{\fullcolorcelllightbluebold}[1]{\cellcolor{colorLightBlue}\color{black}\textbf{#1}}
 
 % Dark blue cells with italics and bold fonts
 \newcommand{\colorcelldarkbluebold}{\cellcolor{colorDarkBlue}\color{black}\bfseries}
+
 
 % New generic commands for consistent formatting
 \newcommand{\coursetitle}[1]{\noindent\textbf{#1}\\[0.5em]}
 \newcommand{\criterionTable}{\noindent\begin{tabular}{|p{0.20\textwidth}|p{0.77\textwidth}|}}
 \newcommand{\wrappedcell}[2]{\parbox[t]{#1\textwidth}{#2}}
 
-% Specific commands for Criterion D
+% Criterion A
+\newcommand{\criterionAEmptyCol}{0.05\textwidth}
+\newcommand{\criterionACodeCol}{0.22\textwidth}
+\newcommand{\criterionATitleCol}{0.40\textwidth}
+\newcommand{\criterionACoordinatorCol}{0.20\textwidth}
+\newcommand{\criterionAFileCol}{0.10\textwidth}
+
+\newcommand{\criterionATable}{%
+  \begin{tabular}{|p{\criterionAEmptyCol}|p{\criterionACodeCol}|p{\criterionATitleCol}|p{\criterionACoordinatorCol}|p{\criterionAFileCol}|}%
+}
+
+% Criterion B
+
+
+% Criterion C
+
+
+% Criterion D
 \newcommand{\criterionDcoursetitle}[1]{\noindent\textbf{#1}}
 \newcommand{\criterionDtable}{%
   \begin{longtable}{|p{0.2\textwidth}|p{0.3\textwidth}|p{0.45\textwidth}|}%
 }
 
-% Column commands for Criterion D table
+% Column commands
 \newcommand{\unitcolumn}[1]{\parbox[t]{0.2\textwidth}{#1}}
 \newcommand{\assessmentcolumn}[1]{\parbox[t]{0.3\textwidth}{#1}}
 \newcommand{\complexcomputingcolumn}[1]{\parbox[t]{0.45\textwidth}{#1}}
 
-% Specific column commands for Criterion E table
+% Criterion E 
 \newcommand{\unitcodecolumn}[1]{\wrappedcell{0.20}{#1}}
 \newcommand{\justificationcolumn}[1]{\wrappedcell{0.77}{#1}}
-

@@ -1,5 +1,3 @@
-## start
-
 from pylatex import Package, NoEscape, Section, Subsection, Subsubsection, Tabular, MultiColumn, MultiRow, Document, NewLine
 from sfia import SFIA
 from knowledgebase import KnowledgeBase
@@ -34,37 +32,49 @@ def createCriterionATable(programName, listOfCourse):
     ### Start loop for each program
     criterionASubSubSection.append('Program Name\n')
     criterionASubSubSection.append(NoEscape(r'\begin{adjustbox}{max width=\textwidth}'))
-    criterionATable = Tabular(table_spec="|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|")
+    criterionATable = Tabular(table_spec="|p{\criterionAEmptyCol}|p{\criterionACodeCol}|p{\criterionATitleCol}|p{\criterionACoordinatorCol}|p{\criterionAFileCol}|")
     criterionATable.add_hline()
-    criterionATable.add_row((MultiColumn(20, align="|l|", data=MultiRow(2, data="Program Details")),))
-    criterionATable.add_row((MultiColumn(20, align="|l|", data=""),))
+    criterionATable.add_row((MultiColumn(5, align="|l|", data=NoEscape(r'\cellcolor{colorDarkBlue}')),))
+    criterionATable.add_row((MultiColumn(5, align="|l|", data=NoEscape(r'\cellcolor{colorDarkBlue}\multirow{-2}{*}{\textbf{Program Details}}')),))
     criterionATable.add_hline()
-    criterionATable.add_row((MultiColumn(9, align="|l|", data=NoEscape(r'\colorcelllightblueitalic Code')), (MultiColumn(11, align="|l|", data="code-name"))))
+    criterionATable.add_row((MultiColumn(2, align="|l|", data=NoEscape(r'\colorcelllightblueitalic Code')), (MultiColumn(3, align="|l|", data="code-name"))))
     criterionATable.add_hline()
-    criterionATable.add_row((MultiColumn(9, align="|l|", data=NoEscape(r'\colorcelllightblueitalic Award title on Transcript/Testamur')), (MultiColumn(11, align="|l|", data="award-name"))))
+    criterionATable.add_row((MultiColumn(2, align="|l|", data=NoEscape(r'\colorcelllightblueitalic Award title on Transcript/Testamur')), (MultiColumn(3, align="|l|", data="award-name"))))
     criterionATable.add_hline()
-    criterionATable.add_row((MultiColumn(9, align="|l|", data=NoEscape(r'\colorcelllightblueitalic EFT Years of Study')), (MultiColumn(11, align="|l|", data="study-duration"))))
+    criterionATable.add_row((MultiColumn(2, align="|l|", data=NoEscape(r'\colorcelllightblueitalic EFT Years of Study')), (MultiColumn(3, align="|l|", data="study-duration"))))
     criterionATable.add_hline()
-    criterionATable.add_row((MultiColumn(9, align="|l|", data=NoEscape(r'\colorcelllightblueitalic First Year of Offer')), (MultiColumn(11, align="|l|", data="year-name"))))
+    criterionATable.add_row((MultiColumn(2, align="|l|", data=NoEscape(r'\colorcelllightblueitalic First Year of Offer')), (MultiColumn(3, align="|l|", data="year-name"))))
     criterionATable.add_hline()
-    criterionATable.add_row((MultiColumn(20, align="|l|", data=MultiRow(2, data="Personnel")),))
-    criterionATable.add_row((MultiColumn(20, align="|l|", data=""),))
+    criterionATable.add_row((MultiColumn(5, align="|l|", data=NoEscape(r'\cellcolor{colorDarkBlue}')),))
+    criterionATable.add_row((MultiColumn(5, align="|l|", data=NoEscape(r'\cellcolor{colorDarkBlue}\multirow{-2}{*}{\textbf{Personnel}}')),))
     criterionATable.add_hline()
-    criterionATable.add_row((MultiColumn(9, align="|l|", data=NoEscape(r'\colorcelllightblueitalic Program Chair')), (MultiColumn(11, align="|l|", data="chair-name"))))
+    criterionATable.add_row((MultiColumn(2, align="|l|", data=NoEscape(r'\colorcelllightblueitalic Program Chair')), (MultiColumn(3, align="|l|", data="chair-name"))))
     criterionATable.add_hline()
-    criterionATable.add_row((MultiColumn(9, align="|l|", data=NoEscape(r'\colorcelllightblueitalic ICT Industry Liaison')), (MultiColumn(11, align="|l|", data="liaison-name"))))
+    criterionATable.add_row((MultiColumn(2, align="|l|", data=NoEscape(r'\colorcelllightblueitalic ICT Industry Liaison')), (MultiColumn(3, align="|l|", data="liaison-name"))))
     criterionATable.add_hline()
-    criterionATable.add_row((MultiColumn(9, align="|l|", data=NoEscape(r'\colorcelllightblueitalic Key Academic Staff')), (MultiColumn(11, align="|l|", data="[list-of-staff-name]"))))
+    criterionATable.add_row((MultiColumn(2, align="|l|", data=NoEscape(r'\colorcelllightblueitalic Key Academic Staff')), (MultiColumn(3, align="|l|", data="[list-of-staff-name]"))))
     criterionATable.add_hline()
-    criterionATable.add_row((MultiColumn(20, align="|l|", data=MultiRow(2, data="Outcomes")),))
-    criterionATable.add_row((MultiColumn(20, align="|l|", data=""),))
+    criterionATable.add_row((MultiColumn(5, align="|l|", data=NoEscape(r'\cellcolor{colorDarkBlue}')),))
+    criterionATable.add_row((MultiColumn(5, align="|l|", data=NoEscape(r'\cellcolor{colorDarkBlue}\multirow{-2}{*}{\textbf{Outcomes}}')),))
     criterionATable.add_hline()
-    criterionATable.add_row((MultiColumn(20, align="|l|", data="Lorem Ipsum"),))
+    criterionATable.add_row((MultiColumn(5, align="|l|", data="Lorem Ipsum"),))
     criterionATable.add_hline()
-    criterionATable.add_row((MultiColumn(8, align="|l", data=MultiRow(2, data="Unit Sequence")), MultiColumn(12, align="l|", data=MultiRow(2, data="Key: *advanced units (Criterion D) and ^integrated and applied units (Criterion E)"))))
-    criterionATable.add_row((MultiColumn(20, align="|l|", data=""),))
+    criterionATable.add_row((
+        MultiColumn(2, align="|l", data=NoEscape(r'\cellcolor{colorDarkBlue}')),
+        MultiColumn(3, align="l|", data=NoEscape(r'\cellcolor{colorDarkBlue}'))
+    ))
+    criterionATable.add_row((
+        MultiColumn(2, align="|l", data=NoEscape(r'\cellcolor{colorDarkBlue}\multirow{-2}{*}{\textbf{Unit Sequence}}')),
+        MultiColumn(3, align="l|", data=NoEscape(r'\cellcolor{colorDarkBlue}\multirow{-2}{*}{Key: *advanced units (Criterion D) and \textasciicircum integrated and applied units (Criterion E)}'))
+    ))
     criterionATable.add_hline()
-    criterionATable.add_row((MultiColumn(1, align="|l|", data=""),MultiColumn(3, align="|l|", data="Code"),MultiColumn(8, align="|l|", data="Title"),MultiColumn(6, align="|l|", data="Unit Coordinator(s)"),MultiColumn(2, align="|l|", data="File #"),))
+    criterionATable.add_row((
+        NoEscape(r'\cellcolor{colorLightBlue}\textbf{}'),
+        NoEscape(r'\cellcolor{colorLightBlue}\textbf{Code}'),
+        NoEscape(r'\cellcolor{colorLightBlue}\textbf{Title}'),
+        NoEscape(r'\cellcolor{colorLightBlue}\textbf{Unit Coordinator(s)}'),
+        NoEscape(r'\cellcolor{colorLightBlue}\textbf{File \#}'),
+    ))
     criterionATable.add_hline()
     criterionASubSubSection.append(criterionATable)
     criterionASubSubSection.append(NoEscape(r'\end{adjustbox}'))
