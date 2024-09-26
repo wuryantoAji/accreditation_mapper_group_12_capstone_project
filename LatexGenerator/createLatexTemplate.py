@@ -35,7 +35,7 @@ def createCriterionATable(programName, listOfCourse):
     criterionATable = Tabular(table_spec="|p{\criterionAEmptyCol}|p{\criterionACodeCol}|p{\criterionATitleCol}|p{\criterionACoordinatorCol}|p{\criterionAFileCol}|")
     criterionATable.add_hline()
     criterionATable.add_row((MultiColumn(5, align="|l|", data=NoEscape(r'\cellcolor{colorDarkBlue}')),))
-    criterionATable.add_row((MultiColumn(5, align="|l|", data=NoEscape(r'\cellcolor{colorDarkBlue}\multirow{-2}{*}{\textbf{Program Details}}')),))
+    criterionATable.add_row((MultiColumn(5, align="|l|", data=NoEscape(r'\criterionAHeader{Program Details}')),))
     criterionATable.add_hline()
     criterionATable.add_row((MultiColumn(2, align="|l|", data=NoEscape(r'\colorcelllightblueitalic Code')), (MultiColumn(3, align="|l|", data="code-name"))))
     criterionATable.add_hline()
@@ -46,7 +46,7 @@ def createCriterionATable(programName, listOfCourse):
     criterionATable.add_row((MultiColumn(2, align="|l|", data=NoEscape(r'\colorcelllightblueitalic First Year of Offer')), (MultiColumn(3, align="|l|", data="year-name"))))
     criterionATable.add_hline()
     criterionATable.add_row((MultiColumn(5, align="|l|", data=NoEscape(r'\cellcolor{colorDarkBlue}')),))
-    criterionATable.add_row((MultiColumn(5, align="|l|", data=NoEscape(r'\cellcolor{colorDarkBlue}\multirow{-2}{*}{\textbf{Personnel}}')),))
+    criterionATable.add_row((MultiColumn(5, align="|l|", data=NoEscape(r'\criterionAHeader{Personnel}')),))
     criterionATable.add_hline()
     criterionATable.add_row((MultiColumn(2, align="|l|", data=NoEscape(r'\colorcelllightblueitalic Program Chair')), (MultiColumn(3, align="|l|", data="chair-name"))))
     criterionATable.add_hline()
@@ -55,7 +55,7 @@ def createCriterionATable(programName, listOfCourse):
     criterionATable.add_row((MultiColumn(2, align="|l|", data=NoEscape(r'\colorcelllightblueitalic Key Academic Staff')), (MultiColumn(3, align="|l|", data="[list-of-staff-name]"))))
     criterionATable.add_hline()
     criterionATable.add_row((MultiColumn(5, align="|l|", data=NoEscape(r'\cellcolor{colorDarkBlue}')),))
-    criterionATable.add_row((MultiColumn(5, align="|l|", data=NoEscape(r'\cellcolor{colorDarkBlue}\multirow{-2}{*}{\textbf{Outcomes}}')),))
+    criterionATable.add_row((MultiColumn(5, align="|l|", data=NoEscape(r'\criterionAHeader{Outcomes}')),))
     criterionATable.add_hline()
     criterionATable.add_row((MultiColumn(5, align="|l|", data="Lorem Ipsum"),))
     criterionATable.add_hline()
@@ -64,8 +64,8 @@ def createCriterionATable(programName, listOfCourse):
         MultiColumn(3, align="l|", data=NoEscape(r'\cellcolor{colorDarkBlue}'))
     ))
     criterionATable.add_row((
-        MultiColumn(2, align="|l", data=NoEscape(r'\cellcolor{colorDarkBlue}\multirow{-2}{*}{\textbf{Unit Sequence}}')),
-        MultiColumn(3, align="l|", data=NoEscape(r'\cellcolor{colorDarkBlue}\multirow{-2}{*}{Key: *advanced units (Criterion D) and \textasciicircum integrated and applied units (Criterion E)}'))
+        MultiColumn(2, align="|l", data=NoEscape(r'\criterionAUnitSequence')),
+        MultiColumn(3, align="l|", data=NoEscape(r'\cellcolor{colorDarkBlue}\multirow{-2}{*}{\criterionAKey}'))
     ))
     criterionATable.add_hline()
     criterionATable.add_row((

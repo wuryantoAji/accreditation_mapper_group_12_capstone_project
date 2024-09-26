@@ -3,6 +3,9 @@
 \definecolor{colorLightBlue}{RGB}{219,229,241}
 \definecolor{header3}{RGB}{211,211,211}
 
+% Font color
+\newcommand{\redtext}[1]{\textcolor{red}{#1}}
+
 % Cell colors
 \newcommand{\colorcelldarkblue}{\cellcolor{colorDarkBlue}\color{black}}
 \newcommand{\colorcelllightblue}{\cellcolor{colorLightBlue}\color{black}}
@@ -16,6 +19,10 @@
 % Dark blue cells with italics and bold fonts
 \newcommand{\colorcelldarkbluebold}{\cellcolor{colorDarkBlue}\color{black}\bfseries}
 
+% New commands for Criterion A table headers
+\newcommand{\criterionAHeader}[1]{\cellcolor{colorDarkBlue}\multirow{-2}{*}{\textbf{#1}}}
+\newcommand{\criterionAKey}{\textit{Key: \redtext{*}advanced units (Criterion D) and \redtext{\^{}}integrated and applied units (Criterion E)}}
+\newcommand{\criterionAUnitSequence}{\cellcolor{colorDarkBlue}\multirow{-2}{*}{\textbf{Unit Sequence}}}
 
 % New generic commands for consistent formatting
 \newcommand{\coursetitle}[1]{\noindent\textbf{#1}\\[0.5em]}
