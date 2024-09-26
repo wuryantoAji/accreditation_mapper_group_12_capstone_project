@@ -78,7 +78,7 @@ def createCriterionATable(programName, listOfCourse):
     criterionATable.add_hline()
     criterionASubSubSection.append(criterionATable)
     criterionASubSubSection.append(NoEscape(r'\end{adjustbox}'))
-    return criterionASubSubSection
+    criterionASubSubSection.generate_tex("criterionA")
 
 # Table 2. Criterion B
 def createCriterionBTable(dataDictionary):
@@ -128,7 +128,7 @@ def createCriterionBTable(dataDictionary):
         criterionBSubSubSection.append(NewLine())
         criterionBSubSubSection.append(NewLine())
         criterionBSubSubSection.append(NewLine())
-    return criterionBSubSubSection
+    criterionBSubSubSection.generate_tex("criterionB")
 
 # Table 3. Criterion C
 def createCriterionCTable(programName, listOfCourse):
@@ -165,8 +165,7 @@ def createCriterionCTable(programName, listOfCourse):
     criterionCTable.add_hline()
     criterionCSubSubSection.append(criterionCTable)
     criterionCSubSubSection.append(NoEscape(r'\end{adjustbox}'))
-    return criterionCSubSubSection
-
+    criterionCSubSubSection.generate_tex("criterionC")
 
 # Table 4. Criterion D
 def createCriterionDTable(dataDictionary):
@@ -229,7 +228,7 @@ def createCriterionDTable(dataDictionary):
                 
                 criterionDSubSubSection.append(NewLine())
 
-    return criterionDSubSubSection
+    criterionDSubSubSection.generate_tex("criterionD")
 
 # Table 5. Criterion E
 def createCriterionETable(dataDictionary):
@@ -266,42 +265,38 @@ def createCriterionETable(dataDictionary):
             criterionESubSubSection.append(NoEscape(r'\end{tabular}'))
             criterionESubSubSection.append(NoEscape(r'\\[1em]'))  # Add some space after each table
     
-    return criterionESubSubSection
-
-def createCriterionFTable(programName, listOfCourse):
-    ## Add subsub section for criterion F
-    criterionFSubSubSection = Subsubsection("Criterion F: Program Design")
-    criterionFSubSubSection.append("Lorem Ipsum 3")    
-    return criterionFSubSubSection
+    criterionESubSubSection.generate_tex("criterionE")
 
 # main function
-def generateLatex():
-    sfia = SFIA('sfiaskills.6.3.en.1.xlsx')
-    kb = KnowledgeBase('CSSE-allprograms-outcome-mappings-20240821.xlsx', sfia)
+def populateCriterionBDictionary(criterionBItems, sfia):
     criterionBList = {}
-    criterionDList = {}
-    criterionEList = {}
     
     #Criterion B
-    for course, criterionB in kb.criterionB.items():
+    for course, criterionB in criterionBItems:
         courseName = course
         value = {}
-        for x in criterionB.criterion_df.groupby(['Outcome','Level (SFIA/Bloom)']).agg(lambda x: ';'.join(x.astype(str)) if not x.empty else '').iterrows():
-            cleanUpJustification = set(x[1]['Justification'].split(";"))
+        for tableElement in criterionB.criterion_df.groupby(['Outcome','Level (SFIA/Bloom)']).agg(lambda x: ';'.join(x.astype(str)) if not x.empty else '').iterrows():
+            cleanUpJustification = set(tableElement[1]['Justification'].split(";"))
             cleanUpJustification.discard('nan')
             joinedJustification = ';'.join(str(element) for element in cleanUpJustification)
-            outcomeCode = x[0][0]
-            sfiaLevel = x[0][1]
+            outcomeCode = tableElement[0][0]
+            sfiaLevel = tableElement[0][1]
             # TODO don't forget to delete this if
-            if(outcomeCode != 'HPCC'):
-                sfiaSkillName = sfia[outcomeCode][sfiaLevel]['Skill']
-                sfiaSkillDescription = sfia[outcomeCode][sfiaLevel]['Description']
-                sfiaLevelDescription = sfia[outcomeCode][sfiaLevel]['Description22']
-                value[(outcomeCode, sfiaLevel)] = [x[1]['Unit Code'], joinedJustification, sfiaSkillName, sfiaSkillDescription, sfiaLevelDescription]
+            if(outcomeCode == 'HPCC'):
+                continue
+            if(outcomeCode == 'MLNG'):
+                continue
+            sfiaSkillName = sfia[outcomeCode][sfiaLevel]['Skill']
+            sfiaSkillDescription = sfia[outcomeCode][sfiaLevel]['Description']
+            sfiaLevelDescription = sfia[outcomeCode][sfiaLevel]['Description22']
+            value[(outcomeCode, sfiaLevel)] = [tableElement[1]['Unit Code'], joinedJustification, sfiaSkillName, sfiaSkillDescription, sfiaLevelDescription]
         criterionBList[f"{courseName}"] = value
+    return criterionBList
 
     #Criterion D 
-    for course, criterionD in kb.criterionD.items():
+def populateCriterionCDictionary(criterionDItems):
+    criterionDList = {}
+    for course, criterionD in criterionDItems:
         if hasattr(criterionD, 'criterion_df'):
             # Ensure all necessary columns are present
             required_columns = ['Unit Code', 'Unit Title', 'Assessment Item', 'Complex Computing Criteria met']
@@ -309,9 +304,12 @@ def generateLatex():
                 if col not in criterionD.criterion_df.columns:
                     criterionD.criterion_df[col] = ''
             criterionDList[course] = criterionD
+    return criterionDList
     
     #Criterion E
-    for course, criterionE in kb.criterionE.items():
+def populateCriterionEDictionary(criterionEItems):
+    criterionEList = {}
+    for course, criterionE in criterionEItems:
         if criterionE.criterion_df is not None and not criterionE.criterion_df.empty:
             # Ensure 'Justification' column exists, if not, add an empty one
             if 'Justification' not in criterionE.criterion_df.columns:
@@ -319,7 +317,15 @@ def generateLatex():
             criterionEList[course] = criterionE.criterion_df.to_dict('records')
         else:
             criterionEList[course] = []
+    return criterionEList
 
+def generateLatex():
+    sfia = SFIA('sfia_v8_custom.xlsx')
+    kb = KnowledgeBase('CSSE-allprograms-outcome-mappings-20240913.xlsx', sfia)
+    #sort by criterion
+    criterionBList = populateCriterionBDictionary(kb.criterionB.items(), sfia)
+    criterionDList = populateCriterionCDictionary(kb.criterionD.items())
+    criterionEList = populateCriterionEDictionary(kb.criterionE.items())
     geometry_options = {"tmargin": "0.5in", "lmargin": "0.5in", "bmargin": "0.5in", "rmargin": "0.5in"}
     doc = Document(documentclass="report",geometry_options=geometry_options)
     doc.packages.append(Package('multirow'))
@@ -338,19 +344,23 @@ def generateLatex():
     programSpecICTSubsection = Subsection("ICT Program Specification")
     programSpecICTSubsection.append("Lorem Ipsum")
     # Add all subsub section part to sub section
-    programSpecICTSubsection.append(createCriterionATable("MIT",["CITS4401"]))
-    programSpecICTSubsection.append(createCriterionBTable(criterionBList))
-    programSpecICTSubsection.append(createCriterionCTable("MIT",["CITS4401"]))
-    programSpecICTSubsection.append(createCriterionDTable(criterionDList))
-    programSpecICTSubsection.append(createCriterionETable(criterionEList))
-    programSpecICTSubsection.append(createCriterionFTable("MIT",["CITS4401"]))
+    createCriterionATable("MIT",["CITS4401"])
+    programSpecICTSubsection.append(NoEscape(r'\include{criterionA}'))
+    createCriterionBTable(criterionBList)
+    programSpecICTSubsection.append(NoEscape(r'\include{criterionB}'))
+    createCriterionCTable("MIT",["CITS4401"])
+    programSpecICTSubsection.append(NoEscape(r'\include{criterionC}'))
+    createCriterionDTable(criterionDList)
+    programSpecICTSubsection.append(NoEscape(r'\include{criterionD}'))
+    createCriterionETable(criterionEList)
+    programSpecICTSubsection.append(NoEscape(r'\include{criterionE}'))
 
     # Add sub section part to section
     programSpecificationAndImplementationICTSection.append(programSpecICTSubsection)
 
     # Add section to the document
     doc.append(programSpecificationAndImplementationICTSection)
-    doc.generate_tex("criterionAtoFTable")
+    doc.generate_tex("main")
 
 def main():
     generateLatex()
