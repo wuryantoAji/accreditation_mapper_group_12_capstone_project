@@ -97,14 +97,14 @@ def createCriterionBTable(dataDictionary):
         criterionBTable.add_hline()
 
         # table header
-        criterionBTable.add_row("","","","","","", color=r'colorDarkBlue')
-        criterionBTable.add_row("","","","","","", color=r'colorDarkBlue')
-        criterionBTable.add_row(MultiRow(NoEscape(-3), data=NoEscape(r'\textit{SFIA Skill}')), 
-                        MultiRow(NoEscape(-3), data=NoEscape(r'\textit{Skill Description}')), 
-                        MultiRow(NoEscape(-3), data=NoEscape(r'\textit{Level Description}')), 
-                        MultiRow(NoEscape(-3), data=NoEscape(r'\textit{Code}')), 
-                        MultiRow(NoEscape(-3), data=NoEscape(r'\textit{Level}')), 
-                        MultiRow(NoEscape(-3), data=NoEscape(r'\textit{Units supporting SFIA skill}')), color=r'colorDarkBlue')
+        criterionBTable.append(NoEscape(r'\criterionBEmptyColoredRow'))
+        criterionBTable.append(NoEscape(r'\criterionBEmptyColoredRow'))
+        criterionBTable.add_row(MultiRow(NoEscape(-3), data=NoEscape(r'\criterionBHeaderCellColored{SFIA Skill}')), 
+                        MultiRow(NoEscape(-3), data=NoEscape(r'\criterionBHeaderCellColored{Skill Description}')), 
+                        MultiRow(NoEscape(-3), data=NoEscape(r'\criterionBHeaderCellColored{Level Description}')), 
+                        MultiRow(NoEscape(-3), data=NoEscape(r'\criterionBHeaderCellColored{Code}')), 
+                        MultiRow(NoEscape(-3), data=NoEscape(r'\criterionBHeaderCellColored{Level}')), 
+                        MultiRow(NoEscape(-3), data=NoEscape(r'\criterionBHeaderCellColored{Units supporting SFIA skill}')))
 
         criterionBTable.add_hline()
         # table content
