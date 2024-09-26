@@ -93,23 +93,38 @@ class CriterionC(Criterion):
     def __init__(self, course, unit_details_dict, outcomes_mappings_df):
         Criterion.__init__(self, course, unit_details_dict, outcomes_mappings_df)
         
-        # Create three dataframes for each of the three tables for Criterion C
-        # self.table_1_df = None
-        # self.table_2_df = None
-        # self.table_3_df = None
-        
         # Call the functions to create and check Criterion C
         self.__create_criterion_c()
         self.__check_criterion_c()
 
-
     def __check_criterion_c(self):
-        return None
+    # Check if there are at least 2 unique outcomes and the number of units
+        table_1_df = self.table_1_df
+        num_of_outcomes = table_1_df['Outcome'].nunique() 
+        num_of_criterionC_units = table_1_df['Unit Code + Unit Name'].nunique() 
+        
+        data = {
+            'QA Item': [
+                'Number of outcomes: ' + str(num_of_outcomes) + ' outcomes (2 required)', 
+                'Number of units: ' + str(num_of_criterionC_units) + ' units'
+            ],
+            'Pass/Fail': [
+                'Pass' if num_of_outcomes >= 2 else 'Fail', 
+                'N/A'
+            ]
+        }
+        
+        self.criterion_qa_df = pd.DataFrame(data)
 
     def __create_criterion_c(self):
         outcomes_mappings_df_copy = self.outcomes_mappings_df.copy()
         outcomes_mappings_df_copy = outcomes_mappings_df_copy[outcomes_mappings_df_copy['Outcome Group'].isin(['CBoK-Core', 'CBoK-Professional', 'CBoK-Depth'])]
+    
         
+        merged_df = pd.merge(self.unit_details_dict, outcomes_mappings_df_copy, on='Unit Code', how='inner')
+    
+        # Rename the columns to avoid confusion
+        merged_df.rename(columns={'Unit Name_x': 'Unit Name'}, inplace=True)
         # -- Create Table 1
         # Create a fixed list of ICT Knowledge Types and Outcome
         knowledge_types_outcomes = [
@@ -135,9 +150,9 @@ class CriterionC(Criterion):
         # Iterate over the ICT Knowledge Types and Outcome
         for knowledge_type, outcome in knowledge_types_outcomes:
             # Filter the DataFrame to get the rows that match the Outcome and Outcome Group
-            matching_rows = outcomes_mappings_df_copy[
-                (outcomes_mappings_df_copy['Outcome'] == outcome) & 
-                (outcomes_mappings_df_copy['Outcome Group'].str.contains(knowledge_type, case=False))
+            matching_rows = merged_df[
+                (merged_df['Outcome'] == outcome) & 
+                (merged_df['Outcome Group'].str.contains(knowledge_type, case=False))
             ]
             
             # Check if there are any matching rows, and if so, create a string of Unit Code + Unit Name
@@ -154,7 +169,6 @@ class CriterionC(Criterion):
 
         self.table_1_df = pd.DataFrame(table_1_data, columns=['ICT Knowledge Types', 'Outcome', 'Unit Code + Unit Name'])
         
-        print(self.table_1_df)
         # -- Create Table 2
         # Create multiindex columns for the pivot table
         columns_table_2 = pd.MultiIndex.from_tuples([
@@ -174,18 +188,18 @@ class CriterionC(Criterion):
             ('In-depth', '')
         ])
         
-        # Create rows for the pivot table
-        outcomes_mappings_df_copy['Unit Code + Unit Name'] = outcomes_mappings_df_copy.apply(
+        # # Create rows for the pivot table
+        merged_df['Unit Code + Unit Name'] = merged_df.apply(
             lambda row: f"{row['Unit Code']}: {row['Unit Name']}", axis=1
         )
 
-        index_table_2 = outcomes_mappings_df_copy[['Unit Code', 'Unit Name']].drop_duplicates()
+        index_table_2 = merged_df[['Unit Code', 'Unit Name']].drop_duplicates()
         index_table_2 = index_table_2.apply(lambda row: f"{row['Unit Code']}: {row['Unit Name']}", axis=1)
         
-        # Fill the pivot table with the Level (SFIA/Bloom) values
+        # # Fill the pivot table with the Level (SFIA/Bloom) values
         data_table_2 = pd.DataFrame(index=index_table_2, columns=columns_table_2)
         
-        for idx, row in outcomes_mappings_df_copy.iterrows():
+        for idx, row in merged_df.iterrows():
             subject_name = f"{row['Unit Code']}: {row['Unit Name']}"
             
             # Iterate over the columns in the table
@@ -195,11 +209,12 @@ class CriterionC(Criterion):
                     data_table_2.loc[subject_name, (knowledge_type, outcome_type)] = row['Level (SFIA/Bloom)']
         
 
-        # Create a DataFrame from the list
+        # # Create a DataFrame from the list
         
         self.table_2_df = data_table_2
         
         # -- Create Table 3
+        
         
     
 class CriterionD(Criterion):
