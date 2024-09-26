@@ -7,6 +7,9 @@ import tempfile
 knowledge_base = "KnowledgeBase"
 latex_generator = "LatexGenerator"
 client_input = "ClientInput"
+excelClientInput = "CSSE-allprograms-outcome-mappings-20240913.xlsx"
+sfiaExcelInput = "sfia_v8_custom.xlsx"
+
 
 def install_dependencies():
     # Install dependencies from requirements.txt using Poetry
@@ -22,9 +25,9 @@ def create_temp_folder():
 
 def copy_constant_files(temp_dir):
     # TODO change to fetch the latest file by sort from new to old
-    input_excel_file = os.path.join(client_input, "CSSE-allprograms-outcome-mappings-20240913.xlsx")
+    input_excel_file = os.path.join(client_input, excelClientInput) 
     # TODO change to fetch the latest file by sort from new to old also filter by .xlsx
-    sfia_excel_file = os.path.join(knowledge_base, "sfia_v8_custom.xlsx")
+    sfia_excel_file = os.path.join(knowledge_base, sfiaExcelInput)
     knowledge_base_python_file = os.path.join(knowledge_base, "knowledgebase.py")
     sfia_python_file = os.path.join(knowledge_base, "sfia.py")
 
@@ -60,7 +63,7 @@ def copy_generated_files_to_output(temp_dir):
     latex_criterionB_file = os.path.join(temp_dir, "criterionB.tex")
     latex_criterionC_file = os.path.join(temp_dir, "criterionC.tex")
     latex_criterionD_file = os.path.join(temp_dir, "criterionD.tex")
-    # latex_criterionE_file = os.path.join(temp_dir, "criterionE.tex")
+    latex_criterionE_file = os.path.join(temp_dir, "criterionE.tex")
     
     latexDirectoryPath = os.path.join('.', 'latexFiles')
 
@@ -73,7 +76,7 @@ def copy_generated_files_to_output(temp_dir):
     shutil.copy(latex_criterionB_file, latexDirectoryPath)
     shutil.copy(latex_criterionC_file, latexDirectoryPath)
     shutil.copy(latex_criterionD_file, latexDirectoryPath)
-    # shutil.copy(latex_criterionE_file, latexDirectoryPath))
+    shutil.copy(latex_criterionE_file, latexDirectoryPath)
     
 
 def clean_up(temp_dir):

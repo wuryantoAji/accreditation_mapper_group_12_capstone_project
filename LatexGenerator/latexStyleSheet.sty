@@ -46,7 +46,7 @@
 \newcommand{\criterionBEmptyColoredRow}{\cellcolor{colorDarkBlue}&\cellcolor{colorDarkBlue}&\cellcolor{colorDarkBlue}&\cellcolor{colorDarkBlue}&\cellcolor{colorDarkBlue}&\cellcolor{colorDarkBlue}\\}
 
 % Criterion C
-
+\newcommand{\myrotcell}[1]{\rotcell{\makebox[0pt][l]{#1}}}
 
 % Criterion D
 \newcommand{\criterionDcoursetitle}[1]{\noindent\textbf{#1}}
@@ -62,3 +62,7 @@
 % Criterion E 
 \newcommand{\unitcodecolumn}[1]{\wrappedcell{0.20}{#1}}
 \newcommand{\justificationcolumn}[1]{\wrappedcell{0.77}{#1}}
+
+% Rubric command
+\newcommand{\rubric}[1]{{\color{red}#1}}
+%\newcommand{\rubric}[1]{}
