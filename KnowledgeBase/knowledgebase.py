@@ -6,7 +6,7 @@ class Criterion:
     def __init__(self, course, unit_details_dict, outcomes_mappings_df):
         self.course = course
         self.criterion_df = None
-        self.criterion_qa_df = pd.DataFrame()
+        self.criterion_qa_df = None
         self.unit_details_dict = unit_details_dict.copy()
         self.outcomes_mappings_df = outcomes_mappings_df.copy()
         return
@@ -72,7 +72,23 @@ class CriterionB(Criterion):
         #Remove N/A Level (SFIA/Bloom) and convert the rest to Ints
         outcomes_mappings_df_copy.dropna(subset=['Level (SFIA/Bloom)'], inplace=True)
         outcomes_mappings_df_copy['Level (SFIA/Bloom)'] = pd.to_numeric(outcomes_mappings_df_copy['Level (SFIA/Bloom)'], errors='coerce').fillna(0).astype(int)
-   
+        
+        
+        # Load the SFIA Justifications sheet (for rows that have tags instead of direct justifications)
+        sfia_justifications = pd.read_excel('CSSE-allprograms-outcome-mappings-20240913.xlsx', sheet_name='SFIA justifications')
+
+        # Adjust 'Tag' to the correct column name found from the print statement
+        justification_map = sfia_justifications.set_index('Tag (used in Outcomes Mappings)')['Justification Text (used in Report Tables)'].to_dict()
+        # Function to map justification or keep existing justification if already present
+        def get_justification(justification):
+            if justification in justification_map:
+                return justification_map[justification]  # Map the tag to its detailed justification
+            else:
+                return justification  # Keep the existing justification if it's already there
+
+        # Apply the function to map specific justifications or leave them as is
+        outcomes_mappings_df_copy['Justification'] = outcomes_mappings_df_copy['Justification'].apply(get_justification)
+
         merged_df = pd.merge(self.unit_details_dict, outcomes_mappings_df_copy, on='Unit Code', how='inner')
         merged_df = merged_df[['Unit Code', 'Outcome', 'Level (SFIA/Bloom)', 'Justification']]
         sorted_df = merged_df.groupby('Outcome').apply(lambda x: x.sort_values(by='Outcome')).reset_index(drop=True)
@@ -181,9 +197,7 @@ class KnowledgeBase:
 
     def __load_unit_details(self, excel):
         # Load the Excel file into a Pandas DataFrame
-        #df = pd.read_excel(excel, header=0, sheet_name='Unit Details')
-        # Changed to Programs Details by client 11/9
-        df = pd.read_excel(excel, header=0, sheet_name='Programs Details')
+        df = pd.read_excel(excel, header=0, sheet_name='Unit Details')
 
         # Drop columns where the name starts with 'Unnamed'
         df = df.loc[:, ~df.columns.str.startswith('Unnamed')]
