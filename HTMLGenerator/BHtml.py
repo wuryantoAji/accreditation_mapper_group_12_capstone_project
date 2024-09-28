@@ -4,6 +4,7 @@ from knowledgebase import KnowledgeBase
 
 # Load Skills For the Information Age (SFIA) database from Excel
 sfia_data = pd.read_excel('sfia_v8_custom.xlsx', usecols=['Skill', 'description', 'description22', 'code', 'level'])
+sfia_data['description22'] = sfia_data['description22'].str.replace('_x000D_', ' ', regex=False)
 
 # Drop duplicates based on the 'code' and 'level' columns (keep the first occurrence)
 sfia_data_unique = sfia_data.drop_duplicates(subset=['code', 'level'], keep='first')
