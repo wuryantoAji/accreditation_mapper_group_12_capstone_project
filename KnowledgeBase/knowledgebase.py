@@ -6,7 +6,7 @@ class Criterion:
     def __init__(self, course, unit_details_dict, outcomes_mappings_df):
         self.course = course
         self.criterion_df = None
-        self.criterion_qa_df = pd.DataFrame()
+        self.criterion_qa_df = None
         self.unit_details_dict = unit_details_dict.copy()
         self.outcomes_mappings_df = outcomes_mappings_df.copy()
         return
@@ -72,7 +72,23 @@ class CriterionB(Criterion):
         #Remove N/A Level (SFIA/Bloom) and convert the rest to Ints
         outcomes_mappings_df_copy.dropna(subset=['Level (SFIA/Bloom)'], inplace=True)
         outcomes_mappings_df_copy['Level (SFIA/Bloom)'] = pd.to_numeric(outcomes_mappings_df_copy['Level (SFIA/Bloom)'], errors='coerce').fillna(0).astype(int)
-   
+        
+        
+        # Load the SFIA Justifications sheet (for rows that have tags instead of direct justifications)
+        sfia_justifications = pd.read_excel('CSSE-allprograms-outcome-mappings-20240913.xlsx', sheet_name='SFIA justifications')
+
+        # Adjust 'Tag' to the correct column name found from the print statement
+        justification_map = sfia_justifications.set_index('Tag (used in Outcomes Mappings)')['Justification Text (used in Report Tables)'].to_dict()
+        # Function to map justification or keep existing justification if already present
+        def get_justification(justification):
+            if justification in justification_map:
+                return justification_map[justification]  # Map the tag to its detailed justification
+            else:
+                return justification  # Keep the existing justification if it's already there
+
+        # Apply the function to map specific justifications or leave them as is
+        outcomes_mappings_df_copy['Justification'] = outcomes_mappings_df_copy['Justification'].apply(get_justification)
+
         merged_df = pd.merge(self.unit_details_dict, outcomes_mappings_df_copy, on='Unit Code', how='inner')
         merged_df = merged_df[['Unit Code', 'Outcome', 'Level (SFIA/Bloom)', 'Justification']]
         sorted_df = merged_df.groupby('Outcome').apply(lambda x: x.sort_values(by='Outcome')).reset_index(drop=True)
@@ -88,6 +104,157 @@ class CriterionB(Criterion):
 
         self.criterion_df = result_df
 
+
+class CriterionC(Criterion):
+    def __init__(self, course, unit_details_dict, outcomes_mappings_df):
+        Criterion.__init__(self, course, unit_details_dict, outcomes_mappings_df)
+        
+        # Call the functions to create and check Criterion C
+        self.__create_criterion_c()
+        self.__check_criterion_c()
+
+    def __check_criterion_c(self):
+        table_2_df = self.table_2_df
+
+        qa_items = []
+        pass_fail = []
+
+        # QA 1: No column may be empty in Table 2
+        empty_columns = []
+        for col in table_2_df.columns:
+            if table_2_df[col].isnull().all():
+                empty_columns.append(col)
+
+        if empty_columns:
+            qa_items.append(f"QA 1: The following columns have empty values: {empty_columns}")
+            pass_fail.append("Fail")
+        else:
+            qa_items.append("QA 1: No columns are empty.")
+            pass_fail.append("Pass")
+
+        # QA 2: Professional - ICT Ethics, Working Individually & Teamwork should be at least level 3
+        professional_issues = []
+        for outcome in [('Professional', 'ICT Ethics'), ('Professional', 'Working Individually & Teamwork')]:
+            if table_2_df[outcome].dropna().astype(float).lt(3).any() or table_2_df[outcome].isnull:
+                professional_issues.append(outcome[1])
+
+        if professional_issues:
+            qa_items.append(f"QA 2: The following Professional outcomes have a Bloom level less than 3: {professional_issues}")
+            pass_fail.append("Fail")
+        else:
+            qa_items.append("QA 2: All specified Professional outcomes have a Bloom level of at least 3.")
+            pass_fail.append("Pass")
+
+        # QA 3: Core - ICT Project Management, Cyber Security should be at least level 3
+        core_issues = []
+        for outcome in [('Core', 'ICT Project Management'), ('Core', 'Cyber Security')]:
+            if table_2_df[outcome].dropna().astype(float).lt(3).any() or table_2_df[outcome].isnull:
+                core_issues.append(outcome[1])
+
+        if core_issues:
+            qa_items.append(f"QA 3: The following Core outcomes have a Bloom level less than 3: {core_issues}")
+            pass_fail.append("Fail")
+        else:
+            qa_items.append("QA 3: All specified Core outcomes have a Bloom level of at least 3.")
+            pass_fail.append("Pass")
+
+        data = {
+            'QA Item': qa_items,
+            'Pass/Fail': pass_fail
+        }
+        self.criterion_qa_df = pd.DataFrame(data)
+        
+    def __create_criterion_c(self):
+        outcomes_mappings_df_copy = self.outcomes_mappings_df.copy()
+        outcomes_mappings_df_copy = outcomes_mappings_df_copy[outcomes_mappings_df_copy['Outcome Group'].isin(['CBoK-Core', 'CBoK-Professional', 'CBoK-Depth'])]
+        
+        merged_df = pd.merge(self.unit_details_dict, outcomes_mappings_df_copy, on='Unit Code', how='inner')
+        merged_df.rename(columns={'Unit Name_x': 'Unit Name'}, inplace=True)
+        
+        # Create Table 1
+        knowledge_types_outcomes = [
+            ('Professional', 'ICT Ethics'),
+            ('Professional', 'Impacts of ICT'),
+            ('Professional', 'Working Individually & Teamwork'),
+            ('Professional', 'Professional Communication'),
+            ('Professional', 'Professional Practitioner'),
+            ('Core', 'ICT Fundamentals'),
+            ('Core', 'ICT Infrastructure'),
+            ('Core', 'Information & Data Science & Engineering'),
+            ('Core', 'Computational Science & Engineering'),
+            ('Core', 'Application Systems'),
+            ('Core', 'Cyber Security'),
+            ('Core', 'ICT Project Management'),
+            ('Core', 'ICT management & governance'),
+            ('In-depth', '')
+        ]
+        
+        # Create a list to append the data for Table 1
+        table_1_data = []
+        
+        # Iterate over the ICT Knowledge Types and Outcome and filter the DataFrame to get the rows that match the Outcome and Outcome Group
+        for knowledge_type, outcome in knowledge_types_outcomes:
+            matching_rows = merged_df[
+                (merged_df['Outcome'] == outcome) & 
+                (merged_df['Outcome Group'].str.contains(knowledge_type, case=False))
+            ]
+            
+            # Check if there are any matching rows. If so, create a string of Unit Code + Unit Name
+            if not matching_rows.empty:
+                unit_code_name_list = matching_rows.apply(lambda row: f"{row['Unit Code']} {row['Unit Name']}", axis=1).tolist()
+                unit_code_name = ', '.join(unit_code_name_list)
+            else:
+                unit_code_name = ""
+            
+            table_1_data.append([knowledge_type, outcome, unit_code_name])
+
+        self.table_1_df = pd.DataFrame(table_1_data, columns=['ICT Knowledge Types', 'Outcome', 'Unit Code + Unit Name'])
+        
+        # Create Table 2
+        columns_table_2 = pd.MultiIndex.from_tuples([
+            ('Professional', 'ICT Ethics'),
+            ('Professional', 'Impacts of ICT'),
+            ('Professional', 'Working Individually & Teamwork'),
+            ('Professional', 'Professional Communication'),
+            ('Professional', 'Professional Practitioner'),
+            ('Core', 'ICT Fundamentals'),
+            ('Core', 'ICT Infrastructure'),
+            ('Core', 'Information & Data Science & Engineering'),
+            ('Core', 'Computational Science & Engineering'),
+            ('Core', 'Application Systems'),
+            ('Core', 'Cyber Security'),
+            ('Core', 'ICT Project Management'),
+            ('Core', 'ICT management & governance'),
+            ('In-depth', '')
+        ])
+        
+        # Create rows for the pivot table
+        merged_df['Unit Code + Unit Name'] = merged_df.apply(lambda row: f"{row['Unit Code']}: {row['Unit Name']}", axis=1)
+
+        index_table_2 = merged_df[['Unit Code', 'Unit Name']].drop_duplicates()
+        index_table_2 = index_table_2.apply(lambda row: f"{row['Unit Code']}: {row['Unit Name']}", axis=1)
+        
+        # Fill the pivot table with the Level (SFIA/Bloom) values
+        table_2_data = pd.DataFrame(index=index_table_2, columns=columns_table_2)
+        
+        # Iterate over the columns in the table and fill the cell with the Level (SFIA/Bloom) value
+        for idx, row in merged_df.iterrows():
+            subject_name = f"{row['Unit Code']}: {row['Unit Name']}"
+            for (knowledge_type, outcome_type) in columns_table_2:
+                if outcome_type == row['Outcome'] and knowledge_type in row['Outcome Group']:
+                    table_2_data.loc[subject_name, (knowledge_type, outcome_type)] = row['Level (SFIA/Bloom)']
+        
+        # Create a DataFrame from the list
+        self.table_2_df = table_2_data
+        
+        # Create Table 3
+        table_3_data = []
+        
+        for idx, row in merged_df.iterrows():
+            table_3_data.append([f"{row['Unit Code']} {row['Unit Name']}", row['Outcome Group'], row['Outcome'], row['Justification']])
+        
+        self.table_3_df = pd.DataFrame(table_3_data, columns=['Unit Code + Unit Name', 'Outcome Group', 'Outcome', 'Justification'])
+        
     
 class CriterionD(Criterion):
     def __init__(self, course, unit_details_dict, outcomes_mappings_df):
@@ -175,14 +342,12 @@ class KnowledgeBase:
         for course in self.unit_details_dict.keys():
             self.criterionA[course] = CriterionA( course, self.unit_details_dict[course], outcomes_mappings_df )
             self.criterionB[course] = CriterionB( course, self.unit_details_dict[course], outcomes_mappings_df )
-            self.criterionC[course] = None
+            self.criterionC[course] = CriterionC( course, self.unit_details_dict[course], outcomes_mappings_df )
             self.criterionD[course] = CriterionD( course, self.unit_details_dict[course], outcomes_mappings_df )
             self.criterionE[course] = CriterionE( course, self.unit_details_dict[course], outcomes_mappings_df )
 
     def __load_unit_details(self, excel):
         # Load the Excel file into a Pandas DataFrame
-        #df = pd.read_excel(excel, header=0, sheet_name='Unit Details')
-        # Changed to Programs Details by client 11/9
         df = pd.read_excel(excel, header=0, sheet_name='Programs Details')
 
         # Drop columns where the name starts with 'Unnamed'
