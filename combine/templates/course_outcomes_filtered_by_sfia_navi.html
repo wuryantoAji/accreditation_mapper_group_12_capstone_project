@@ -1,0 +1,629 @@
+
+<html>
+<head>
+    <title>Course Outcomes, Levels, and Justifications</title>
+    <style>
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #DCE6F1;
+            text-align: left;
+            cursor: pointer;
+        }
+        .collapsible {
+            width: 50%; /* Limit the width */
+            margin: 20px 0; /* Center the element horizontally */
+            cursor: pointer;
+            background-color: #B7CDE2;
+            padding: 10px;
+            text-align: left;
+            font-weight: bold;
+            border: 1px solid #ccc;
+        }
+        .content {
+            display: none;
+        }
+        .active {
+            display: table;
+        }
+        input[type="text"] {
+            margin-bottom: 15px;
+            padding: 5px;
+            width: 30%;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Criterion B</h1>
+
+    <!-- Add a search box to filter the table -->
+    <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Search for SFIA skills..">
+<h2 class='collapsible' onclick='toggleCollapse("section1")'>Computer Science Major MJD-CMPSC</h2>
+    <table id="section1" class="content">
+        <thead>
+            <tr>
+                <th onclick="sortTable(0, 'section1')">SFIA Skill</th>
+                <th onclick="sortTable(1, 'section1')">Skill Description</th>
+                <th onclick="sortTable(2, 'section1')">Level Description</th>
+                <th onclick="sortTable(3, 'section1')">Code</th>
+                <th onclick="sortTable(4, 'section1')">Level</th>
+                <th onclick="sortTable(5, 'section1')">Units Supporting SFIA Skill</th>
+            </tr>
+        </thead>
+        <tbody>
+    
+        <tr>
+            <td>Systems design</td>
+            <td>Designing systems to meet specified requirements and agreed systems architectures.</td>
+            <td>Follows standard approaches and established design patterns to create new designs for simple systems or system components. 
+Identifies and resolves minor design issues.  
+Identifies alternative design options and seeks guidance when deviating from established design patterns.</td>
+            <td>DESN</td>
+            <td>3</td>
+            <td>Designs system components using appropriate modelling techniques following agreed architectures, design standards, patterns and methodology is developed through the sequence CITS1402, CITS2002, CITS2005, CITS3002, CITS3403. In the capstone CITS3200 students produce detailed design specification to form the basis for construction of systems and reviews, verifies and improves own designs against specifications. </td>
+        </tr>
+        
+        <tr>
+            <td>Programming/software development</td>
+            <td>Developing software components to deliver value to stakeholders.</td>
+            <td>Designs, codes, verifies, tests, documents, amends and refactors moderately complex programs/scripts.  
+Applies agreed standards and tools to achieve a well-engineered result.  
+Monitors and reports on progress. Identifies issues related to software development activities. Proposes practical solutions to resolve issues. 
+Collaborates in reviews of work with others as appropriate.</td>
+            <td>PROG</td>
+            <td>3</td>
+            <td>Designs, codes, verifies, tests, documents, amends and refactors moderately complex programs/scripts is supported by the sequence CITS1401, CITS2005, CITS2002, CITS2200, CITS3001 and the capstone CITS3200. Application of standards and tools is developed in the sequence CITS1402, CITS3403, CITS3002.  </td>
+        </tr>
+        
+        </tbody>
+    </table>
+    <h2 class='collapsible' onclick='toggleCollapse("section2")'>Artificial Intelligence MJD-ARIDM</h2>
+    <table id="section2" class="content">
+        <thead>
+            <tr>
+                <th onclick="sortTable(0, 'section2')">SFIA Skill</th>
+                <th onclick="sortTable(1, 'section2')">Skill Description</th>
+                <th onclick="sortTable(2, 'section2')">Level Description</th>
+                <th onclick="sortTable(3, 'section2')">Code</th>
+                <th onclick="sortTable(4, 'section2')">Level</th>
+                <th onclick="sortTable(5, 'section2')">Units Supporting SFIA Skill</th>
+            </tr>
+        </thead>
+        <tbody>
+    
+        <tr>
+            <td>Systems design</td>
+            <td>Designing systems to meet specified requirements and agreed systems architectures.</td>
+            <td>Follows standard approaches and established design patterns to create new designs for simple systems or system components. 
+Identifies and resolves minor design issues.  
+Identifies alternative design options and seeks guidance when deviating from established design patterns.</td>
+            <td>DESN</td>
+            <td>3</td>
+            <td>Designs system components using appropriate modelling techniques following agreed architectures, design standards, patterns and methodology is developed through the sequence CITS1402, CITS2002, CITS2005, CITS3002, CITS3403. In the capstone CITS3200 students produce detailed design specification to form the basis for construction of systems and reviews, verifies and improves own designs against specifications. </td>
+        </tr>
+        
+        <tr>
+            <td>Machine learning</td>
+            <td>Developing systems that learn through experience and by the use of data.</td>
+            <td>Given a well-described problem and dataset, assesses whether machine learning is likely to provide an effective solution.  
+Implements algorithms developed by others. Advises on the effectiveness of specific techniques, based on project findings and wider research.  
+Contributes to the development, evaluation, monitoring and deployment of machine learning systems.  
+Understands and applies rules and guidelines specific to the industry, and anticipates risks and other implications of modelling.</td>
+            <td>MLNG</td>
+            <td>4</td>
+            <td>ML text to be added</td>
+        </tr>
+        
+        <tr>
+            <td>Programming/software development</td>
+            <td>Developing software components to deliver value to stakeholders.</td>
+            <td>Designs, codes, verifies, tests, documents, amends and refactors moderately complex programs/scripts.  
+Applies agreed standards and tools to achieve a well-engineered result.  
+Monitors and reports on progress. Identifies issues related to software development activities. Proposes practical solutions to resolve issues. 
+Collaborates in reviews of work with others as appropriate.</td>
+            <td>PROG</td>
+            <td>3</td>
+            <td>Designs, codes, verifies, tests, documents, amends and refactors moderately complex programs/scripts is supported by the sequence CITS1401, CITS2005, CITS2002, CITS2200, CITS3001 and the capstone CITS3200. Application of standards and tools is developed in the sequence CITS1402, CITS3403, CITS3002.  </td>
+        </tr>
+        
+        </tbody>
+    </table>
+    <h2 class='collapsible' onclick='toggleCollapse("section3")'>Computing and Data Science MJD-CDSDM</h2>
+    <table id="section3" class="content">
+        <thead>
+            <tr>
+                <th onclick="sortTable(0, 'section3')">SFIA Skill</th>
+                <th onclick="sortTable(1, 'section3')">Skill Description</th>
+                <th onclick="sortTable(2, 'section3')">Level Description</th>
+                <th onclick="sortTable(3, 'section3')">Code</th>
+                <th onclick="sortTable(4, 'section3')">Level</th>
+                <th onclick="sortTable(5, 'section3')">Units Supporting SFIA Skill</th>
+            </tr>
+        </thead>
+        <tbody>
+    
+        <tr>
+            <td>Systems design</td>
+            <td>Designing systems to meet specified requirements and agreed systems architectures.</td>
+            <td>Designs system components using appropriate modelling techniques following agreed architectures, design standards, patterns and methodology.  
+Identifies and evaluates alternative design options and trade-offs. Creates multiple design views to address the concerns of the different stakeholders and to handle functional and non-functional requirements.  
+Models, simulates or prototypes the behaviour of proposed system components to enable approval by stakeholders.  
+Produces detailed design specifications to form the basis for the construction of systems. Reviews, verifies and improves own designs against specifications.</td>
+            <td>DESN</td>
+            <td>4</td>
+            <td>Designs system components using appropriate modelling techniques following agreed architectures, design standards, patterns and methodology is developed through the sequence CITS1402, CITS2002 or CITS2005, CITS4401, CITS5505. In the capstone CITS5206 students produce detailed design specification to form the basis for construction of systems and reviews, verifies and improves own designs against specifications. </td>
+        </tr>
+        
+        <tr>
+            <td>Machine learning</td>
+            <td>Developing systems that learn through experience and by the use of data.</td>
+            <td>Given a well-described problem and dataset, assesses whether machine learning is likely to provide an effective solution.  
+Implements algorithms developed by others. Advises on the effectiveness of specific techniques, based on project findings and wider research.  
+Contributes to the development, evaluation, monitoring and deployment of machine learning systems.  
+Understands and applies rules and guidelines specific to the industry, and anticipates risks and other implications of modelling.</td>
+            <td>MLNG</td>
+            <td>4</td>
+            <td>ML text to be added</td>
+        </tr>
+        
+        <tr>
+            <td>Programming/software development</td>
+            <td>Developing software components to deliver value to stakeholders.</td>
+            <td>Designs, codes, verifies, tests, documents, amends and refactors moderately complex programs/scripts.  
+Applies agreed standards and tools to achieve a well-engineered result.  
+Monitors and reports on progress. Identifies issues related to software development activities. Proposes practical solutions to resolve issues. 
+Collaborates in reviews of work with others as appropriate.</td>
+            <td>PROG</td>
+            <td>3</td>
+            <td>Designs, codes, verifies, tests, documents, amends and refactors moderately complex programs/scripts is supported by the sequence CITS1401, CITS2005, CITS2002, CITS2200, CITS3001 and the capstone CITS3200. Application of standards and tools is developed in the sequence CITS1402, CITS3403, CITS3002.  </td>
+        </tr>
+        
+        </tbody>
+    </table>
+    <h2 class='collapsible' onclick='toggleCollapse("section4")'>International Cybersecurity MJD-ICYDM</h2>
+    <table id="section4" class="content">
+        <thead>
+            <tr>
+                <th onclick="sortTable(0, 'section4')">SFIA Skill</th>
+                <th onclick="sortTable(1, 'section4')">Skill Description</th>
+                <th onclick="sortTable(2, 'section4')">Level Description</th>
+                <th onclick="sortTable(3, 'section4')">Code</th>
+                <th onclick="sortTable(4, 'section4')">Level</th>
+                <th onclick="sortTable(5, 'section4')">Units Supporting SFIA Skill</th>
+            </tr>
+        </thead>
+        <tbody>
+    
+        <tr>
+            <td>Systems design</td>
+            <td>Designing systems to meet specified requirements and agreed systems architectures.</td>
+            <td>Designs system components using appropriate modelling techniques following agreed architectures, design standards, patterns and methodology.  
+Identifies and evaluates alternative design options and trade-offs. Creates multiple design views to address the concerns of the different stakeholders and to handle functional and non-functional requirements.  
+Models, simulates or prototypes the behaviour of proposed system components to enable approval by stakeholders.  
+Produces detailed design specifications to form the basis for the construction of systems. Reviews, verifies and improves own designs against specifications.</td>
+            <td>DESN</td>
+            <td>4</td>
+            <td>Designs system components using appropriate modelling techniques following agreed architectures, design standards, patterns and methodology is developed through the sequence CITS1402, CITS2002 or CITS2005, CITS4401, CITS5505. In the capstone CITS5206 students produce detailed design specification to form the basis for construction of systems and reviews, verifies and improves own designs against specifications. </td>
+        </tr>
+        
+        <tr>
+            <td>High-performance computing</td>
+            <td>Using advanced computer systems and special programming techniques to solve complex computational problems.</td>
+            <td>Develops moderately complex solutions that use high-performance computing environments to address real-world problems.  
+Applies a range of high-performance computing techniques with sensitivity to the limitations of the techniques. Uses input and feedback from experts as appropriate.  
+Analyses the complexity, scalability and performance of algorithms, including massively parallel implementations, and makes or recommends improvements.</td>
+            <td>HPCC</td>
+            <td>4</td>
+            <td>PHYS4022 develops moderately complex solutions that use high-performance computing environments to address real-world problems.  MORE TO WRITE HERE</td>
+        </tr>
+        
+        <tr>
+            <td>Programming/software development</td>
+            <td>Developing software components to deliver value to stakeholders.</td>
+            <td>Designs, codes, verifies, tests, documents, amends and refactors complex programs/scripts and integration software services.  
+Contributes to the selection of the software development methods, tools and techniques. 
+Applies agreed standards and tools to achieve well-engineered outcomes.  
+Participates in reviews of own work and leads reviews of colleagues' work.</td>
+            <td>PROG</td>
+            <td>4</td>
+            <td>Designs, codes, verifies, tests, documents, amends and refactors complex programs/scripts and integration software services. Contributes to the selection of the software development methods, tools and techniques. Applies agreed standards and tools to achieve well-engineered outcomes. Participates in reviews of own work and leads reviews of colleagues' work. Developed in the sequence CITS1401, CITS2002 or CITS2005, CITS4401 and applied in CITS5206.</td>
+        </tr>
+        
+        </tbody>
+    </table>
+    <h2 class='collapsible' onclick='toggleCollapse("section5")'>Quantum Computing MJD-QCOMP</h2>
+    <table id="section5" class="content">
+        <thead>
+            <tr>
+                <th onclick="sortTable(0, 'section5')">SFIA Skill</th>
+                <th onclick="sortTable(1, 'section5')">Skill Description</th>
+                <th onclick="sortTable(2, 'section5')">Level Description</th>
+                <th onclick="sortTable(3, 'section5')">Code</th>
+                <th onclick="sortTable(4, 'section5')">Level</th>
+                <th onclick="sortTable(5, 'section5')">Units Supporting SFIA Skill</th>
+            </tr>
+        </thead>
+        <tbody>
+    
+        <tr>
+            <td>Systems design</td>
+            <td>Designing systems to meet specified requirements and agreed systems architectures.</td>
+            <td>Follows standard approaches and established design patterns to create new designs for simple systems or system components. 
+Identifies and resolves minor design issues.  
+Identifies alternative design options and seeks guidance when deviating from established design patterns.</td>
+            <td>DESN</td>
+            <td>3</td>
+            <td>Designs system components using appropriate modelling techniques following agreed architectures, design standards, patterns and methodology is developed through the sequence CITS1402, CITS2002, CITS2005, CITS3002, CITS3403. In the capstone CITS3200 students produce detailed design specification to form the basis for construction of systems and reviews, verifies and improves own designs against specifications. </td>
+        </tr>
+        
+        <tr>
+            <td>High-performance computing</td>
+            <td>Using advanced computer systems and special programming techniques to solve complex computational problems.</td>
+            <td>Develops moderately complex solutions that use high-performance computing environments to address real-world problems.  
+Applies a range of high-performance computing techniques with sensitivity to the limitations of the techniques. Uses input and feedback from experts as appropriate.  
+Analyses the complexity, scalability and performance of algorithms, including massively parallel implementations, and makes or recommends improvements.</td>
+            <td>HPCC</td>
+            <td>4</td>
+            <td>PHYS4022 develops moderately complex solutions that use high-performance computing environments to address real-world problems.  MORE TO WRITE HERE</td>
+        </tr>
+        
+        <tr>
+            <td>Machine learning</td>
+            <td>Developing systems that learn through experience and by the use of data.</td>
+            <td>Given a well-described problem and dataset, assesses whether machine learning is likely to provide an effective solution.  
+Implements algorithms developed by others. Advises on the effectiveness of specific techniques, based on project findings and wider research.  
+Contributes to the development, evaluation, monitoring and deployment of machine learning systems.  
+Understands and applies rules and guidelines specific to the industry, and anticipates risks and other implications of modelling.</td>
+            <td>MLNG</td>
+            <td>4</td>
+            <td>ML text to be added</td>
+        </tr>
+        
+        <tr>
+            <td>Programming/software development</td>
+            <td>Developing software components to deliver value to stakeholders.</td>
+            <td>Designs, codes, verifies, tests, documents, amends and refactors moderately complex programs/scripts.  
+Applies agreed standards and tools to achieve a well-engineered result.  
+Monitors and reports on progress. Identifies issues related to software development activities. Proposes practical solutions to resolve issues. 
+Collaborates in reviews of work with others as appropriate.</td>
+            <td>PROG</td>
+            <td>3</td>
+            <td>Designs, codes, verifies, tests, documents, amends and refactors moderately complex programs/scripts is supported by the sequence CITS1401, CITS2005, CITS2002, CITS2200, CITS3001 and the capstone CITS3200. Application of standards and tools is developed in the sequence CITS1402, CITS3403, CITS3002.  </td>
+        </tr>
+        
+        </tbody>
+    </table>
+    <h2 class='collapsible' onclick='toggleCollapse("section6")'>Master of Information Technology (Artificial Intelligence) (2025) 62510 SP-ARTIN </h2>
+    <table id="section6" class="content">
+        <thead>
+            <tr>
+                <th onclick="sortTable(0, 'section6')">SFIA Skill</th>
+                <th onclick="sortTable(1, 'section6')">Skill Description</th>
+                <th onclick="sortTable(2, 'section6')">Level Description</th>
+                <th onclick="sortTable(3, 'section6')">Code</th>
+                <th onclick="sortTable(4, 'section6')">Level</th>
+                <th onclick="sortTable(5, 'section6')">Units Supporting SFIA Skill</th>
+            </tr>
+        </thead>
+        <tbody>
+    
+        <tr>
+            <td>Systems design</td>
+            <td>Designing systems to meet specified requirements and agreed systems architectures.</td>
+            <td>Designs system components using appropriate modelling techniques following agreed architectures, design standards, patterns and methodology.  
+Identifies and evaluates alternative design options and trade-offs. Creates multiple design views to address the concerns of the different stakeholders and to handle functional and non-functional requirements.  
+Models, simulates or prototypes the behaviour of proposed system components to enable approval by stakeholders.  
+Produces detailed design specifications to form the basis for the construction of systems. Reviews, verifies and improves own designs against specifications.</td>
+            <td>DESN</td>
+            <td>4</td>
+            <td>Designs system components using appropriate modelling techniques following agreed architectures, design standards, patterns and methodology is developed through the sequence CITS1402, CITS2002 or CITS2005, CITS4401, CITS5505. In the capstone CITS5206 students produce detailed design specification to form the basis for construction of systems and reviews, verifies and improves own designs against specifications. </td>
+        </tr>
+        
+        <tr>
+            <td>Machine learning</td>
+            <td>Developing systems that learn through experience and by the use of data.</td>
+            <td>Given a well-described problem and dataset, assesses whether machine learning is likely to provide an effective solution.  
+Implements algorithms developed by others. Advises on the effectiveness of specific techniques, based on project findings and wider research.  
+Contributes to the development, evaluation, monitoring and deployment of machine learning systems.  
+Understands and applies rules and guidelines specific to the industry, and anticipates risks and other implications of modelling.</td>
+            <td>MLNG</td>
+            <td>4</td>
+            <td>ML text to be added</td>
+        </tr>
+        
+        <tr>
+            <td>Programming/software development</td>
+            <td>Developing software components to deliver value to stakeholders.</td>
+            <td>Designs, codes, verifies, tests, documents, amends and refactors complex programs/scripts and integration software services.  
+Contributes to the selection of the software development methods, tools and techniques. 
+Applies agreed standards and tools to achieve well-engineered outcomes.  
+Participates in reviews of own work and leads reviews of colleagues' work.</td>
+            <td>PROG</td>
+            <td>4</td>
+            <td>Designs, codes, verifies, tests, documents, amends and refactors complex programs/scripts and integration software services. Contributes to the selection of the software development methods, tools and techniques. Applies agreed standards and tools to achieve well-engineered outcomes. Participates in reviews of own work and leads reviews of colleagues' work. Developed in the sequence CITS1401, CITS2002 or CITS2005, CITS4401 and applied in CITS5206.</td>
+        </tr>
+        
+        </tbody>
+    </table>
+    <h2 class='collapsible' onclick='toggleCollapse("section7")'>Master of Information Technology (Software Systems) (2025) 62510 SP-SOFSY</h2>
+    <table id="section7" class="content">
+        <thead>
+            <tr>
+                <th onclick="sortTable(0, 'section7')">SFIA Skill</th>
+                <th onclick="sortTable(1, 'section7')">Skill Description</th>
+                <th onclick="sortTable(2, 'section7')">Level Description</th>
+                <th onclick="sortTable(3, 'section7')">Code</th>
+                <th onclick="sortTable(4, 'section7')">Level</th>
+                <th onclick="sortTable(5, 'section7')">Units Supporting SFIA Skill</th>
+            </tr>
+        </thead>
+        <tbody>
+    
+        <tr>
+            <td>Systems design</td>
+            <td>Designing systems to meet specified requirements and agreed systems architectures.</td>
+            <td>Designs system components using appropriate modelling techniques following agreed architectures, design standards, patterns and methodology.  
+Identifies and evaluates alternative design options and trade-offs. Creates multiple design views to address the concerns of the different stakeholders and to handle functional and non-functional requirements.  
+Models, simulates or prototypes the behaviour of proposed system components to enable approval by stakeholders.  
+Produces detailed design specifications to form the basis for the construction of systems. Reviews, verifies and improves own designs against specifications.</td>
+            <td>DESN</td>
+            <td>4</td>
+            <td>Designs system components using appropriate modelling techniques following agreed architectures, design standards, patterns and methodology is developed through the sequence CITS1402, CITS2002 or CITS2005, CITS4401, CITS5505. In the capstone CITS5206 students produce detailed design specification to form the basis for construction of systems and reviews, verifies and improves own designs against specifications. </td>
+        </tr>
+        
+        <tr>
+            <td>High-performance computing</td>
+            <td>Using advanced computer systems and special programming techniques to solve complex computational problems.</td>
+            <td>Develops moderately complex solutions that use high-performance computing environments to address real-world problems.  
+Applies a range of high-performance computing techniques with sensitivity to the limitations of the techniques. Uses input and feedback from experts as appropriate.  
+Analyses the complexity, scalability and performance of algorithms, including massively parallel implementations, and makes or recommends improvements.</td>
+            <td>HPCC</td>
+            <td>4</td>
+            <td>PHYS4022 develops moderately complex solutions that use high-performance computing environments to address real-world problems.  MORE TO WRITE HERE</td>
+        </tr>
+        
+        <tr>
+            <td>Programming/software development</td>
+            <td>Developing software components to deliver value to stakeholders.</td>
+            <td>Designs, codes, verifies, tests, documents, amends and refactors complex programs/scripts and integration software services.  
+Contributes to the selection of the software development methods, tools and techniques. 
+Applies agreed standards and tools to achieve well-engineered outcomes.  
+Participates in reviews of own work and leads reviews of colleagues' work.</td>
+            <td>PROG</td>
+            <td>4</td>
+            <td>Designs, codes, verifies, tests, documents, amends and refactors complex programs/scripts and integration software services. Contributes to the selection of the software development methods, tools and techniques. Applies agreed standards and tools to achieve well-engineered outcomes. Participates in reviews of own work and leads reviews of colleagues' work. Developed in the sequence CITS1401, CITS2002 or CITS2005, CITS4401 and applied in CITS5206.</td>
+        </tr>
+        
+        </tbody>
+    </table>
+    <h2 class='collapsible' onclick='toggleCollapse("section8")'>Master of Information Technology (Applied Computing) (2025) 62510 SP-XXXX</h2>
+    <table id="section8" class="content">
+        <thead>
+            <tr>
+                <th onclick="sortTable(0, 'section8')">SFIA Skill</th>
+                <th onclick="sortTable(1, 'section8')">Skill Description</th>
+                <th onclick="sortTable(2, 'section8')">Level Description</th>
+                <th onclick="sortTable(3, 'section8')">Code</th>
+                <th onclick="sortTable(4, 'section8')">Level</th>
+                <th onclick="sortTable(5, 'section8')">Units Supporting SFIA Skill</th>
+            </tr>
+        </thead>
+        <tbody>
+    
+        <tr>
+            <td>Systems design</td>
+            <td>Designing systems to meet specified requirements and agreed systems architectures.</td>
+            <td>Designs system components using appropriate modelling techniques following agreed architectures, design standards, patterns and methodology.  
+Identifies and evaluates alternative design options and trade-offs. Creates multiple design views to address the concerns of the different stakeholders and to handle functional and non-functional requirements.  
+Models, simulates or prototypes the behaviour of proposed system components to enable approval by stakeholders.  
+Produces detailed design specifications to form the basis for the construction of systems. Reviews, verifies and improves own designs against specifications.</td>
+            <td>DESN</td>
+            <td>4</td>
+            <td>Designs system components using appropriate modelling techniques following agreed architectures, design standards, patterns and methodology is developed through the sequence CITS1402, CITS2002 or CITS2005, CITS4401, CITS5505. In the capstone CITS5206 students produce detailed design specification to form the basis for construction of systems and reviews, verifies and improves own designs against specifications. </td>
+        </tr>
+        
+        <tr>
+            <td>High-performance computing</td>
+            <td>Using advanced computer systems and special programming techniques to solve complex computational problems.</td>
+            <td>Develops moderately complex solutions that use high-performance computing environments to address real-world problems.  
+Applies a range of high-performance computing techniques with sensitivity to the limitations of the techniques. Uses input and feedback from experts as appropriate.  
+Analyses the complexity, scalability and performance of algorithms, including massively parallel implementations, and makes or recommends improvements.</td>
+            <td>HPCC</td>
+            <td>4</td>
+            <td>PHYS4022 develops moderately complex solutions that use high-performance computing environments to address real-world problems.  MORE TO WRITE HERE</td>
+        </tr>
+        
+        <tr>
+            <td>Machine learning</td>
+            <td>Developing systems that learn through experience and by the use of data.</td>
+            <td>Given a well-described problem and dataset, assesses whether machine learning is likely to provide an effective solution.  
+Implements algorithms developed by others. Advises on the effectiveness of specific techniques, based on project findings and wider research.  
+Contributes to the development, evaluation, monitoring and deployment of machine learning systems.  
+Understands and applies rules and guidelines specific to the industry, and anticipates risks and other implications of modelling.</td>
+            <td>MLNG</td>
+            <td>4</td>
+            <td>ML text to be added</td>
+        </tr>
+        
+        <tr>
+            <td>Programming/software development</td>
+            <td>Developing software components to deliver value to stakeholders.</td>
+            <td>Designs, codes, verifies, tests, documents, amends and refactors complex programs/scripts and integration software services.  
+Contributes to the selection of the software development methods, tools and techniques. 
+Applies agreed standards and tools to achieve well-engineered outcomes.  
+Participates in reviews of own work and leads reviews of colleagues' work.</td>
+            <td>PROG</td>
+            <td>4</td>
+            <td>Designs, codes, verifies, tests, documents, amends and refactors complex programs/scripts and integration software services. Contributes to the selection of the software development methods, tools and techniques. Applies agreed standards and tools to achieve well-engineered outcomes. Participates in reviews of own work and leads reviews of colleagues' work. Developed in the sequence CITS1401, CITS2002 or CITS2005, CITS4401 and applied in CITS5206.</td>
+        </tr>
+        
+        </tbody>
+    </table>
+    <h2 class='collapsible' onclick='toggleCollapse("section9")'>Master of Data Science TBA</h2>
+    <table id="section9" class="content">
+        <thead>
+            <tr>
+                <th onclick="sortTable(0, 'section9')">SFIA Skill</th>
+                <th onclick="sortTable(1, 'section9')">Skill Description</th>
+                <th onclick="sortTable(2, 'section9')">Level Description</th>
+                <th onclick="sortTable(3, 'section9')">Code</th>
+                <th onclick="sortTable(4, 'section9')">Level</th>
+                <th onclick="sortTable(5, 'section9')">Units Supporting SFIA Skill</th>
+            </tr>
+        </thead>
+        <tbody>
+    
+        <tr>
+            <td>Systems design</td>
+            <td>Designing systems to meet specified requirements and agreed systems architectures.</td>
+            <td>Designs system components using appropriate modelling techniques following agreed architectures, design standards, patterns and methodology.  
+Identifies and evaluates alternative design options and trade-offs. Creates multiple design views to address the concerns of the different stakeholders and to handle functional and non-functional requirements.  
+Models, simulates or prototypes the behaviour of proposed system components to enable approval by stakeholders.  
+Produces detailed design specifications to form the basis for the construction of systems. Reviews, verifies and improves own designs against specifications.</td>
+            <td>DESN</td>
+            <td>4</td>
+            <td>PHYS4022 develops moderately complex solutions that use high-performance computing environments to address real-world problems.  MORE TO WRITE HERE</td>
+        </tr>
+        
+        <tr>
+            <td>Machine learning</td>
+            <td>Developing systems that learn through experience and by the use of data.</td>
+            <td>Given a well-described problem and dataset, assesses whether machine learning is likely to provide an effective solution.  
+Implements algorithms developed by others. Advises on the effectiveness of specific techniques, based on project findings and wider research.  
+Contributes to the development, evaluation, monitoring and deployment of machine learning systems.  
+Understands and applies rules and guidelines specific to the industry, and anticipates risks and other implications of modelling.</td>
+            <td>MLNG</td>
+            <td>4</td>
+            <td>ML text to be added</td>
+        </tr>
+        
+        <tr>
+            <td>Programming/software development</td>
+            <td>Developing software components to deliver value to stakeholders.</td>
+            <td>Designs, codes, verifies, tests, documents, amends and refactors moderately complex programs/scripts.  
+Applies agreed standards and tools to achieve a well-engineered result.  
+Monitors and reports on progress. Identifies issues related to software development activities. Proposes practical solutions to resolve issues. 
+Collaborates in reviews of work with others as appropriate.</td>
+            <td>PROG</td>
+            <td>3</td>
+            <td>Designs, codes, verifies, tests, documents, amends and refactors moderately complex programs/scripts is supported by the sequence CITS1401, CITS2005, CITS2002, CITS2200, CITS3001 and the capstone CITS3200. Application of standards and tools is developed in the sequence CITS1402, CITS3403, CITS3002.  </td>
+        </tr>
+        
+        </tbody>
+    </table>
+    <h2 class='collapsible' onclick='toggleCollapse("section10")'>B Eng (SE) TBA</h2>
+    <table id="section10" class="content">
+        <thead>
+            <tr>
+                <th onclick="sortTable(0, 'section10')">SFIA Skill</th>
+                <th onclick="sortTable(1, 'section10')">Skill Description</th>
+                <th onclick="sortTable(2, 'section10')">Level Description</th>
+                <th onclick="sortTable(3, 'section10')">Code</th>
+                <th onclick="sortTable(4, 'section10')">Level</th>
+                <th onclick="sortTable(5, 'section10')">Units Supporting SFIA Skill</th>
+            </tr>
+        </thead>
+        <tbody>
+    
+        </tbody>
+    </table>
+    <h2 class='collapsible' onclick='toggleCollapse("section11")'>MPE (SE) TBA</h2>
+    <table id="section11" class="content">
+        <thead>
+            <tr>
+                <th onclick="sortTable(0, 'section11')">SFIA Skill</th>
+                <th onclick="sortTable(1, 'section11')">Skill Description</th>
+                <th onclick="sortTable(2, 'section11')">Level Description</th>
+                <th onclick="sortTable(3, 'section11')">Code</th>
+                <th onclick="sortTable(4, 'section11')">Level</th>
+                <th onclick="sortTable(5, 'section11')">Units Supporting SFIA Skill</th>
+            </tr>
+        </thead>
+        <tbody>
+    
+        </tbody>
+    </table>
+    
+<script>
+// Function to toggle collapsible sections by ID
+function toggleCollapse(sectionId) {
+    var element = document.getElementById(sectionId);
+    if (element.style.display === "none" || element.style.display === "") {
+        element.style.display = "table";
+    } else {
+        element.style.display = "none";
+    }
+}
+
+// Function to sort the table by column within a specific table
+function sortTable(n, tableId) {
+    var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+    table = document.getElementById(tableId);
+    switching = true;
+    dir = "asc"; 
+    while (switching) {
+        switching = false;
+        rows = table.rows;
+        for (i = 1; i < (rows.length - 1); i++) {
+            shouldSwitch = false;
+            x = rows[i].getElementsByTagName("TD")[n];
+            y = rows[i + 1].getElementsByTagName("TD")[n];
+            if (dir == "asc") {
+                if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                    shouldSwitch = true;
+                    break;
+                }
+            } else if (dir == "desc") {
+                if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                    shouldSwitch = true;
+                    break;
+                }
+            }
+        }
+        if (shouldSwitch) {
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+            switchcount++;
+        } else {
+            if (switchcount == 0 && dir == "asc") {
+                dir = "desc";
+                switching = true;
+            }
+        }
+    }
+}
+
+// Function to filter/search through the table
+function searchTable() {
+    var input, filter, table, tr, td, i, j, txtValue;
+    input = document.getElementById("searchInput");
+    filter = input.value.toLowerCase();
+    table = document.querySelectorAll("table");
+    table.forEach(tbl => {
+        tr = tbl.getElementsByTagName("tr");
+        for (i = 1; i < tr.length; i++) {
+            tr[i].style.display = "none"; 
+            td = tr[i].getElementsByTagName("td");
+            for (j = 0; j < td.length; j++) {
+                if (td[j]) {
+                    txtValue = td[j].textContent || td[j].innerText;
+                    if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                        break;
+                    }
+                }
+            }
+        }
+    });
+}
+</script>
+</body>
+</html>
