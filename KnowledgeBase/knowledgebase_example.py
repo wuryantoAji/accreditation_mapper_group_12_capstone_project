@@ -3,9 +3,11 @@ from knowledgebase import KnowledgeBase
 import pandas as pd
 
 # Skills For the Information Age database
+sfia = SFIA('KnowledgeBase\sfia_v8_custom.xlsx')
 sfia = SFIA('KnowledgeBase/sfiaskills.6.3.en.1.xlsx')
 
 # KnowledgeBase - processes the input from the client
+kb = KnowledgeBase( 'KnowledgeBase\CSSE-allprograms-outcome-mappings-20241001.xlsx', sfia)
 kb = KnowledgeBase('KnowledgeBase/CSSE-allprograms-outcome-mappings-20240821.xlsx', sfia)
 
 # Step 1: store all the dataframes in a list
