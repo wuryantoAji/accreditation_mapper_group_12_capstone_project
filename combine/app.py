@@ -1,6 +1,7 @@
 # app.py
 from flask import Flask, render_template
 import BHtml
+import EHtml
 
 app = Flask(__name__, static_url_path='/static', static_folder='static')
 
@@ -28,8 +29,10 @@ def execute_D():
     return render_template('criteria_D.html')
 
 @app.route('/E')
-def execute_E():
-    return render_template('criteria_E.html')
+def criteria_e():
+    html_content = EHtml.generate_html_content()
+    print(html_content)  # This will print the content to the console
+    return render_template('criteria_E.html', script_output=html_content)
 
 if __name__ == '__main__':
     app.run(debug=True)
