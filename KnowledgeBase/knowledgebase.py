@@ -92,11 +92,14 @@ class CriterionB(Criterion):
             else:
                 return justification  # Keep the existing justification if it's already there
 
+        # Move the justification to a column called justificationCode
+        outcomes_mappings_df_copy['JustificationCode'] = outcomes_mappings_df_copy['Justification']
+
         # Apply the function to map specific justifications or leave them as is
         outcomes_mappings_df_copy['Justification'] = outcomes_mappings_df_copy['Justification'].apply(get_justification)
 
         merged_df = pd.merge(self.unit_details_dict, outcomes_mappings_df_copy, on='Unit Code', how='inner')
-        merged_df = merged_df[['Unit Code', 'Outcome', 'Level (SFIA/Bloom)', 'Justification']]
+        merged_df = merged_df[['Unit Code', 'Outcome', 'Level (SFIA/Bloom)', 'Justification', 'JustificationCode']]
         sorted_df = merged_df.groupby('Outcome').apply(lambda x: x.sort_values(by='Outcome')).reset_index(drop=True)
 
         group_column = 'Outcome'
@@ -288,7 +291,7 @@ class CriterionD(Criterion):
         if 'Justification' not in merged_df.columns:
             merged_df['Justification'] = ''
         
-        self.criterion_df = merged_df[['Unit Code', 'Unit Name', 'Justification', 'Assessment Item (for D: Advanced Algorithms and C: CBoK mapping)']]
+        self.criterion_df = merged_df[['Unit Code', 'Unit Name', 'Justification']]
 
     
 class CriterionE(Criterion):

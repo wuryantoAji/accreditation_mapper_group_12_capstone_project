@@ -6,3 +6,4 @@ temp_dev_folder/
 virtualenv/
 ClientInput/
 latexFiles/
+latex_output*

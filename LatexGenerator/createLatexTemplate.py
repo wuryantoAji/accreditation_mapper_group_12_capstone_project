@@ -1,7 +1,10 @@
 import argparse
+import os
+import zipfile
 from pylatex import Package, NoEscape, Section, Subsection, Subsubsection, Tabular, MultiColumn, MultiRow, Document, NewLine, LongTable
 from sfia import SFIA
 from knowledgebase import KnowledgeBase
+from caidi import CAIDI
 
 placeholderConstant = 'Placeholder'
 
@@ -71,12 +74,10 @@ def createCriterionBTable(dataDictionary):
     ### Start loop for each program
     for key in dataDictionary:
         criterionBSubSubSection = Subsubsection(f"{key}\n")
-        professionalSkills = ""
-        for skill in dataDictionary[key].keys():
-            professionalSkills = professionalSkills+"+"+dataDictionary[key][skill][5]
-        criterionBSubSubSection.append(f"ICT professional role: {professionalSkills[1:]}\n")
+        professionalSkills = dataDictionary[key][1]
+        criterionBSubSubSection.append(f"ICT professional role: {professionalSkills}\n")
         sfiaSkills = ""
-        for sfiaComponent in dataDictionary[key].keys():
+        for sfiaComponent in dataDictionary[key][0].keys():
             sfiaSkills = sfiaSkills+"+"+sfiaComponent[0]
         criterionBSubSubSection.append(f"SFIA skills: {sfiaSkills[1:]}\n")
         # criterionBSubSubSection.append(NoEscape(r'\begin{adjustbox}{max width=1\textwidth}'))
@@ -96,14 +97,14 @@ def createCriterionBTable(dataDictionary):
         criterionBTable.add_hline()
         criterionBTable.end_table_header()
         # table content
-        for sfiaComponent in dataDictionary[key].keys():
+        for sfiaComponent in dataDictionary[key][0].keys():
             sfiaCode = sfiaComponent[0]
             sfiaLevel = sfiaComponent[1]
-            unitList = dataDictionary[key][sfiaComponent][0]
-            unitsSupportingSFIASkill = dataDictionary[key][sfiaComponent][1]
-            sfiaSkill = dataDictionary[key][sfiaComponent][2]
-            skillDescription = dataDictionary[key][sfiaComponent][3]
-            levelDescription = dataDictionary[key][sfiaComponent][4].replace('_x000D_', '\n')
+            unitList = dataDictionary[key][0][sfiaComponent][0]
+            unitsSupportingSFIASkill = dataDictionary[key][0][sfiaComponent][1]
+            sfiaSkill = dataDictionary[key][0][sfiaComponent][2]
+            skillDescription = dataDictionary[key][0][sfiaComponent][3]
+            levelDescription = dataDictionary[key][0][sfiaComponent][4].replace('_x000D_', '\n')
             criterionBTable.add_row(NoEscape(r'{%s}' % sfiaSkill),
                         NoEscape(r'{%s}' %skillDescription), 
                         NoEscape(r'{%s}' %levelDescription), 
@@ -167,11 +168,13 @@ def createCriterionDTable(dataDictionary):
             for _, row in criterionD.criterion_df.iterrows():
                 unit_code = row.get('Unit Code', '').strip()
                 unit_name = row.get('Unit Name', '').strip()
-                assessment_item = row.get('Assessment Item (for D: Advanced Algorithms and C: CBoK mapping)', '').strip()
+                # assessment_item = row.get('Justification', '').strip()
                 if(type(row.get('Justification')) == str):
                     justification = row.get('Justification', '').strip()
+                    assessment_item = row.get('Justification', '').strip()
                 else:
                     justification = ''
+                    assessment_item = ''
                 
                 if not (unit_code or unit_name or assessment_item or justification):
                     continue
@@ -262,11 +265,11 @@ def createCriterionETable(dataDictionary):
     return criterionEList    
 
 # main function
-def populateCriterionBDictionary(criterionBItems, sfia, professionalRole):
+def populateCriterionBDictionary(criterionBItems, sfia):
     criterionBList = {}
-    
+
     #Criterion B
-    for course, criterionB in criterionBItems:
+    for course, criterionB in criterionBItems.items():
         courseName = course
         value = {}
         for tableElement in criterionB.criterion_df.groupby(['Outcome','Level (SFIA/Bloom)']).agg(lambda x: ';'.join(x.astype(str)) if not x.empty else '').iterrows():
@@ -278,13 +281,10 @@ def populateCriterionBDictionary(criterionBItems, sfia, professionalRole):
             sfiaSkillName = sfia[outcomeCode][sfiaLevel]['Skill']
             sfiaSkillDescription = sfia[outcomeCode][sfiaLevel]['Description']
             sfiaLevelDescription = sfia[outcomeCode][sfiaLevel]['Description22']
-            professionalRoleForSkill = ''
-            for item in professionalRole:
-                if(item[0] == outcomeCode):
-                    professionalRoleForSkill = item[1]
-            value[(outcomeCode, sfiaLevel)] = [tableElement[1]['Unit Code'], joinedJustification, sfiaSkillName, sfiaSkillDescription, sfiaLevelDescription, professionalRoleForSkill]
+            value[(outcomeCode, sfiaLevel)] = [tableElement[1]['Unit Code'], joinedJustification, sfiaSkillName, sfiaSkillDescription, sfiaLevelDescription]
         if len(value) > 0:
-            criterionBList[f"{courseName}"] = value
+            professionalRoleForSkill = ' + '.join(criterionBItems[courseName].roles)
+            criterionBList[f"{courseName}"] = [value, professionalRoleForSkill]
     return criterionBList
 
     #Criterion D 
@@ -293,7 +293,7 @@ def populateCriterionDDictionary(criterionDItems):
     for course, criterionD in criterionDItems:
         if hasattr(criterionD, 'criterion_df'):
             # Ensure all necessary columns are present
-            required_columns = ['Unit Code', 'Unit Title', 'Assessment Item (for D: Advanced Algorithms and C: CBoK mapping)', 'Complex Computing Criteria met']
+            required_columns = ['Unit Code', 'Unit Title', 'Complex Computing Criteria met']
             for col in required_columns:
                 if col not in criterionD.criterion_df.columns:
                     criterionD.criterion_df[col] = ''
@@ -313,9 +313,10 @@ def populateCriterionEDictionary(criterionEItems):
             criterionEList[course] = []
     return criterionEList
 
-def generateLatex(sortBy, clientInputFile, sfiaFile, generateCriterionDictionary):
-    sfia = SFIA(sfiaFile) # TODO change this into parameter instead
-    kb = KnowledgeBase(clientInputFile, sfia) # TODO change this into parameter instead
+def generateLatex(sortBy, clientInputFile, sfiaFile, caidiInput, generateCriterionDictionary):
+    sfia = SFIA(sfiaFile)
+    cd = CAIDI( caidiInput )
+    kb = KnowledgeBase(clientInputFile, sfia, cd)
     #sort by criterion
     geometry_options = {"tmargin": "0.5in", "lmargin": "0.5in", "bmargin": "0.5in", "rmargin": "0.5in"}
     doc = Document(documentclass="report",geometry_options=geometry_options)
@@ -332,7 +333,7 @@ def generateLatex(sortBy, clientInputFile, sfiaFile, generateCriterionDictionary
         criterionAFileNameList = createCriterionATable("MIT",["CITS4401"])
     
     if(generateCriterionDictionary["generateCriterionB"]):
-        criterionBList = populateCriterionBDictionary(kb.criterionB.items(), sfia, kb.professionalRole.items())
+        criterionBList = populateCriterionBDictionary(kb.criterionB, sfia)
         criterionBFileNameList = createCriterionBTable(criterionBList)
 
     if(generateCriterionDictionary["generateCriterionC"]):
@@ -361,6 +362,7 @@ def generateLatex(sortBy, clientInputFile, sfiaFile, generateCriterionDictionary
             for nameList in criterionBFileNameList:
                 criterionBSection.append(NoEscape(r'\include{%s}' %nameList))
             doc.append(criterionBSection)
+            ## add justification table description table
 
         if(generateCriterionDictionary["generateCriterionC"]):
             ## Add section for criterion C
@@ -387,7 +389,86 @@ def generateLatex(sortBy, clientInputFile, sfiaFile, generateCriterionDictionary
 
     # Sort by program
     elif(sortBy == 'program'):
-        print("")
+        courseDictionary = {}
+        
+        for fileName in criterionBFileNameList:
+            if(fileName.replace(".tex", "").replace("criterionB-", "") not in courseDictionary):
+                courseDictionary[fileName.replace(".tex", "").replace("criterionB-", "")] = [fileName]
+            else:
+                tempList = courseDictionary[fileName.replace(".tex", "").replace("criterionB-", "")]
+                tempList.append(fileName)
+                courseDictionary[fileName.replace(".tex", "").replace("criterionB-", "")] = tempList
+                
+        for fileName in criterionDFileNameList:
+            if(fileName.replace(".tex", "").replace("criterionD-", "") not in courseDictionary):
+                courseDictionary[fileName.replace(".tex", "").replace("criterionD-", "")] = [fileName]
+            else:
+                tempList = courseDictionary[fileName.replace(".tex", "").replace("criterionD-", "")]
+                tempList.append(fileName)
+                courseDictionary[fileName.replace(".tex", "").replace("criterionD-", "")] = tempList
+        
+        for fileName in criterionEFileNameList:
+            if(fileName.replace(".tex", "").replace("criterionE-", "") not in courseDictionary):
+                courseDictionary[fileName.replace(".tex", "").replace("criterionE-", "")] = [fileName]
+            else:
+                tempList = courseDictionary[fileName.replace(".tex", "").replace("criterionE-", "")]
+                tempList.append(fileName)
+                courseDictionary[fileName.replace(".tex", "").replace("criterionE-", "")] = tempList
+        
+        for course in courseDictionary:
+            criterionCourseSection = Section(f"{course}")
+
+            if(generateCriterionDictionary["generateCriterionA"]):
+                criterionCourseSection.append("Criterion A: Program Design\n")
+                # criterionASection.append(NoEscape(r'\include{%s}' %nameList))
+
+            if(generateCriterionDictionary["generateCriterionB"]):
+                criterionCourseSection.append("Criterion B: Professional ICT Role and Skills\n")
+                criterionCourseSection.append(NoEscape(r'\include{%s}' %courseDictionary[course][0]))
+
+            if(generateCriterionDictionary["generateCriterionC"]):
+                criterionCourseSection.append("Criterion C: Program Design\n")
+                criterionCourseSection.append("Mapping of Units to the Australian Computer Society’s Core Body of Knowledge (CBoK)\n")
+                criterionCourseSection.append("Lorem Ipsum 2\n")
+                # criterionASection.append(NoEscape(r'\include{%s}' %nameList))
+
+            if(generateCriterionDictionary["generateCriterionD"]):
+                criterionCourseSection.append("Criterion D: Program Design\n")
+                criterionCourseSection.append(NoEscape(r'\include{%s}' %courseDictionary[course][1]))
+
+            if(generateCriterionDictionary["generateCriterionE"]):
+                criterionCourseSection.append("Criterion E: Program Design\n")
+                criterionCourseSection.append(NoEscape(r'\include{%s}' %courseDictionary[course][2]))
+
+            # if(generateCriterionDictionary["generateCriterionA"]):
+            #     criterionASection = Subsection("Criterion A: Program Design")
+            #     # criterionASection.append(NoEscape(r'\include{%s}' %nameList))
+            #     criterionCourseSection.append(criterionASection)
+
+            # if(generateCriterionDictionary["generateCriterionB"]):
+            #     criterionBSection = Subsection("Criterion B: Professional ICT Role and Skills")
+            #     criterionBSection.append(NoEscape(r'\include{%s}' %courseDictionary[course][0]))
+            #     criterionCourseSection.append(criterionBSection)
+
+            # if(generateCriterionDictionary["generateCriterionC"]):
+            #     criterionCSection = Subsection("Criterion C: Program Design")
+            #     criterionCSection.append("Mapping of Units to the Australian Computer Society’s Core Body of Knowledge (CBoK)\n")
+            #     criterionCSection.append("Lorem Ipsum 2\n")
+            #     # criterionASection.append(NoEscape(r'\include{%s}' %nameList))
+            #     criterionCourseSection.append(criterionCSection)
+
+            # if(generateCriterionDictionary["generateCriterionD"]):
+            #     criterionDSection = Subsection("Criterion D: Program Design")
+            #     criterionDSection.append(NoEscape(r'\include{%s}' %courseDictionary[course][1]))
+            #     criterionCourseSection.append(criterionDSection)
+
+            # if(generateCriterionDictionary["generateCriterionE"]):
+            #     criterionESection = Subsection("Criterion E: Program Design")
+            #     criterionESection.append(NoEscape(r'\include{%s}' %courseDictionary[course][2]))
+            #     criterionCourseSection.append(criterionESection)
+        
+            doc.append(criterionCourseSection)   
+
 
     doc.generate_tex("main")
 
@@ -397,6 +478,7 @@ def main():
     parser.add_argument('-s', '--sort', type=str, help='Sort By', default='criterion')
     parser.add_argument('-i', '--clientInput', type=str, help='Client Excel Input File', default='input.xlsx')
     parser.add_argument('-si', '--sfiaInput', type=str, help='SFIA Input File', default='sfia.xlsx')
+    parser.add_argument('-ci', '--caidiInput', type=str, help='Caidi Input File', default='caidi.zip')
     parser.add_argument('-ca', '--criterionA', type=bool, help='Generate Criterion A', default=True)
     parser.add_argument('-cb', '--criterionB', type=bool, help='Generate Criterion B', default=True)
     parser.add_argument('-cc', '--criterionC', type=bool, help='Generate Criterion C', default=True)
@@ -408,6 +490,7 @@ def main():
     sortBy = args.sort
     clientInputFile = args.clientInput
     sfiaInputFile = args.sfiaInput
+    caidiInputFile = args.caidiInput
     generateCriterionA = args.criterionA
     generateCriterionB = args.criterionB
     generateCriterionC = args.criterionC
@@ -422,7 +505,21 @@ def main():
         "generateCriterionE": generateCriterionE
     }
     
-    generateLatex(sortBy, clientInputFile, sfiaInputFile, generateCriterionDictionary)
+    generateLatex(sortBy, clientInputFile, sfiaInputFile, caidiInputFile, generateCriterionDictionary)
+
+    with zipfile.ZipFile('latex_output.zip', 'w') as zipf:
+    # Loop through all files in the folder
+        for foldername, subfolders, filenames in os.walk('.'):
+            for filename in filenames:
+                # Check if the file ends with the desired extension
+                if filename.endswith('.tex'):
+                    file_path = os.path.join(foldername, filename)
+                    # Add the file to the Zip archive
+                    zipf.write(file_path, os.path.relpath(file_path, '.'))
+                if filename.endswith('.sty'):
+                    file_path = os.path.join(foldername, filename)
+                    # Add the file to the Zip archive
+                    zipf.write(file_path, os.path.relpath(file_path, '.'))
 
 if __name__ == "__main__":
     main()

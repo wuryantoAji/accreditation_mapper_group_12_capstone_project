@@ -22,19 +22,21 @@ def create_temp_folder():
     print(f"Temporary directory created: {temp_dir}")
     return temp_dir
 
-def copy_constant_files(temp_dir, excelClientInput, sfiaExcelInput):
-    # TODO change to fetch the latest file by sort from new to old
+def copy_constant_files(temp_dir, excelClientInput, sfiaExcelInput, caidiZipInput):
     input_excel_file = os.path.join(client_input, excelClientInput) 
-    # TODO change to fetch the latest file by sort from new to old also filter by .xlsx
+    caidi_zip_file = os.path.join(client_input, caidiZipInput)
     sfia_excel_file = os.path.join(knowledge_base, sfiaExcelInput)
     knowledge_base_python_file = os.path.join(knowledge_base, "knowledgebase.py")
     sfia_python_file = os.path.join(knowledge_base, "sfia.py")
+    caidi_python_file = os.path.join(knowledge_base, "caidi.py")
 
     shutil.copy("pyproject.toml", temp_dir)
     shutil.copy(input_excel_file, temp_dir)
     shutil.copy(sfia_excel_file, temp_dir)
+    shutil.copy(caidi_zip_file, temp_dir)
     shutil.copy(knowledge_base_python_file, temp_dir)
     shutil.copy(sfia_python_file, temp_dir)
+    shutil.copy(caidi_python_file, temp_dir)
     print(f"Copied constant files to {temp_dir}")  
 
 def copy_latex_program(temp_dir):
@@ -45,13 +47,13 @@ def copy_latex_program(temp_dir):
     shutil.copy(latex_stylesheet_file, temp_dir)
     print(f"Copied latex program to {temp_dir}")
 
-def run_python_program(temp_dir, clientInputFile, sfiaInputFile, latexConfig):
+def run_python_program(temp_dir, clientInputFile, sfiaInputFile, caidiInputFile, latexConfig):
     # Run the Python program in the temporary directory using Poetry's environment
     script_path = os.path.join(temp_dir, "createLatexTemplate.py")
     if(latexConfig['generateAll']):
-        result = subprocess.run(["poetry", "run", "python", script_path, '-s', latexConfig['sortBy'], '-i', clientInputFile, '-si', sfiaInputFile], cwd=temp_dir)
+        result = subprocess.run(["poetry", "run", "python", script_path, '-s', latexConfig['sortBy'], '-i', clientInputFile, '-si', sfiaInputFile, '-ci', caidiInputFile], cwd=temp_dir)
     else:
-        result = subprocess.run(["poetry", "run", "python", script_path, '-s', latexConfig['sortBy'], '-i', clientInputFile, '-si', sfiaInputFile, '-ca', latexConfig['generateCriterionA'], '-cb', latexConfig['generateCriterionB'], '-cc', latexConfig['generateCriterionC'], '-cd', latexConfig['generateCriterionD'], '-ce', latexConfig['generateCriterionE']], cwd=temp_dir)
+        result = subprocess.run(["poetry", "run", "python", script_path, '-s', latexConfig['sortBy'], '-i', clientInputFile, '-si', sfiaInputFile, '-ci', caidiInputFile, '-ca', latexConfig['generateCriterionA'], '-cb', latexConfig['generateCriterionB'], '-cc', latexConfig['generateCriterionC'], '-cd', latexConfig['generateCriterionD'], '-ce', latexConfig['generateCriterionE']], cwd=temp_dir)
     
     if result.returncode != 0:
         raise Exception(f"Python script failed with exit code {result.returncode}")
@@ -59,19 +61,8 @@ def run_python_program(temp_dir, clientInputFile, sfiaInputFile, latexConfig):
     print("Python program executed successfully")
 
 def copy_generated_files_to_output(temp_dir):
-    latex_stylesheet_file = os.path.join(temp_dir, "latexStyleSheet.sty")
-    
-    latexDirectoryPath = os.path.join('.', 'latexFiles')
-
-    if(not os.path.isdir('latexFiles')):
-        latexDirectory = os.mkdir(latexDirectoryPath)
-
-    shutil.copy(latex_stylesheet_file, latexDirectoryPath)
-
-    for filename in os.listdir(temp_dir):
-        if filename.endswith(".tex"):
-            latex_file_output = os.path.join(temp_dir, filename)
-            shutil.copy(latex_file_output, latexDirectoryPath)
+    latex_output_zip = os.path.join(temp_dir, "latex_output.zip")
+    shutil.copy(latex_output_zip, '.')
 
 def clean_up(temp_dir):
     # Remove the temporary directory
@@ -92,9 +83,9 @@ def main():
             print("Error: Failed to decode the config.json file")
         install_dependencies()
         temp_dir = create_temp_folder()
-        copy_constant_files(temp_dir, config["clientInputFile"], config["sfiaFile"])
+        copy_constant_files(temp_dir, config["clientInputFile"], config["sfiaFile"], config["caidiFile"])
         copy_latex_program(temp_dir)
-        run_python_program(temp_dir, config["clientInputFile"], config["sfiaFile"], config["latexConfig"])
+        run_python_program(temp_dir, config["clientInputFile"], config["sfiaFile"], config["caidiFile"], config["latexConfig"])
         copy_generated_files_to_output(temp_dir)
     finally:
         if temp_dir:
