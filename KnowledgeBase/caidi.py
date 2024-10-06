@@ -4,14 +4,6 @@ from io import BytesIO
 from openpyxl import load_workbook
 from bs4 import BeautifulSoup
 
-class Unit:
-    def __init__(self):
-        return
-
-class Course:
-    def __init__(self):
-        return
-
 
 
 class CAIDI:
@@ -66,8 +58,11 @@ class CAIDI:
                             tables = pd.read_html( file_bytes )
 
                             for table in tables:
+                                # Tables with key/value pairs only have two columns
                                 if len(table.columns) == 2 and [value for value in [0, 1] if value in table.columns]:
                                     grand_table = pd.concat([grand_table, table], ignore_index=True)
+                                #if len(table.columns) == 4:
+                                #    print(table)
 
                             result_dict = {}
                             for index, row in grand_table.iterrows():
@@ -88,9 +83,6 @@ class CAIDI:
                                 self.course[code] = result_dict
                                 
 
-
-                            
-        
         except FileNotFoundError:
             print(f"The file {caidi_zip_file} does not exist.")
         except zipfile.BadZipFile:
