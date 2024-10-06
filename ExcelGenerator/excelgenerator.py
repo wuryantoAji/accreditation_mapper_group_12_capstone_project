@@ -4,6 +4,7 @@ import io
 import zipfile
 import argparse
 import pandas as pd
+from caidi import CAIDI
 
 
 # Create the parser
@@ -12,6 +13,7 @@ parser = argparse.ArgumentParser(description="Program to create ACS criterion Ex
 # Add arguments
 parser.add_argument('-k', '--knowledge', type=str, help='The Knowledge Base input file', required=True)
 parser.add_argument('-s', '--sfia', type=str, help='The SFIA input file', required=True)
+parser.add_argument('-c', '--caidi', type=str, help='The CAIDI input zip file', required=True)
 parser.add_argument('-o', '--output', type=str, help='The output file', default='output.zip', required=True)
 
 # Parse the arguments
@@ -19,6 +21,7 @@ args = parser.parse_args()
 
 # Use the arguments
 print(f"Knowledge base input file: {args.knowledge}")
+print(f"CAIDI input file: {args.caidi}")
 print(f"SFIA input file: {args.sfia}")
 print(f"Output file: {args.output}")
 
@@ -28,8 +31,11 @@ output_zip_file = args.output
 # Skills For the Information Age database
 sfia = SFIA(args.sfia)
 
+# CAIDI dataset
+cd = CAIDI( args.caidi )
+
 # KnowledgeBase - processes the input from the client
-kb = KnowledgeBase( args.knowledge, sfia)
+kb = KnowledgeBase( args.knowledge, sfia, cd)
 
 
 with zipfile.ZipFile(output_zip_file, 'w') as output_zip:
@@ -109,6 +115,8 @@ with zipfile.ZipFile(output_zip_file, 'w') as output_zip:
         criterion_QA_df['Course'] = course
         criterion_E_QA_df = pd.concat([criterion_QA_df, criterion_E_QA_df], ignore_index=True)
     all_criterion_QA_df = pd.concat([all_criterion_QA_df, criterion_E_QA_df], ignore_index=True)
+
+    all_criterion_QA_df = pd.concat([all_criterion_QA_df, kb.criterion_QA_df], ignore_index=True)
 
     # Write the DataFrame to the Excel buffer
     with pd.ExcelWriter(excel_buffer, engine='xlsxwriter') as writer:
