@@ -1,41 +1,51 @@
 import pandas as pd
 
 from sfia import SFIA
+from caidi import CAIDI
 
 class Criterion:
     def __init__(self, course, unit_details_dict, outcomes_mappings_df):
         self.course = course
-        self.criterion_df = None
-        self.criterion_qa_df = None
+        self.criterion_df = pd.DataFrame()
+        self.criterion_qa_df = pd.DataFrame()
         self.unit_details_dict = unit_details_dict.copy()
         self.outcomes_mappings_df = outcomes_mappings_df.copy()
         return
     
 # Missing:
-# - self.code
-# - self.award_title
-# - self.eft
-# - self.first_year_offered
-# - self.program_chair
 # - self.industry_liasion
 # - self.key_academic_staff
-# - self.outcomes
-# - self.justification
 class CriterionA(Criterion):
-    def __init__(self, course, unit_details_dict, outcomes_mappings_df):
+    def __init__(self, course, unit_details_dict, outcomes_mappings_df, outcomes_details_df, cd):
         Criterion.__init__(self, course, unit_details_dict, outcomes_mappings_df)
-        self.code = None
-        self.award_title = None
-        self.eft = None
-        self.first_year_offered = None
-        self.program_chair = [ 'UNKNOWN' ]
-        self.industry_liasion = [ 'UNKNOWN' ]
-        self.key_academic_staff = [ 'UNKNOWN' ]
-        self.outcomes = None
-        self.justification = None
         
         self.__create_criterion_a()
         self.__check_criterion_a()
+
+        identifiers = __extract_identifiers__(course)
+        if identifiers[0] not in cd.course:
+            return
+
+        filtered_df = outcomes_details_df[(outcomes_details_df['Outcome Group'] == 'Program Outcomes') & (outcomes_details_df['Outcome Subgroup or Level'] == identifiers[0])]
+        filtered_df[ 'Complete Outcome' ] = filtered_df[ 'Outcome' ] + "\n" + filtered_df[ 'Outcome Description' ]
+        merged_outcomes = '\n'.join(filtered_df['Complete Outcome'])
+
+        filtered_df = outcomes_details_df[(outcomes_details_df['Outcome Group'] == 'Program Justification') & (outcomes_details_df['Outcome Subgroup or Level'] == identifiers[0])]
+        filtered_df[ 'Complete Justification' ] = filtered_df[ 'Outcome' ] + "\n" + filtered_df[ 'Outcome Description' ]
+        merged_justification = '\n'.join(filtered_df['Complete Justification'])
+
+        self.code = identifiers[0]
+        self.award_title = cd.course[identifiers[0]]['Title']
+        if identifiers[0].startswith('MJD'):
+            self.eft = '3 years'
+        else:
+            self.eft = '2 years'
+        self.first_year_offered = cd.course[identifiers[0]]['First year of offer']
+        self.program_chair = cd.course[identifiers[0]]['Coordinator']
+        self.industry_liasion = [ 'UNKNOWN' ]
+        self.key_academic_staff = [ 'UNKNOWN' ]
+        self.outcomes = merged_outcomes
+        self.justification = merged_justification
 
     def __check_criterion_a(self):
         return None
@@ -43,12 +53,12 @@ class CriterionA(Criterion):
     def __create_criterion_a(self):
         self.criterion_df = self.unit_details_dict
 
-# Missing: Role input
+
 class CriterionB(Criterion):
-    def __init__(self, course, unit_details_dict, outcomes_mappings_df):
+    def __init__(self, course, unit_details_dict, outcomes_mappings_df, outcomes_details_df, sfia_justifications):
         Criterion.__init__(self, course, unit_details_dict, outcomes_mappings_df)
         self.roles = []
-        self.__create_criterion_b()
+        self.__create_criterion_b(outcomes_details_df, sfia_justifications)
         self.__check_criterion_b()
         self.outcomes = self.criterion_df['Outcome'].unique().tolist()
 
@@ -65,7 +75,7 @@ class CriterionB(Criterion):
         }
         self.criterion_qa_df = pd.DataFrame(data)
 
-    def __create_criterion_b(self):
+    def __create_criterion_b(self, outcomes_details_df, sfia_justifications):
         outcomes_mappings_df_copy = self.outcomes_mappings_df.copy()
         outcomes_mappings_df_copy = outcomes_mappings_df_copy[outcomes_mappings_df_copy['Outcome Group'] == 'ICT Skills SFIA']
 
@@ -73,10 +83,6 @@ class CriterionB(Criterion):
         outcomes_mappings_df_copy.dropna(subset=['Level (SFIA/Bloom)'], inplace=True)
         outcomes_mappings_df_copy['Level (SFIA/Bloom)'] = pd.to_numeric(outcomes_mappings_df_copy['Level (SFIA/Bloom)'], errors='coerce').fillna(0).astype(int)
         
-        
-        # Load the SFIA Justifications sheet (for rows that have tags instead of direct justifications)
-        sfia_justifications = pd.read_excel('CSSE-allprograms-outcome-mappings-20240913.xlsx', sheet_name='SFIA justifications')
-
         # Adjust 'Tag' to the correct column name found from the print statement
         justification_map = sfia_justifications.set_index('Tag (used in Outcomes Mappings)')['Justification Text (used in Report Tables)'].to_dict()
         # Function to map justification or keep existing justification if already present
@@ -103,6 +109,10 @@ class CriterionB(Criterion):
         result_df = sorted_df[sorted_df[value_column] == max_values]
 
         self.criterion_df = result_df
+
+        # Get professional role
+        role_df = pd.merge(result_df, outcomes_details_df, on='Outcome', how='left')
+        self.roles = list(set(role_df['Professional Role'].tolist()))
 
 
 class CriterionC(Criterion):
@@ -318,21 +328,41 @@ class CriterionE(Criterion):
         else:
             self.criterion_df = pd.DataFrame(columns=['Unit Code', 'Unit Name', 'Justification'])
 
+def __extract_identifiers__( title):
+    words = title.strip().split()
+    # Is this postgraduate with specialisation or postgraduate or a major
+    if words[-2].isdigit():
+        return [ words[-2], words[-1] ]
+    # Postraduate with no specialisation
+    elif words[-1].isdigit():
+        return [ words[-1], 'None' ]
+    # Major
+    elif '-' in words[-1]:
+        return [ words[-1] ]
+    # No valid identifiers
+    else:
+        return []
+
+    
 class KnowledgeBase:
-    def __init__(self, kb_excel_file, sfia):
+    def __init__(self, kb_excel_file, sfia, cd):
         self.__sfia = sfia
+        self.__cd = cd
 
         #Outcomes Mappings
         outcomes_mappings_df = df = pd.read_excel(kb_excel_file, header=0, sheet_name='Outcomes Mappings')
         # Outcomes Details
-        outcomes_details_df = pd.read_excel(kb_excel_file, header=1, sheet_name='Outcomes Details')
+        outcomes_details_df = pd.read_excel(kb_excel_file, header=0, sheet_name='Outcomes Details')
         # Unit details
         self.unit_details_dict = self.__load_unit_details(kb_excel_file)
 
         # Some necessary data cleaning
         outcomes_mappings_df.dropna(subset=['Unit Code'], inplace=True)
         outcomes_details_df.dropna(subset=['Outcome Group'], inplace=True)
-        
+
+        # Load the SFIA Justifications sheet (for rows that have tags instead of direct justifications)
+        sfia_justifications = pd.read_excel(kb_excel_file, sheet_name='SFIA justifications')
+
         self.criterionA = {}
         self.criterionB = {} 
         self.criterionC = {}
@@ -340,8 +370,8 @@ class KnowledgeBase:
         self.criterionE = {}
 
         for course in self.unit_details_dict.keys():
-            self.criterionA[course] = CriterionA( course, self.unit_details_dict[course], outcomes_mappings_df )
-            self.criterionB[course] = CriterionB( course, self.unit_details_dict[course], outcomes_mappings_df )
+            self.criterionA[course] = CriterionA( course, self.unit_details_dict[course], outcomes_mappings_df, outcomes_details_df, self.__cd )
+            self.criterionB[course] = CriterionB( course, self.unit_details_dict[course], outcomes_mappings_df, outcomes_details_df, sfia_justifications )
             self.criterionC[course] = CriterionC( course, self.unit_details_dict[course], outcomes_mappings_df )
             self.criterionD[course] = CriterionD( course, self.unit_details_dict[course], outcomes_mappings_df )
             self.criterionE[course] = CriterionE( course, self.unit_details_dict[course], outcomes_mappings_df )
@@ -364,6 +394,16 @@ class KnowledgeBase:
             print(f"Column not found: {e}")
             raise
 
+####
+#        data = {
+#            'QA Item': ['Number of outcomes ' +str(num_of_outcomes)+' outcomes (2 required)',
+#                        'Number of units ' +str(num_of_criterionB_units)+' units out of ' + str(num_of_units) ],
+#            'Pass/Fail': [ str(num_of_outcomes >= 2), 'N/A']
+#        }
+####
+        self.criterion_QA_df = pd.DataFrame( { 'Course': [], 'Criterion' : [],'QA Item': [], 'Pass/Fail': [] })
+        self.course_identifiers = {}
+
         # Define the columns to iterate over
         columns_to_check = all_columns[start_idx:end_idx + 1]
 
@@ -374,6 +414,17 @@ class KnowledgeBase:
         for column in columns_to_check:
             # Check if the header is not NA
             if pd.notna(df[column].name) and not df[column].name.startswith('Unnamed'):
+                identifiers = __extract_identifiers__(column)
+
+                # Continue if there are no valid identifiers
+                if identifiers == []:
+                    print( "Ignoring " + column + " due to lack of correct identifiers")
+                    new_row = {'Course': column, 'Criterion' : 'KnowledgeBase','QA Item': 'Identifier for ' + column + ' invalid', 'Pass/Fail': 'Fail'}
+                    self.criterion_QA_df.loc[len(self.criterion_QA_df)] = new_row
+                    continue
+
+                self.course_identifiers[column] = identifiers
+
                 # Filter rows where the column value is not NA
                 filtered_df = df[df[column].notna()]
                 filtered_df[column] = filtered_df[column].astype(str).str.strip()
