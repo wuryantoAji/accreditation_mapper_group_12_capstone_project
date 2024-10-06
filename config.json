@@ -1,0 +1,19 @@
+{
+    "clientInputFile" : "CSSE-allprograms-outcome-mappings-20241001.xlsx",
+    "sfiaFile" : "sfia_v8_custom.xlsx",
+    "latexConfig" : {
+        "sortBy": "criterion",
+        "generateAll": true,
+        "generateCriterionA": true,
+        "generateCriterionB": true,
+        "generateCriterionC": true,
+        "generateCriterionD": true,
+        "generateCriterionE": true
+    },
+    "excelConfig" : {
+
+    },
+    "htmlConfig":{
+
+    }
+}

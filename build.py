@@ -2,14 +2,13 @@ import os
 import shutil
 import subprocess
 import tempfile
+import json
 
 # Constant
 knowledge_base = "KnowledgeBase"
 latex_generator = "LatexGenerator"
 client_input = "ClientInput"
-excelClientInput = "CSSE-allprograms-outcome-mappings-20240913.xlsx"
-sfiaExcelInput = "sfia_v8_custom.xlsx"
-
+config_path = os.path.join(os.path.dirname(__file__), 'config.json')
 
 def install_dependencies():
     # Install dependencies from requirements.txt using Poetry
@@ -23,7 +22,7 @@ def create_temp_folder():
     print(f"Temporary directory created: {temp_dir}")
     return temp_dir
 
-def copy_constant_files(temp_dir):
+def copy_constant_files(temp_dir, excelClientInput, sfiaExcelInput):
     # TODO change to fetch the latest file by sort from new to old
     input_excel_file = os.path.join(client_input, excelClientInput) 
     # TODO change to fetch the latest file by sort from new to old also filter by .xlsx
@@ -46,10 +45,13 @@ def copy_latex_program(temp_dir):
     shutil.copy(latex_stylesheet_file, temp_dir)
     print(f"Copied latex program to {temp_dir}")
 
-def run_python_program(temp_dir):
+def run_python_program(temp_dir, clientInputFile, sfiaInputFile, latexConfig):
     # Run the Python program in the temporary directory using Poetry's environment
     script_path = os.path.join(temp_dir, "createLatexTemplate.py")
-    result = subprocess.run(["poetry", "run", "python", script_path], cwd=temp_dir)
+    if(latexConfig['generateAll']):
+        result = subprocess.run(["poetry", "run", "python", script_path, '-s', latexConfig['sortBy'], '-i', clientInputFile, '-si', sfiaInputFile], cwd=temp_dir)
+    else:
+        result = subprocess.run(["poetry", "run", "python", script_path, '-s', latexConfig['sortBy'], '-i', clientInputFile, '-si', sfiaInputFile, '-ca', latexConfig['generateCriterionA'], '-cb', latexConfig['generateCriterionB'], '-cc', latexConfig['generateCriterionC'], '-cd', latexConfig['generateCriterionD'], '-ce', latexConfig['generateCriterionE']], cwd=temp_dir)
     
     if result.returncode != 0:
         raise Exception(f"Python script failed with exit code {result.returncode}")
@@ -58,12 +60,6 @@ def run_python_program(temp_dir):
 
 def copy_generated_files_to_output(temp_dir):
     latex_stylesheet_file = os.path.join(temp_dir, "latexStyleSheet.sty")
-    latex_main_file = os.path.join(temp_dir, "main.tex")
-    latex_criterionA_file = os.path.join(temp_dir, "criterionA.tex")
-    latex_criterionB_file = os.path.join(temp_dir, "criterionB.tex")
-    latex_criterionC_file = os.path.join(temp_dir, "criterionC.tex")
-    latex_criterionD_file = os.path.join(temp_dir, "criterionD.tex")
-    latex_criterionE_file = os.path.join(temp_dir, "criterionE.tex")
     
     latexDirectoryPath = os.path.join('.', 'latexFiles')
 
@@ -71,13 +67,11 @@ def copy_generated_files_to_output(temp_dir):
         latexDirectory = os.mkdir(latexDirectoryPath)
 
     shutil.copy(latex_stylesheet_file, latexDirectoryPath)
-    shutil.copy(latex_main_file, latexDirectoryPath)
-    shutil.copy(latex_criterionA_file, latexDirectoryPath)
-    shutil.copy(latex_criterionB_file, latexDirectoryPath)
-    shutil.copy(latex_criterionC_file, latexDirectoryPath)
-    shutil.copy(latex_criterionD_file, latexDirectoryPath)
-    shutil.copy(latex_criterionE_file, latexDirectoryPath)
-    
+
+    for filename in os.listdir(temp_dir):
+        if filename.endswith(".tex"):
+            latex_file_output = os.path.join(temp_dir, filename)
+            shutil.copy(latex_file_output, latexDirectoryPath)
 
 def clean_up(temp_dir):
     # Remove the temporary directory
@@ -88,11 +82,19 @@ def clean_up(temp_dir):
 def main():
     temp_dir = None
     try:
+        try:
+            with open(config_path, 'r') as f:
+                config = json.load(f)
+                print("Configuration loaded successfully:", config)
+        except FileNotFoundError:
+            print(f"Error: config.json file not found at {config_path}")
+        except json.JSONDecodeError:
+            print("Error: Failed to decode the config.json file")
         install_dependencies()
         temp_dir = create_temp_folder()
-        copy_constant_files(temp_dir)
+        copy_constant_files(temp_dir, config["clientInputFile"], config["sfiaFile"])
         copy_latex_program(temp_dir)
-        run_python_program(temp_dir)
+        run_python_program(temp_dir, config["clientInputFile"], config["sfiaFile"], config["latexConfig"])
         copy_generated_files_to_output(temp_dir)
     finally:
         if temp_dir:

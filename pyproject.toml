@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "accreditation-mapper-group-12-capstone-project"
 version = "0.1.0"
-description = ""
-authors = ["Your Name <you@example.com>"]
+description = "build file for accrediation mapper"
+authors = ["Group 12 - MIT Capstone Course UWA"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
