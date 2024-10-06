@@ -6,7 +6,7 @@ from jinja2 import Template
 # Step 1: Extract data and store it as a DataFrame
 
 # Skills For the Information Age database
-sfia = SFIA('KnowledgeBase/sfiaskills.6.3.en.1.xlsx')
+sfia = SFIA('KnowledgeBase/sfia_v8_custom.xlsx')
 
 # KnowledgeBase - processes the input from the client
 kb = KnowledgeBase('KnowledgeBase/CSSE-allprograms-outcome-mappings-20240821.xlsx', sfia)

@@ -5,7 +5,7 @@ from sfia import SFIA
 
 
 
-data = SFIA('KnowledgeBase/sfiaskills.6.3.en.1.xlsx')
+data = SFIA('KnowledgeBase/sfia_v8_custom.xlsx')
 
 entry = data[('DESN', 1, 'Description')]
 

@@ -3,22 +3,22 @@ from knowledgebase import KnowledgeBase
 import pandas as pd
 
 # Skills For the Information Age database
-sfia = SFIA('KnowledgeBase\sfia_v8_custom.xlsx')
-sfia = SFIA('KnowledgeBase/sfiaskills.6.3.en.1.xlsx')
+sfia = SFIA('KnowledgeBase/sfia_v8_custom.xlsx')
+
 
 # KnowledgeBase - processes the input from the client
-kb = KnowledgeBase( 'KnowledgeBase\CSSE-allprograms-outcome-mappings-20241001.xlsx', sfia)
-kb = KnowledgeBase('KnowledgeBase/CSSE-allprograms-outcome-mappings-20240821.xlsx', sfia)
+kb = KnowledgeBase('KnowledgeBase/CSSE-allprograms-outcome-mappings-20241001.xlsx', sfia)
+
 
 # Step 1: store all the dataframes in a list
 data_frames = []
 
 # loop through course data and save DataFrame
-for course, criterion in kb.criterionD.items():
+for course, criterion in kb.criterionC.items():
     print(f"Processing course: {course}")
     
     df = criterion.criterion_df
-    if df is not None and not df.empty:
+    if df is not None and not df.empty: 
         # extract course code and title from course name
         course_code = course.split()[-1]  
         course_title = " ".join(course.split()[:-1])  
