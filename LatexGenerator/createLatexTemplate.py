@@ -15,6 +15,8 @@ def createCriterionATable(programName, listOfCourse):
     criterionAList = []
     ### Start loop for each program
     criterionASubSubSection = Subsubsection('Program Name\n')
+    criterionASubSubSection.append(NoEscape(r'\rubric{Criterion A Rubric}'))
+    criterionASubSubSection.append(NewLine())
     criterionASubSubSection.append(NoEscape(r'\begin{adjustbox}{max width=\textwidth}'))
     criterionATable = Tabular(table_spec="|p{\criterionAEmptyCol}|p{\criterionACodeCol}|p{\criterionATitleCol}|p{\criterionACoordinatorCol}|p{\criterionAFileCol}|")
     criterionATable.add_hline()
@@ -63,7 +65,6 @@ def createCriterionATable(programName, listOfCourse):
     criterionASubSubSection.append(criterionATable)
     criterionASubSubSection.append(NoEscape(r'\end{adjustbox}'))
     criterionASubSubSection.append(NewLine())
-    criterionASubSubSection.append(NoEscape(r'\rubric{Criterion A Rubric}'))
     criterionASubSubSection.generate_tex("criterionA-")
     criterionAList.append(f"criterionA-.tex")
     return criterionAList
