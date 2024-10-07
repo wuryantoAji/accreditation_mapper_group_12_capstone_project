@@ -80,8 +80,12 @@ class CriterionB(Criterion):
         outcomes_mappings_df_copy = outcomes_mappings_df_copy[outcomes_mappings_df_copy['Outcome Group'] == 'ICT Skills SFIA']
 
         #Remove N/A Level (SFIA/Bloom) and convert the rest to Ints
-        outcomes_mappings_df_copy.dropna(subset=['Level (SFIA/Bloom)'], inplace=True)
-        outcomes_mappings_df_copy['Level (SFIA/Bloom)'] = pd.to_numeric(outcomes_mappings_df_copy['Level (SFIA/Bloom)'], errors='coerce').fillna(0).astype(int)
+        # Changed 07/10
+        #outcomes_mappings_df_copy.dropna(subset=['Level (SFIA/Bloom)'], inplace=True)
+        outcomes_mappings_df_copy.dropna(subset=['Level (SFIA/Bloom/UnitOutcome)'], inplace=True)
+        # Changed 07/10
+        #outcomes_mappings_df_copy['Level (SFIA/Bloom)'] = pd.to_numeric(outcomes_mappings_df_copy['Level (SFIA/Bloom)'], errors='coerce').fillna(0).astype(int)
+        outcomes_mappings_df_copy['Level (SFIA/Bloom/UnitOutcome)'] = pd.to_numeric(outcomes_mappings_df_copy['Level (SFIA/Bloom/UnitOutcome)'], errors='coerce').fillna(0).astype(int)
         
         # Adjust 'Tag' to the correct column name found from the print statement
         justification_map = sfia_justifications.set_index('Tag (used in Outcomes Mappings)')['Justification Text (used in Report Tables)'].to_dict()
@@ -96,11 +100,15 @@ class CriterionB(Criterion):
         outcomes_mappings_df_copy['Justification'] = outcomes_mappings_df_copy['Justification'].apply(get_justification)
 
         merged_df = pd.merge(self.unit_details_dict, outcomes_mappings_df_copy, on='Unit Code', how='inner')
-        merged_df = merged_df[['Unit Code', 'Outcome', 'Level (SFIA/Bloom)', 'Justification']]
+        # Changed 07/10
+        #merged_df = merged_df[['Unit Code', 'Outcome', 'Level (SFIA/Bloom)', 'Justification']]
+        merged_df = merged_df[['Unit Code', 'Outcome', 'Level (SFIA/Bloom/UnitOutcome)', 'Justification']]
         sorted_df = merged_df.groupby('Outcome').apply(lambda x: x.sort_values(by='Outcome')).reset_index(drop=True)
 
         group_column = 'Outcome'
-        value_column = 'Level (SFIA/Bloom)'
+        # Changed 07/10
+        #value_column = 'Level (SFIA/Bloom)'
+        value_column = 'Level (SFIA/Bloom/UnitOutcome)'
 
         # Group by the specified column and find the maximum value for each group
         max_values = sorted_df.groupby(group_column)[value_column].transform('max')
@@ -252,7 +260,9 @@ class CriterionC(Criterion):
             subject_name = f"{row['Unit Code']}: {row['Unit Name']}"
             for (knowledge_type, outcome_type) in columns_table_2:
                 if outcome_type == row['Outcome'] and knowledge_type in row['Outcome Group']:
-                    table_2_data.loc[subject_name, (knowledge_type, outcome_type)] = row['Level (SFIA/Bloom)']
+                    # Changed 07/10
+                    #table_2_data.loc[subject_name, (knowledge_type, outcome_type)] = row['Level (SFIA/Bloom)']
+                    table_2_data.loc[subject_name, (knowledge_type, outcome_type)] = row['Level (SFIA/Bloom/UnitOutcome)']
         
         # Create a DataFrame from the list
         self.table_2_df = table_2_data
