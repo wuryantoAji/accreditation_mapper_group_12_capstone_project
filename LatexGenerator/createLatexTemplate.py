@@ -538,8 +538,8 @@ def generateLatex(sortBy, clientInputFile, sfiaFile, caidiInput, generateCriteri
             #     criterionESection = Subsection("Criterion E: Program Design")
             #     criterionESection.append(NoEscape(r'\input{%s}' %courseDictionary[course][2]))
             #     criterionCourseSection.append(criterionESection)
-            criterionCourseSection.append(NoEscape(r'\input{criterionB-justification_explanation}'))
             doc.append(criterionCourseSection)   
+        doc.append(NoEscape(r'\input{criterionB-justification_explanation}'))
 
 
     doc.generate_tex("main")
