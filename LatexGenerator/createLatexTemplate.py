@@ -74,6 +74,7 @@ def createCriterionBTable(dataDictionary):
     ### Start loop for each program
     for key in dataDictionary:
         criterionBSubSubSection = Subsubsection(f"{key}\n")
+        criterionBSubSubSection.append(NoEscape(r'\rubric{Criterion B Rubric || SFIA Code ( ) || SFIA Level ( ) || Unit Supporting SFIA Skill ( ) || SFIA Skill ( ) || Skill Description ( ) || Level Description ( )}'))
         professionalSkills = dataDictionary[key][1]
         criterionBSubSubSection.append(f"ICT professional role: {professionalSkills}\n")
         sfiaSkills = ""
@@ -114,7 +115,6 @@ def createCriterionBTable(dataDictionary):
             criterionBTable.add_hline()
         criterionBSubSubSection.append(criterionBTable)
         # criterionBSubSubSection.append(NoEscape(r'\end{adjustbox}'))
-        criterionBSubSubSection.append(NoEscape(r'\rubric{Criterion B Rubric || SFIA Code ( ) || SFIA Level ( ) || Unit Supporting SFIA Skill ( ) || SFIA Skill ( ) || Skill Description ( ) || Level Description ( )}'))
         criterionBSubSubSection.append(NewLine())
         criterionBSubSubSection.generate_tex(f"criterionB-{key.strip()}")
         criterionBList.append(f"criterionB-{key.strip()}.tex")
@@ -125,6 +125,7 @@ def createCriterionCTable(programName, listOfCourse):
     criterionCList = []
     ### Start loop for each program
     criterionCSubSubSection = Subsubsection('Program Name\n')
+    criterionCSubSubSection.append(NoEscape(r'\rubric{Criterion C Rubric}'))
     criterionCSubSubSection.append(NoEscape(r'\begin{adjustbox}{max width=\textwidth}'))
     criterionCTable = Tabular(table_spec="|l|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|")
     criterionCTable.add_hline()
@@ -154,7 +155,6 @@ def createCriterionCTable(programName, listOfCourse):
     criterionCSubSubSection.append(criterionCTable)
     criterionCSubSubSection.append(NoEscape(r'\end{adjustbox}'))
     criterionCSubSubSection.append(NewLine())
-    criterionCSubSubSection.append(NoEscape(r'\rubric{Criterion C Rubric}'))
     criterionCSubSubSection.generate_tex("criterionC-")
     criterionCList.append(f"criterionC-.tex")
     return criterionCList
@@ -188,6 +188,7 @@ def createCriterionDTable(dataDictionary):
 
             if table_content:
                 criterionDSubSubSection = Subsubsection(NoEscape(r'\criterionDcoursetitle{' + course + r'} \\\\'))
+                criterionDSubSubSection.append(NoEscape(r'\rubric{Criterion D Rubric} \\\\'))
 
                 # Start longtable using the new command
                 criterionDSubSubSection.append(NoEscape(r'\criterionDtable'))
@@ -216,7 +217,6 @@ def createCriterionDTable(dataDictionary):
                     criterionDSubSubSection.append(NoEscape(r'\hline'))
 
                 criterionDSubSubSection.append(NoEscape(r'\end{longtable}'))
-                criterionDSubSubSection.append(NoEscape(r'\rubric{Criterion D Rubric} \\\\'))
                 
                 # Add some vertical space between tables
                 criterionDSubSubSection.append(NoEscape(r'\vspace{1em}'))
@@ -233,6 +233,7 @@ def createCriterionETable(dataDictionary):
         if courseData:  # Only process courses with data
             # Add the course title using the command
             criterionESubSubSection = Subsubsection(NoEscape(r'\coursetitle{' + course + '} \\\\'))
+            criterionESubSubSection.append(NoEscape(r'\rubric{Criterion E Rubric} \\\\'))
             
             # Start the tabular environment using the command
             criterionESubSubSection.append(NoEscape(r'\criterionTable'))
@@ -258,7 +259,6 @@ def createCriterionETable(dataDictionary):
                 criterionESubSubSection.append(NoEscape(r'\hline'))
             
             criterionESubSubSection.append(NoEscape(r'\end{tabular}'))
-            criterionESubSubSection.append(NoEscape(r'\rubric{Criterion E Rubric} \\\\'))
             criterionESubSubSection.append(NoEscape(r'\\[1em]'))  # Add some space after each table
             criterionESubSubSection.generate_tex(f"criterionE-{course.strip()}")
             criterionEList.append(f"criterionE-{course.strip()}.tex")
