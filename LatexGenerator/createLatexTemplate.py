@@ -53,7 +53,7 @@ def createCriterionATable(dataDictionary):
         ))
         criterionATable.add_hline()
         criterionATable.add_row((
-            NoEscape(r'\cellcolor{colorLightBlue}\textbf{}'),
+            NoEscape(r'\cellcolor{colorLightBlue}\textbf{Level}'),
             NoEscape(r'\cellcolor{colorLightBlue}\textbf{Code}'),
             NoEscape(r'\cellcolor{colorLightBlue}\textbf{Title}'),
             NoEscape(r'\cellcolor{colorLightBlue}\textbf{Unit Coordinator(s)}'),
@@ -67,7 +67,7 @@ def createCriterionATable(dataDictionary):
             unitName = unit[1]['Unit Name'].split(";")
             for eachRow in range(len(unitCode)):
                 if(eachRow == 0):
-                    criterionATable.add_row(MultiRow(len(unitCode), data=NoEscape(r'\levelrotcell{Level '+ str(level) +'}')), NoEscape(unitCode[eachRow]), NoEscape(unitName[eachRow]), NoEscape(r''), NoEscape(r''))
+                    criterionATable.add_row(MultiRow(len(unitCode), data=NoEscape(str(level))), NoEscape(unitCode[eachRow]), NoEscape(unitName[eachRow]), NoEscape(r''), NoEscape(r''))
                 else:
                     criterionATable.add_row(NoEscape(''), NoEscape(unitCode[eachRow]), NoEscape(unitName[eachRow]), NoEscape(r''), NoEscape(r''))
                 if(eachRow == len(unitCode)-1):
@@ -529,37 +529,11 @@ def generateLatex(sortBy, clientInputFile, sfiaFile, caidiInput, generateCriteri
                 criterionCourseSection.append("Criterion E: Program Design\n")
                 criterionCourseSection.append(NoEscape(r'\input{%s}' %courseDictionary[course][3]))
 
-            # if(generateCriterionDictionary["generateCriterionA"]):
-            #     criterionASection = Subsection("Criterion A: Program Design")
-            #     # criterionASection.append(NoEscape(r'\input{%s}' %nameList))
-            #     criterionCourseSection.append(criterionASection)
-
-            # if(generateCriterionDictionary["generateCriterionB"]):
-            #     criterionBSection = Subsection("Criterion B: Professional ICT Role and Skills")
-            #     criterionBSection.append(NoEscape(r'\input{%s}' %courseDictionary[course][0]))
-            #     criterionCourseSection.append(criterionBSection)
-
-            # if(generateCriterionDictionary["generateCriterionC"]):
-            #     criterionCSection = Subsection("Criterion C: Program Design")
-            #     criterionCSection.append("Mapping of Units to the Australian Computer Society’s Core Body of Knowledge (CBoK)\n")
-            #     criterionCSection.append("Lorem Ipsum 2\n")
-            #     # criterionASection.append(NoEscape(r'\input{%s}' %nameList))
-            #     criterionCourseSection.append(criterionCSection)
-
-            # if(generateCriterionDictionary["generateCriterionD"]):
-            #     criterionDSection = Subsection("Criterion D: Program Design")
-            #     criterionDSection.append(NoEscape(r'\input{%s}' %courseDictionary[course][1]))
-            #     criterionCourseSection.append(criterionDSection)
-
-            # if(generateCriterionDictionary["generateCriterionE"]):
-            #     criterionESection = Subsection("Criterion E: Program Design")
-            #     criterionESection.append(NoEscape(r'\input{%s}' %courseDictionary[course][2]))
-            #     criterionCourseSection.append(criterionESection)
             doc.append(criterionCourseSection)   
         doc.append(NoEscape(r'\input{criterionB-justification_explanation}'))
 
 
-    doc.generate_tex("main")
+    doc.generate_tex(f"main-{sortBy}")
 
 def main():
     parser = argparse.ArgumentParser(description="Program to generate latex files for ACS submission")
