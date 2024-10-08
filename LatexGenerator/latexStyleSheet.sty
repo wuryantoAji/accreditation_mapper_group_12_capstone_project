@@ -2,6 +2,9 @@
 \definecolor{colorDarkBlue}{RGB}{174,192,216}
 \definecolor{colorLightBlue}{RGB}{219,229,241}
 \definecolor{header3}{RGB}{211,211,211}
+\definecolor{lightRed}{RGB}{255,204,204}
+\definecolor{lightOrange}{RGB}{255,229,204}
+\definecolor{veryDarkBlue}{RGB}{0,51,102}
 
 % Font color
 \newcommand{\redtext}[1]{\textcolor{red}{#1}}
@@ -9,6 +12,7 @@
 % Cell colors
 \newcommand{\colorcelldarkblue}{\cellcolor{colorDarkBlue}\color{black}}
 \newcommand{\colorcelllightblue}{\cellcolor{colorLightBlue}\color{black}}
+\newcommand{\colorcellverydarkblue}{\cellcolor{veryDarkBlue}\color{white}}
 
 % Header colors
 % Light blue cells with italics and bold fonts
@@ -47,6 +51,11 @@
 
 % Criterion C
 \newcommand{\myrotcell}[1]{\rotcell{\makebox[0pt][l]{#1}}}
+\newcommand{\essentialKnowledgeCell}{\cellcolor{lightRed}\color{black}}
+\newcommand{\generalKnowledgeCell}{\cellcolor{lightOrange}\color{black}}
+\newcommand{\professionalKnowledgeCell}{\cellcolor{colorLightBlue}\color{black}}
+\newcommand{\technologyBuildingCell}{\cellcolor{colorLightBlue}\color{black}}
+\newcommand{\lightBlueCell}[1]{\cellcolor{colorLightBlue}\color{black}#1}
 
 % Criterion D
 \newcommand{\criterionDcoursetitle}[1]{\noindent\textbf{#1}}

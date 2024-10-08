@@ -133,27 +133,137 @@ def createCriterionCTable(programName, listOfCourse):
     criterionCTable = Tabular(table_spec="|l|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|")
     criterionCTable.add_hline()
     criterionCTable.add_row(
-        ("CBoK Knowledge Areas", (MultiColumn(8, align="|c|", data="ESSENTIAL CORE ICT KNOWLEDGE")),(MultiColumn(11, align="|c|", data="GENERAL ICT KNOWLEDGE")))
+        ("CBoK Knowledge Areas", (MultiColumn(8, align="|c|", data=NoEscape(r"\essentialKnowledgeCell ESSENTIAL CORE ICT KNOWLEDGE"))),(MultiColumn(11, align="|c|", data=NoEscape(r"\generalKnowledgeCell GENERAL ICT KNOWLEDGE"))))
     )
     criterionCTable.add_hline()
     criterionCTable.add_row(
-        (MultiColumn(1, align="|c|", data=MultiRow(2, data=programName)), (MultiColumn(2, align="|c|", data=MultiRow(2, data="Problem Solving"))), (MultiColumn(6, align="|c|", data=MultiRow(2, data="ICT Professional Knowledge"))), (MultiColumn(3, align="|c|", data=MultiRow(2, data="Technology Resources"))), (MultiColumn(4, align="|c|", data=MultiRow(2, data="Technology Building"))), (MultiColumn(4, align="|c|", data=MultiRow(2, data="ICT Management"))))
+        (MultiColumn(1, align="|c|", data=MultiRow(2, data=programName)), 
+         (MultiColumn(2, align="|c|", data=MultiRow(2, data="Problem Solving"))), 
+         (MultiColumn(6, align="|c|", data=NoEscape(r"\professionalKnowledgeCell ICT Professional Knowledge"))), 
+         (MultiColumn(3, align="|c|", data=MultiRow(2, data="Technology Resources"))), 
+         (MultiColumn(4, align="|c|", data=NoEscape(r"\technologyBuildingCell Technology Building"))), 
+         (MultiColumn(4, align="|c|", data=MultiRow(2, data="ICT Management"))))
     )
     criterionCTable.add_row(
         (MultiColumn(1, align="|c|", data=""), MultiColumn(2, align="|c|", data=""), MultiColumn(6, align="|c|", data=""), MultiColumn(3, align="|c|", data=""), MultiColumn(4, align="|c|", data=""), MultiColumn(4, align="|c|", data=""))
     )
     criterionCTable.add_hline(2,20)
-    criterionCTable.add_row((NoEscape(r'\rule{0pt}{175pt}'),NoEscape(r'\myrotcell{Abstraction}'),NoEscape(r'\myrotcell{Design}'),NoEscape(r'\myrotcell{Ethics}'),NoEscape(r'\myrotcell{Professional expectations}'),NoEscape(r'\myrotcell{Teamwork concepts and issues}'),NoEscape(r'\myrotcell{Interpersonal communications}'),NoEscape(r'\myrotcell{Societal issues/legal issues/privacy}'),NoEscape(r'\myrotcell{Understanding the ICT profession}'),NoEscape(r'\myrotcell{Hardware \& software fundamentals}'),NoEscape(r'\myrotcell{Data \& information management}'),NoEscape(r'\myrotcell{Networking}'),NoEscape(r'\myrotcell{Programming}'),NoEscape(r'\myrotcell{Human factors}'),NoEscape(r'\myrotcell{Systems development}'),NoEscape(r'\myrotcell{Systems acquisition}'),NoEscape(r'\myrotcell{IT governance \& organisational issues}'),NoEscape(r'\myrotcell{IT project management}'),NoEscape(r'\myrotcell{Service management}'),NoEscape(r'\myrotcell{Cyber security}')))
+    criterionCTable.add_row((
+        NoEscape(r'\rule{0pt}{175pt}'),
+        NoEscape(r'\myrotcell{Abstraction}'),
+        NoEscape(r'\myrotcell{Design}'),
+        NoEscape(r'\lightBlueCell{\myrotcell{Ethics}}'),
+        NoEscape(r'\lightBlueCell{\myrotcell{Professional expectations}}'),
+        NoEscape(r'\lightBlueCell{\myrotcell{Teamwork concepts and issues}}'),
+        NoEscape(r'\lightBlueCell{\myrotcell{Interpersonal communications}}'),
+        NoEscape(r'\lightBlueCell{\myrotcell{Societal issues/legal issues/privacy}}'),
+        NoEscape(r'\lightBlueCell{\myrotcell{Understanding the ICT profession}}'),
+        NoEscape(r'\myrotcell{Hardware \& software fundamentals}'),
+        NoEscape(r'\myrotcell{Data \& information management}'),
+        NoEscape(r'\myrotcell{Networking}'),
+        NoEscape(r'\lightBlueCell{\myrotcell{Programming}}'),
+        NoEscape(r'\lightBlueCell{\myrotcell{Human factors}}'),
+        NoEscape(r'\lightBlueCell{\myrotcell{Systems development}}'),
+        NoEscape(r'\lightBlueCell{\myrotcell{Systems acquisition}}'),
+        NoEscape(r'\myrotcell{IT governance \& organisational issues}'),
+        NoEscape(r'\myrotcell{IT project management}'),
+        NoEscape(r'\myrotcell{Service management}'),
+        NoEscape(r'\myrotcell{Cyber security}')
+    ))
     criterionCTable.add_hline()
-    criterionCTable.add_row((MultiColumn(20, align="|l|", data="CITS1001 Software Engineering with Java (Core)"),))
+    criterionCTable.add_row((MultiColumn(20, align="|l|", data=NoEscape(r"\colorcellverydarkblue CITS1001 Software Engineering with Java (Core)")),))
     criterionCTable.add_hline()
-    criterionCTable.add_row(("Lectures","X","X","","","X","","","X","X","X","","X","","X","X","","","",""))
+    criterionCTable.add_row((
+        "Lectures",
+        "X",
+        "X",
+        NoEscape(r'\lightBlueCell{}'),
+        NoEscape(r'\lightBlueCell{}'),
+        NoEscape(r'\lightBlueCell{X}'),
+        NoEscape(r'\lightBlueCell{}'),
+        NoEscape(r'\lightBlueCell{}'),
+        NoEscape(r'\lightBlueCell{X}'),
+        "X",
+        "X",
+        "",
+        NoEscape(r'\lightBlueCell{X}'),
+        NoEscape(r'\lightBlueCell{}'),
+        NoEscape(r'\lightBlueCell{X}'),
+        NoEscape(r'\lightBlueCell{X}'),
+        "",
+        "",
+        "",
+        ""
+    ))
     criterionCTable.add_hline()
-    criterionCTable.add_row(("Mid-semester test","X","X","","","X","","","X","X","X","","X","","X","X","","","",""))
+    criterionCTable.add_row((
+        "Mid-semester test",
+        "X",
+        "X",
+        NoEscape(r'\lightBlueCell{}'),
+        NoEscape(r'\lightBlueCell{}'),
+        NoEscape(r'\lightBlueCell{X}'),
+        NoEscape(r'\lightBlueCell{}'),
+        NoEscape(r'\lightBlueCell{}'),
+        NoEscape(r'\lightBlueCell{X}'),
+        "X",
+        "X",
+        "",
+        NoEscape(r'\lightBlueCell{X}'),
+        NoEscape(r'\lightBlueCell{}'),
+        NoEscape(r'\lightBlueCell{X}'),
+        NoEscape(r'\lightBlueCell{X}'),
+        "",
+        "",
+        "",
+        ""
+    ))
     criterionCTable.add_hline()
-    criterionCTable.add_row(("Programming Exercises","X","X","","","X","","","X","X","X","","X","","X","X","","","",""))
+    criterionCTable.add_row((
+        "Programming Exercises",
+        "X",
+        "X",
+        NoEscape(r'\lightBlueCell{}'),
+        NoEscape(r'\lightBlueCell{}'),
+        NoEscape(r'\lightBlueCell{X}'),
+        NoEscape(r'\lightBlueCell{}'),
+        NoEscape(r'\lightBlueCell{}'),
+        NoEscape(r'\lightBlueCell{X}'),
+        "X",
+        "X",
+        "",
+        NoEscape(r'\lightBlueCell{X}'),
+        NoEscape(r'\lightBlueCell{}'),
+        NoEscape(r'\lightBlueCell{X}'),
+        NoEscape(r'\lightBlueCell{X}'),
+        "",
+        "",
+        "",
+        ""
+    ))
     criterionCTable.add_hline()
-    criterionCTable.add_row(("Exam","X","X","","","X","","","X","X","X","","X","","X","X","","","",""))
+    criterionCTable.add_row((
+        "Exam",
+        "X",
+        "X",
+        NoEscape(r'\lightBlueCell{}'),
+        NoEscape(r'\lightBlueCell{}'),
+        NoEscape(r'\lightBlueCell{X}'),
+        NoEscape(r'\lightBlueCell{}'),
+        NoEscape(r'\lightBlueCell{}'),
+        NoEscape(r'\lightBlueCell{X}'),
+        "X",
+        "X",
+        "",
+        NoEscape(r'\lightBlueCell{X}'),
+        NoEscape(r'\lightBlueCell{}'),
+        NoEscape(r'\lightBlueCell{X}'),
+        NoEscape(r'\lightBlueCell{X}'),
+        "",
+        "",
+        "",
+        ""
+    ))
     criterionCTable.add_hline()
     criterionCSubSubSection.append(criterionCTable)
     criterionCSubSubSection.append(NoEscape(r'\end{adjustbox}'))
