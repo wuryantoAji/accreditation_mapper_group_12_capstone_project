@@ -21,27 +21,27 @@ def createCriterionATable(dataDictionary):
         criterionATable.add_row((MultiColumn(5, align="|l|", data=NoEscape(r'\cellcolor{colorDarkBlue}')),))
         criterionATable.add_row((MultiColumn(5, align="|l|", data=NoEscape(r'\criterionAHeader{Program Details}')),))
         criterionATable.add_hline()
-        criterionATable.add_row((MultiColumn(2, align="|l|", data=NoEscape(r'\colorcelllightblueitalic Code')), (MultiColumn(3, align="|l|", data="code-name"))))
+        criterionATable.add_row((MultiColumn(2, align="|l|", data=NoEscape(r'\colorcelllightblueitalic Code')), (MultiColumn(3, align="|l|", data=dataDictionary[key]["code"]))))
         criterionATable.add_hline()
-        criterionATable.add_row((MultiColumn(2, align="|l|", data=NoEscape(r'\colorcelllightblueitalic Award title on Transcript/Testamur')), (MultiColumn(3, align="|l|", data="award-name"))))
+        criterionATable.add_row((MultiColumn(2, align="|l|", data=NoEscape(r'\colorcelllightblueitalic Award title on Transcript/Testamur')), (MultiColumn(3, align="|l|", data=dataDictionary[key]["award_title"]))))
         criterionATable.add_hline()
-        criterionATable.add_row((MultiColumn(2, align="|l|", data=NoEscape(r'\colorcelllightblueitalic EFT Years of Study')), (MultiColumn(3, align="|l|", data="study-duration"))))
+        criterionATable.add_row((MultiColumn(2, align="|l|", data=NoEscape(r'\colorcelllightblueitalic EFT Years of Study')), (MultiColumn(3, align="|l|", data=dataDictionary[key]["eft"]))))
         criterionATable.add_hline()
-        criterionATable.add_row((MultiColumn(2, align="|l|", data=NoEscape(r'\colorcelllightblueitalic First Year of Offer')), (MultiColumn(3, align="|l|", data="year-name"))))
+        criterionATable.add_row((MultiColumn(2, align="|l|", data=NoEscape(r'\colorcelllightblueitalic First Year of Offer')), (MultiColumn(3, align="|l|", data=dataDictionary[key]["first_year_offered"]))))
         criterionATable.add_hline()
         criterionATable.add_row((MultiColumn(5, align="|l|", data=NoEscape(r'\cellcolor{colorDarkBlue}')),))
         criterionATable.add_row((MultiColumn(5, align="|l|", data=NoEscape(r'\criterionAHeader{Personnel}')),))
         criterionATable.add_hline()
-        criterionATable.add_row((MultiColumn(2, align="|l|", data=NoEscape(r'\colorcelllightblueitalic Program Chair')), (MultiColumn(3, align="|l|", data="chair-name"))))
+        criterionATable.add_row((MultiColumn(2, align="|l|", data=NoEscape(r'\colorcelllightblueitalic Program Chair')), (MultiColumn(3, align="|l|", data=dataDictionary[key]["program_chair"]))))
         criterionATable.add_hline()
-        criterionATable.add_row((MultiColumn(2, align="|l|", data=NoEscape(r'\colorcelllightblueitalic ICT Industry Liaison')), (MultiColumn(3, align="|l|", data="liaison-name"))))
+        criterionATable.add_row((MultiColumn(2, align="|l|", data=NoEscape(r'\colorcelllightblueitalic ICT Industry Liaison')), (MultiColumn(3, align="|l|", data=dataDictionary[key]["industry_liasion"]))))
         criterionATable.add_hline()
-        criterionATable.add_row((MultiColumn(2, align="|l|", data=NoEscape(r'\colorcelllightblueitalic Key Academic Staff')), (MultiColumn(3, align="|l|", data="[list-of-staff-name]"))))
+        criterionATable.add_row((MultiColumn(2, align="|l|", data=NoEscape(r'\colorcelllightblueitalic Key Academic Staff')), (MultiColumn(3, align="|l|", data=dataDictionary[key]["key_academic_staff"]))))
         criterionATable.add_hline()
         criterionATable.add_row((MultiColumn(5, align="|l|", data=NoEscape(r'\cellcolor{colorDarkBlue}')),))
         criterionATable.add_row((MultiColumn(5, align="|l|", data=NoEscape(r'\criterionAHeader{Outcomes}')),))
         criterionATable.add_hline()
-        criterionATable.add_row((MultiColumn(5, align="|l|", data="Lorem Ipsum"),))
+        criterionATable.add_row((MultiColumn(5, align="|l|", data=NoEscape(r'\criterionAOutcomes{'+ dataDictionary[key]["outcomes"].replace('\n', ' \\\\ \\\\ ') +'}')),))
         criterionATable.add_hline()
         criterionATable.add_row((
             MultiColumn(2, align="|l", data=NoEscape(r'\cellcolor{colorDarkBlue}')),
@@ -61,13 +61,28 @@ def createCriterionATable(dataDictionary):
         ))
         criterionATable.add_hline()
         criterionASubSubSection.append(criterionATable)
-        # justificationProgramDesignTable = Tabular(table_spec=NoEscape(r'|p{1\textwidth}|'))
-        # justificationProgramDesignTable.add_hline()        
-        # justificationProgramDesignTable.add_row((NoEscape(r'Justification of Program Design')))
-        # justificationProgramDesignTable.add_hline()
-        # justificationProgramDesignTable.add_row((NoEscape(r'Placeholder')))
-        # justificationProgramDesignTable.add_hline()
-        # criterionASubSubSection.append(justificationProgramDesignTable)
+        for unit in dataDictionary[key]["dataFrame"].groupby(['Level']).agg(lambda x: ';'.join(x.astype(str)) if not x.empty else '').iterrows():
+            level = unit[0]
+            unitCode = unit[1]['Unit Code'].split(";")
+            unitName = unit[1]['Unit Name'].split(";")
+            for eachRow in range(len(unitCode)):
+                if(eachRow == 0):
+                    criterionATable.add_row(MultiRow(len(unitCode), data=NoEscape(r'\levelrotcell{Level '+ str(level) +'}')), NoEscape(unitCode[eachRow]), NoEscape(unitName[eachRow]), NoEscape(r''), NoEscape(r''))
+                else:
+                    criterionATable.add_row(NoEscape(''), NoEscape(unitCode[eachRow]), NoEscape(unitName[eachRow]), NoEscape(r''), NoEscape(r''))
+                if(eachRow == len(unitCode)-1):
+                    criterionATable.add_hline()
+                else:
+                    criterionATable.add_hline(2,5)
+        # Start longtable using the new command
+        criterionASubSubSection.append(NoEscape(r'\begin{longtable}{|l|}%'))
+        # Table header
+        criterionASubSubSection.append(NoEscape(r'\hline%'))
+        criterionASubSubSection.append(NoEscape(r'{\colorcelldarkbluebold Justification of Program Design} \\%'))
+        criterionASubSubSection.append(NoEscape(r'\hline%'))
+        criterionASubSubSection.append(NoEscape(r'{%s} \\' %dataDictionary[key]["justification"]))
+        criterionASubSubSection.append(NoEscape(r'\hline%'))
+        criterionASubSubSection.append(NoEscape(r'\end{longtable}%'))
         criterionASubSubSection.append(NoEscape(r'\rubric{Criterion A Rubric}\\\\'))
         criterionASubSubSection.generate_tex(f"criterionA-{key.strip()}")
         criterionAList.append(f"criterionA-{key.strip()}.tex")
@@ -329,7 +344,7 @@ def populateCriterionBDictionary(criterionBItems, sfia):
     for course, criterionB in criterionBItems.items():
         courseName = course
         value = {}
-        for tableElement in criterionB.criterion_df.groupby(['Outcome','Level (SFIA/Bloom)']).agg(lambda x: ';'.join(x.astype(str)) if not x.empty else '').iterrows():
+        for tableElement in criterionB.criterion_df.groupby(['Outcome','Level (SFIA/Bloom/UnitOutcome)']).agg(lambda x: ';'.join(x.astype(str)) if not x.empty else '').iterrows():
             cleanUpJustification = set(tableElement[1]['Justification'].split(";"))
             cleanUpJustification.discard('nan')
             joinedJustification = ';'.join(str(element) for element in cleanUpJustification)
