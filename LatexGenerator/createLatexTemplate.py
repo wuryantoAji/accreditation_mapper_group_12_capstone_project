@@ -335,6 +335,8 @@ def populateCriterionADictionary(criterionA):
             "outcomes":outcomes,
             "justification":justification
         }
+        # print(courseName)
+        # print(criterionA_df)
     return criterionAList
 
 def populateCriterionBDictionary(criterionBItems, sfia):

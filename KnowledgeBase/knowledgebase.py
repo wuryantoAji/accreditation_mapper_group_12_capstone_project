@@ -105,7 +105,7 @@ class CriterionB(Criterion):
         merged_df = pd.merge(self.unit_details_dict, outcomes_mappings_df_copy, on='Unit Code', how='inner')
         # Changed 07/10
         #merged_df = merged_df[['Unit Code', 'Outcome', 'Level (SFIA/Bloom)', 'Justification']]
-        merged_df = merged_df[['Unit Code', 'Outcome', 'Level (SFIA/Bloom/UnitOutcome)', 'Justification']]
+        merged_df = merged_df[['Unit Code', 'Outcome', 'Level (SFIA/Bloom/UnitOutcome)', 'Justification', 'JustificationCode']]
         sorted_df = merged_df.groupby('Outcome').apply(lambda x: x.sort_values(by='Outcome')).reset_index(drop=True)
 
         group_column = 'Outcome'
