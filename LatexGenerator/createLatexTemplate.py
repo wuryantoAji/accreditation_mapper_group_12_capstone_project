@@ -127,6 +127,8 @@ def createCriterionCTable(programName, listOfCourse):
     ### Start loop for each program
     criterionCSubSubSection = Subsubsection('Program Name\n')
     criterionCSubSubSection.append(NoEscape(r'\rubric{Criterion C Rubric}'))
+    criterionCSubSubSection.append(NoEscape(r'\\[1em]'))
+    criterionCSubSubSection.append(NewLine())
     criterionCSubSubSection.append(NoEscape(r'\begin{adjustbox}{max width=\textwidth}'))
     criterionCTable = Tabular(table_spec="|l|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|")
     criterionCTable.add_hline()
@@ -135,7 +137,7 @@ def createCriterionCTable(programName, listOfCourse):
     )
     criterionCTable.add_hline()
     criterionCTable.add_row(
-        (MultiColumn(1, align="|c|", data=MultiRow(2, data="Program Name")), (MultiColumn(2, align="|c|", data=MultiRow(2, data="Problem Solving"))), (MultiColumn(6, align="|c|", data=MultiRow(2, data="ICT Professional Knowledge"))), (MultiColumn(3, align="|c|", data=MultiRow(2, data="Technology Resources"))), (MultiColumn(4, align="|c|", data=MultiRow(2, data="Technology Building"))), (MultiColumn(4, align="|c|", data=MultiRow(2, data="ICT Management"))))
+        (MultiColumn(1, align="|c|", data=MultiRow(2, data=programName)), (MultiColumn(2, align="|c|", data=MultiRow(2, data="Problem Solving"))), (MultiColumn(6, align="|c|", data=MultiRow(2, data="ICT Professional Knowledge"))), (MultiColumn(3, align="|c|", data=MultiRow(2, data="Technology Resources"))), (MultiColumn(4, align="|c|", data=MultiRow(2, data="Technology Building"))), (MultiColumn(4, align="|c|", data=MultiRow(2, data="ICT Management"))))
     )
     criterionCTable.add_row(
         (MultiColumn(1, align="|c|", data=""), MultiColumn(2, align="|c|", data=""), MultiColumn(6, align="|c|", data=""), MultiColumn(3, align="|c|", data=""), MultiColumn(4, align="|c|", data=""), MultiColumn(4, align="|c|", data=""))
@@ -156,10 +158,23 @@ def createCriterionCTable(programName, listOfCourse):
     criterionCSubSubSection.append(criterionCTable)
     criterionCSubSubSection.append(NoEscape(r'\end{adjustbox}'))
     criterionCSubSubSection.append(NewLine())
+    
+    # Add the new table below
+    criterionCSubSubSection.append(NoEscape(r'\\[1em]'))
+    criterionCSubSubSection.append(NoEscape(r'\begin{tabular}{|p{0.3\textwidth}|p{0.7\textwidth}|}'))
+    criterionCSubSubSection.append(NoEscape(r'\hline'))
+    criterionCSubSubSection.append(NoEscape(r'\multicolumn{2}{|c|}{\textbf{Criterion C: Lorem Ipsum}} \\'))
+    criterionCSubSubSection.append(NoEscape(r'\hline'))
+    criterionCSubSubSection.append(NoEscape(r'\textbf{Unit Code \& Title} & \textbf{Justification} \\'))
+    criterionCSubSubSection.append(NoEscape(r'\hline'))
+    criterionCSubSubSection.append(NoEscape(r'Lorem Ipsum & Lorem Ipsum \\'))
+    criterionCSubSubSection.append(NoEscape(r'\hline'))
+    criterionCSubSubSection.append(NoEscape(r'\end{tabular}'))
+    
     criterionCSubSubSection.generate_tex("criterionC-")
     criterionCList.append(f"criterionC-.tex")
     return criterionCList
-
+    
 # Table 4. Criterion D
 def createCriterionDTable(dataDictionary):
     criterionDList = []
