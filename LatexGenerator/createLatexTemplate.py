@@ -134,8 +134,13 @@ def createCriterionCTable(course, criterionC):
     criterionCTable.add_hline()
     criterionCTable.add_row((
         "CBoK Knowledge Areas", 
-        MultiColumn(8, align="|c|", data=NoEscape(r"\essentialKnowledgeCell ESSENTIAL CORE ICT KNOWLEDGE")),
-        MultiColumn(11, align="|c|", data=NoEscape(r"\generalKnowledgeCell GENERAL ICT KNOWLEDGE"))
+        MultiColumn(8, align="|c|", data=NoEscape(r"\cellcolor{lightRed}")),
+        MultiColumn(11, align="|c|", data=NoEscape(r"\cellcolor{lightOrange}"))
+    ))
+    criterionCTable.add_row((
+        MultiColumn(1, align="|c|", data=""),
+        MultiColumn(8, align="|c|", data=NoEscape(r"\criterionCEssentialHeader{ESSENTIAL CORE ICT KNOWLEDGE}")),
+        MultiColumn(11, align="|c|", data=NoEscape(r"\criterionCGeneralHeader{GENERAL ICT KNOWLEDGE}"))
     ))
     criterionCTable.add_hline()
     
