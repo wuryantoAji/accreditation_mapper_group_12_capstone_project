@@ -129,7 +129,7 @@ def createCriterionCTable(programName, criterionC):
     criterionCSubSubSection.append(NoEscape(r'\\[1em]'))
     criterionCSubSubSection.append(NewLine())
     criterionCSubSubSection.append(NoEscape(r'\begin{adjustbox}{max width=\textwidth}'))
-    criterionCTable = Tabular(table_spec=r"|l|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|")
+    criterionCTable = Tabular(table_spec=r"|p{3cm}|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|")
     criterionCTable.add_hline()
     criterionCTable.add_row((
         "CBoK Knowledge Areas", 
@@ -138,7 +138,7 @@ def createCriterionCTable(programName, criterionC):
     ))
     criterionCTable.add_hline()
     criterionCTable.add_row((
-        MultiColumn(1, align="|c|", data=MultiRow(2, data=programName)), 
+        MultiColumn(1, align="|c|", data=MultiRow(2, data=NoEscape(r"\begin{tabular}[c]{@{}c@{}}Master of\\Information\\Technology\\(Applied\\Computing)\\(2025) 62510\\SP-XXXX\end{tabular}"))), 
         MultiColumn(2, align="|c|", data=MultiRow(2, data="Problem Solving")), 
         MultiColumn(6, align="|c|", data=NoEscape(r"\professionalKnowledgeCell ICT Professional Knowledge")), 
         MultiColumn(3, align="|c|", data=MultiRow(2, data="Technology Resources")), 
@@ -182,7 +182,7 @@ def createCriterionCTable(programName, criterionC):
 
     # Example of a data row (repeat this pattern for each row of data)
     criterionCTable.add_row((
-        "Lectures",
+        NoEscape(r"\begin{tabular}[c]{@{}l@{}}Lectures\end{tabular}"),
         "X",
         "X",
         NoEscape(r'\lightBlueCell{}'),
@@ -210,7 +210,7 @@ def createCriterionCTable(programName, criterionC):
     criterionCSubSubSection.append(NewLine())
     
     # Add the new table below
-    criterionCSubSubSection.append(NoEscape(r'\begin{longtable}{|p{0.25\textwidth}|p{0.15\textwidth}|p{0.15\textwidth}|p{0.35\textwidth}|}'))
+    criterionCSubSubSection.append(NoEscape(r'\begin{longtable}{|p{0.25\textwidth}|p{0.10\textwidth}|p{0.10\textwidth}|p{0.45\textwidth}|}'))
     criterionCSubSubSection.append(NoEscape(r'\hline'))
     criterionCSubSubSection.append(NoEscape(r'\multicolumn{4}{|c|}{\textbf{Criterion C: Core Body of Knowledge (CBoK)}} \\'))
     criterionCSubSubSection.append(NoEscape(r'\hline'))
