@@ -190,7 +190,6 @@ class CriterionC(Criterion):
         merged_df.rename(columns={'Unit Name_x': 'Unit Name'}, inplace=True)
         
         # Create Table 1
-        # The outcome names here might be inconsistent with the 'Outcome' column from 'Outcomes Mappings'. Adjust the names if necessary. Same for Outcome Groups.
         knowledge_types_outcomes = [
             ('Professional', 'ICT Ethics'),
             ('Professional', 'Impacts of ICT'),
@@ -205,7 +204,7 @@ class CriterionC(Criterion):
             ('Core', 'Cyber Security'),
             ('Core', 'ICT Project Management'),
             ('Core', 'ICT management & governance'),
-            ('Depth', 'In-depth ICT Knowledge')
+            ('In-depth', '')
         ]
         
         # Create a list to append the data for Table 1
@@ -230,7 +229,6 @@ class CriterionC(Criterion):
         self.table_1_df = pd.DataFrame(table_1_data, columns=['ICT Knowledge Types', 'Outcome', 'Unit Code + Unit Name'])
         
         # Create Table 2
-        # The outcome names here might be inconsistent with the 'Outcome' column from 'Outcomes Mappings'. Adjust the names if necessary. Same for Outcome Groups.
         columns_table_2 = pd.MultiIndex.from_tuples([
             ('Professional', 'ICT Ethics'),
             ('Professional', 'Impacts of ICT'),
@@ -245,7 +243,7 @@ class CriterionC(Criterion):
             ('Core', 'Cyber Security'),
             ('Core', 'ICT Project Management'),
             ('Core', 'ICT management & governance'),
-            ('Depth', 'In-depth ICT Knowledge')
+            ('In-depth', '')
         ])
         
         # Create rows for the pivot table
@@ -367,6 +365,8 @@ class KnowledgeBase:
         outcomes_details_df = pd.read_excel(kb_excel_file, header=0, sheet_name='Outcomes Details')
         # Unit details
         self.unit_details_dict = self.__load_unit_details(kb_excel_file)
+        # Unit outcomes
+        self.unit_outcomes_df = pd.read_excel(kb_excel_file, header=0, sheet_name='Unit Outcomes')
 
         # Some necessary data cleaning
         outcomes_mappings_df.dropna(subset=['Unit Code'], inplace=True)
@@ -405,6 +405,8 @@ class KnowledgeBase:
         except ValueError as e:
             print(f"Column not found: {e}")
             raise
+
+
 
 ####
 #        data = {

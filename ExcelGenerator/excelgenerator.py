@@ -7,6 +7,16 @@ import pandas as pd
 from caidi import CAIDI
 
 
+def __make_excel_legal_name(input_string):
+        # List of characters to replace
+    characters_to_replace = ['[', ']', ':', '*', '?', '\\', '/']
+    
+    # Replace each character with '-'
+    for char in characters_to_replace:
+        input_string = input_string.replace(char, '-')
+    
+    return input_string
+
 # Create the parser
 parser = argparse.ArgumentParser(description="Program to create ACS criterion Excel file from input Excel file.")
 
@@ -126,3 +136,21 @@ with zipfile.ZipFile(output_zip_file, 'w') as output_zip:
     excel_buffer.seek(0)
 
     output_zip.writestr('criterion_QA.xlsx', excel_buffer.getvalue())
+
+
+    # Write out the units spreadsheet that contains unit outcomes.
+
+    # Create a BytesIO buffer to hold the Excel file
+    excel_buffer = io.BytesIO()
+
+    # Write the DataFrame to the Excel buffer
+    with pd.ExcelWriter(excel_buffer, engine='xlsxwriter') as writer:
+        # Group the DataFrame by the 'Group' column
+        for group_name, group_data in kb.unit_outcomes_df.groupby('Unit Code'):
+            # Write each group to a different worksheet
+            group_data.to_excel(writer, sheet_name=__make_excel_legal_name(group_name), index=False)
+
+    # Seek to the beginning of the BytesIO buffer
+    excel_buffer.seek(0)
+
+    output_zip.writestr('Unit Outcomes.xlsx', excel_buffer.getvalue())
