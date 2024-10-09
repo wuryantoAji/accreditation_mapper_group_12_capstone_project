@@ -1,6 +1,7 @@
 import argparse
 import os
 import zipfile
+import pandas as pd
 from pylatex import Package, NoEscape, Section, Subsection, Subsubsection, Tabular, MultiColumn, MultiRow, Document, NewLine, LongTable
 from sfia import SFIA
 from knowledgebase import KnowledgeBase
@@ -137,13 +138,24 @@ def createCriterionCTable(course, criterionC):
         MultiColumn(11, align="|c|", data=NoEscape(r"\generalKnowledgeCell GENERAL ICT KNOWLEDGE"))
     ))
     criterionCTable.add_hline()
+    
+    # Format the course name to be multi-line
+    formatted_course = course.replace(' ', r'\\')
     criterionCTable.add_row((
-        MultiColumn(1, align="|c|", data=MultiRow(2, data=NoEscape(r"\begin{tabular}[c]{@{}c@{}}" + course + r"\end{tabular}"))), 
-        MultiColumn(2, align="|c|", data=MultiRow(2, data="Problem Solving")), 
+        MultiColumn(1, align="|c|", data=MultiRow(3, data=NoEscape(r"\begin{tabular}[c]{@{}c@{}}" + formatted_course + r"\end{tabular}"))), 
+        MultiColumn(2, align="|c|", data=NoEscape(r"\lightGrayCell{Problem Solving}")), 
         MultiColumn(6, align="|c|", data=NoEscape(r"\professionalKnowledgeCell ICT Professional Knowledge")), 
-        MultiColumn(3, align="|c|", data=MultiRow(2, data="Technology Resources")), 
+        MultiColumn(3, align="|c|", data=NoEscape(r"\lightGrayCell{Technology Resources}")), 
         MultiColumn(4, align="|c|", data=NoEscape(r"\technologyBuildingCell Technology Building")), 
-        MultiColumn(4, align="|c|", data=MultiRow(2, data="ICT Management"))
+        MultiColumn(4, align="|c|", data=NoEscape(r"\lightGrayCell{ICT Management}"))
+    ))
+    criterionCTable.add_row((
+        MultiColumn(1, align="|c|", data=""),
+        MultiColumn(2, align="|c|", data=""),
+        MultiColumn(6, align="|c|", data=""),
+        MultiColumn(3, align="|c|", data=""),
+        MultiColumn(4, align="|c|", data=""),
+        MultiColumn(4, align="|c|", data="")
     ))
     criterionCTable.add_row((
         MultiColumn(1, align="|c|", data=""),
@@ -156,60 +168,86 @@ def createCriterionCTable(course, criterionC):
     criterionCTable.add_hline(2,20)
     criterionCTable.add_row((
         NoEscape(r'\rule{0pt}{175pt}'),
-        NoEscape(r'\myrotcell{Abstraction}'),
-        NoEscape(r'\myrotcell{Design}'),
+        NoEscape(r'\lightGrayCell{\myrotcell{Abstraction}}'),
+        NoEscape(r'\lightGrayCell{\myrotcell{Design}}'),
         NoEscape(r'\lightBlueCell{\myrotcell{Ethics}}'),
         NoEscape(r'\lightBlueCell{\myrotcell{Professional expectations}}'),
         NoEscape(r'\lightBlueCell{\myrotcell{Teamwork concepts and issues}}'),
         NoEscape(r'\lightBlueCell{\myrotcell{Interpersonal communications}}'),
         NoEscape(r'\lightBlueCell{\myrotcell{Societal issues/legal issues/privacy}}'),
         NoEscape(r'\lightBlueCell{\myrotcell{Understanding the ICT profession}}'),
-        NoEscape(r'\myrotcell{Hardware \& software fundamentals}'),
-        NoEscape(r'\myrotcell{Data \& information management}'),
-        NoEscape(r'\myrotcell{Networking}'),
+        NoEscape(r'\lightGrayCell{\myrotcell{Hardware \& software fundamentals}}'),
+        NoEscape(r'\lightGrayCell{\myrotcell{Data \& information management}}'),
+        NoEscape(r'\lightGrayCell{\myrotcell{Networking}}'),
         NoEscape(r'\lightBlueCell{\myrotcell{Programming}}'),
         NoEscape(r'\lightBlueCell{\myrotcell{Human factors}}'),
         NoEscape(r'\lightBlueCell{\myrotcell{Systems development}}'),
         NoEscape(r'\lightBlueCell{\myrotcell{Systems acquisition}}'),
-        NoEscape(r'\myrotcell{IT governance \& organisational issues}'),
-        NoEscape(r'\myrotcell{IT project management}'),
-        NoEscape(r'\myrotcell{Service management}'),
-        NoEscape(r'\myrotcell{Cyber security}')
+        NoEscape(r'\lightGrayCell{\myrotcell{IT governance \& organisational issues}}'),
+        NoEscape(r'\lightGrayCell{\myrotcell{IT project management}}'),
+        NoEscape(r'\lightGrayCell{\myrotcell{Service management}}'),
+        NoEscape(r'\lightGrayCell{\myrotcell{Cyber security}}')
     ))
-    criterionCTable.add_hline()
-    criterionCTable.add_row((MultiColumn(20, align="|l|", data=NoEscape(r"\colorcellverydarkblue CITS1001 Software Engineering with Java (Core)")),))
     criterionCTable.add_hline()
 
-    # Example of a data row (repeat this pattern for each row of data)
-    criterionCTable.add_row((
-        NoEscape(r"\begin{tabular}[c]{@{}l@{}}Lectures\end{tabular}"),
-        "X",
-        "X",
-        NoEscape(r'\lightBlueCell{}'),
-        NoEscape(r'\lightBlueCell{}'),
-        NoEscape(r'\lightBlueCell{X}'),
-        NoEscape(r'\lightBlueCell{}'),
-        NoEscape(r'\lightBlueCell{}'),
-        NoEscape(r'\lightBlueCell{X}'),
-        "X",
-        "X",
-        "",
-        NoEscape(r'\lightBlueCell{X}'),
-        NoEscape(r'\lightBlueCell{}'),
-        NoEscape(r'\lightBlueCell{X}'),
-        NoEscape(r'\lightBlueCell{X}'),
-        "",
-        "",
-        "",
-        ""
-    ))
-    criterionCTable.add_hline()
+    # Define the expected columns
+    expected_columns = [
+        ('Core', 'Abstraction'),
+        ('Core', 'Design'),
+        ('Professional', 'Ethics'),
+        ('Professional', 'Professional expectations'),
+        ('Professional', 'Teamwork concepts and issues'),
+        ('Professional', 'Interpersonal communications'),
+        ('Professional', 'Societal issues/legal issues/privacy'),
+        ('Professional', 'Understanding the ICT profession'),
+        ('Core', 'Hardware & software fundamentals'),
+        ('Core', 'Data & information management'),
+        ('Core', 'Networking'),
+        ('Core', 'Programming'),
+        ('Core', 'Human factors'),
+        ('Core', 'Systems development'),
+        ('Core', 'Systems acquisition'),
+        ('Core', 'IT governance & organisational issues'),
+        ('Core', 'IT project management'),
+        ('Core', 'Service management'),
+        ('Core', 'Cyber security')
+    ]
+
+    # Populate the table with data from criterionC.table_2_df
+    for index, row in criterionC.table_2_df.iterrows():
+        unit_name = index
+        criterionCTable.add_row((MultiColumn(20, align="|l|", data=NoEscape(r"\colorcellverydarkblue " + unit_name)),))
+        criterionCTable.add_hline()
+
+        data_row = [NoEscape(r"\begin{tabular}[c]{@{}l@{}}Lectures\end{tabular}")]
+        for column in expected_columns:
+            if column in criterionC.table_2_df.columns:
+                value = row[column]
+                if pd.notna(value):
+                    if column[0] == 'Professional' or column[0] == 'Core':
+                        data_row.append(NoEscape(r'\lightBlueCell{X}'))
+                    else:
+                        data_row.append("X")
+                else:
+                    if column[0] == 'Professional' or column[0] == 'Core':
+                        data_row.append(NoEscape(r'\lightBlueCell{}'))
+                    else:
+                        data_row.append("")
+            else:
+                # If the column is not in the DataFrame, add an empty cell
+                if column[0] == 'Professional' or column[0] == 'Core':
+                    data_row.append(NoEscape(r'\lightBlueCell{}'))
+                else:
+                    data_row.append("")
+
+        criterionCTable.add_row(tuple(data_row))
+        criterionCTable.add_hline()
 
     criterionCSubSubSection.append(criterionCTable)
     criterionCSubSubSection.append(NoEscape(r'\end{adjustbox}'))
     criterionCSubSubSection.append(NewLine())
     
-    # Second table
+    # Second table (unchanged)
     criterionCSubSubSection.append(NoEscape(r'\begin{longtable}{|p{0.25\textwidth}|p{0.10\textwidth}|p{0.10\textwidth}|p{0.45\textwidth}|}'))
     criterionCSubSubSection.append(NoEscape(r'\hline'))
     criterionCSubSubSection.append(NoEscape(r'\multicolumn{4}{|c|}{\textbf{Criterion C: Core Body of Knowledge (CBoK)}} \\'))
