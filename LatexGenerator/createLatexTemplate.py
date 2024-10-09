@@ -210,8 +210,7 @@ def createCriterionCTable(programName, criterionC):
     criterionCSubSubSection.append(NewLine())
     
     # Add the new table below
-    criterionCSubSubSection.append(NoEscape(r'\\[1em]'))
-    criterionCSubSubSection.append(NoEscape(r'\begin{longtable}{|p{0.20\textwidth}|p{0.15\textwidth}|p{0.15\textwidth}|p{0.40\textwidth}|}'))
+    criterionCSubSubSection.append(NoEscape(r'\begin{longtable}{|p{0.25\textwidth}|p{0.15\textwidth}|p{0.15\textwidth}|p{0.35\textwidth}|}'))
     criterionCSubSubSection.append(NoEscape(r'\hline'))
     criterionCSubSubSection.append(NoEscape(r'\multicolumn{4}{|c|}{\textbf{Criterion C: Core Body of Knowledge (CBoK)}} \\'))
     criterionCSubSubSection.append(NoEscape(r'\hline'))
@@ -219,39 +218,32 @@ def createCriterionCTable(programName, criterionC):
     criterionCSubSubSection.append(NoEscape(r'\hline'))
     criterionCSubSubSection.append(NoEscape(r'\endhead'))
     
-# Create a dictionary to group related outcomes
-    outcome_groups = {}
-    for _, row in criterionC.table_1_df.iterrows():
-        key = (row['ICT Knowledge Types'], row['Outcome'])
-        if key not in outcome_groups:
-            outcome_groups[key] = []
-        outcome_groups[key].extend(row['Unit Code + Unit Name'].split(', '))
-
-    for (knowledge_type, outcome), units in outcome_groups.items():
-        cbok_outcome = f"{knowledge_type} - {outcome}"
+    # Group the data by Outcome Group and Outcome
+    grouped = criterionC.table_3_df.groupby(['Outcome Group', 'Outcome'])
+    
+    for (outcome_group, outcome), group in grouped:
+        cbok_outcome = f"{outcome_group} - {outcome}"
         
-        for unit in units:
-            unit_parts = unit.split()
-            if not unit_parts:
-                continue  # Skip empty units
-            unit_code = unit_parts[0]
+        for _, row in group.iterrows():
+            unit_code = row['Unit Code + Unit Name'].split()[0]  # Extract unit code
             
-            try:
-                level = criterionC.table_2_df.loc[unit, (knowledge_type, outcome)]
-                level = str(level) if not pd.isna(level) else 'N/A'
-            except KeyError:
-                level = 'N/A'
+            # Get the level from the original DataFrame
+            level = criterionC.outcomes_mappings_df.loc[
+                (criterionC.outcomes_mappings_df['Unit Code'] == unit_code) &
+                (criterionC.outcomes_mappings_df['Outcome Group'] == outcome_group) &
+                (criterionC.outcomes_mappings_df['Outcome'] == outcome),
+                'Level (SFIA/Bloom/UnitOutcome)'
+            ].values
             
-            justification_row = criterionC.table_3_df[
-                (criterionC.table_3_df['Unit Code + Unit Name'] == unit) & 
-                (criterionC.table_3_df['Outcome'] == outcome)
-            ]
-            justification = justification_row['Justification'].values[0] if not justification_row.empty else 'N/A'
+            level = str(level[0]) if len(level) > 0 else 'N/A'
+            
+            justification = row['Justification']
             
             # Escape special characters for LaTeX
-            justification = justification.replace('&', r'\&').replace('%', r'\%').replace('#', r'\#').replace('_', r'\_')
+            cbok_outcome_escaped = cbok_outcome.replace('&', r'\&').replace('%', r'\%').replace('#', r'\#').replace('_', r'\_')
+            justification_escaped = justification.replace('&', r'\&').replace('%', r'\%').replace('#', r'\#').replace('_', r'\_')
             
-            criterionCSubSubSection.append(NoEscape(f"{cbok_outcome} & {unit_code} & {level} & {justification} \\\\"))
+            criterionCSubSubSection.append(NoEscape(f"{cbok_outcome_escaped} & {unit_code} & {level} & {justification_escaped} \\\\"))
             criterionCSubSubSection.append(NoEscape(r'\hline'))
 
     criterionCSubSubSection.append(NoEscape(r'\end{longtable}'))
@@ -259,7 +251,7 @@ def createCriterionCTable(programName, criterionC):
     criterionCSubSubSection.generate_tex("criterionC-")
     criterionCList.append(f"criterionC-.tex")
     return criterionCList
-    
+
 # Table 4. Criterion D
 def createCriterionDTable(dataDictionary):
     criterionDList = []
@@ -373,8 +365,8 @@ def populateCriterionBDictionary(criterionBItems, sfia):
     for course, criterionB in criterionBItems.items():
         courseName = course
         value = {}
-        for tableElement in criterionB.criterion_df.groupby(['Outcome','Level (SFIA/Bloom)']).agg(lambda x: ';'.join(x.astype(str)) if not x.empty else '').iterrows():
-            cleanUpJustification = set(tableElement[1]['JustificationCode'].split(";"))
+        for tableElement in criterionB.criterion_df.groupby(['Outcome','Level (SFIA/Bloom/UnitOutcome)']).agg(lambda x: ';'.join(x.astype(str)) if not x.empty else '').iterrows():
+            cleanUpJustification = set(tableElement[1]['Justification'].split(";"))
             cleanUpJustification.discard('nan')
             joinedJustification = ';'.join(str(element) for element in cleanUpJustification)
             outcomeCode = tableElement[0][0]
@@ -387,6 +379,9 @@ def populateCriterionBDictionary(criterionBItems, sfia):
             professionalRoleForSkill = ' + '.join(criterionBItems[courseName].roles)
             criterionBList[f"{courseName}"] = [value, professionalRoleForSkill]
     return criterionBList
+
+    #CriterionC
+    
 
     #Criterion D 
 def populateCriterionDDictionary(criterionDItems):
@@ -530,9 +525,12 @@ def generateLatex(sortBy, clientInputFile, sfiaFile, caidiInput, generateCriteri
                 criterionCourseSection.append(NoEscape(r'\include{%s}' %courseDictionary[course][0]))
 
             if(generateCriterionDictionary["generateCriterionC"]):
-                criterionCourseSection.append("Criterion C: Program Design\n")
-                criterionCourseSection.append("Mapping of Units to the Australian Computer Society’s Core Body of Knowledge (CBoK)\n")
-                criterionCourseSection.append("Lorem Ipsum 2\n")
+                ## Add section for criterion C
+                criterionCSection = Section("Criterion C: Core Body of Knowledge")
+                criterionCSection.append("Mapping of Units to the Australian Computer Society's Core Body of Knowledge (CBoK)\n")
+                for nameList in criterionCFileNameList:
+                    criterionCSection.append(NoEscape(r'\include{%s}' %nameList))
+                doc.append(criterionCSection)
                 # criterionASection.append(NoEscape(r'\include{%s}' %nameList))
 
             if(generateCriterionDictionary["generateCriterionD"]):
