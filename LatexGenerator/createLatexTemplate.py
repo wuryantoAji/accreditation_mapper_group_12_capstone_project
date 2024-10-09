@@ -76,11 +76,13 @@ def createCriterionATable(dataDictionary):
                     unitCode = groupByCourseType[courseTypeIter][eachRow]['Unit Code']
                     unitName = groupByCourseType[courseTypeIter][eachRow]['Unit Name']
                     if(eachRow == 0):
-                        criterionATable.add_row(MultiRow(len(groupByCourseType[courseTypeIter]), data=NoEscape(str(level))), MultiColumn(4, align="|l|", data=NoEscape(courseTypeIter)))                        
+                        criterionATable.add_row(NoEscape(r'\cellcolor{colorLightBlue}'), MultiColumn(4, align="|l|", data=NoEscape(r'\colorcellgreyitalic {%s}' %courseTypeIter)))                        
                         criterionATable.add_hline(2,5)
-                        criterionATable.add_row(NoEscape(''), NoEscape(unitCode), NoEscape(unitName), NoEscape(r''), NoEscape(r''))
+                        criterionATable.add_row(NoEscape(r'\cellcolor{colorLightBlue}'), NoEscape(unitCode), NoEscape(unitName), NoEscape(r''), NoEscape(r''))
+                    elif(eachRow == len(groupByCourseType[courseTypeIter])-1):
+                        criterionATable.add_row(MultiRow(NoEscape(-len(groupByCourseType[courseTypeIter])), data=NoEscape(r'\cellcolor{colorLightBlue}\textbf{%s}' %str(level))), NoEscape(unitCode), NoEscape(unitName), NoEscape(r''), NoEscape(r''))
                     else:
-                        criterionATable.add_row(NoEscape(''), NoEscape(unitCode), NoEscape(unitName), NoEscape(r''), NoEscape(r''))
+                        criterionATable.add_row(NoEscape(r'\cellcolor{colorLightBlue}'), NoEscape(unitCode), NoEscape(unitName), NoEscape(r''), NoEscape(r''))
                     if(eachRow == len(groupByCourseType[courseTypeIter])-1):
                         criterionATable.add_hline()
                     else:
