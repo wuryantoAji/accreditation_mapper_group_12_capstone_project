@@ -18,7 +18,7 @@ def createCriterionATable(programName, listOfCourse):
     criterionASubSubSection.append(NoEscape(r'\rubric{Criterion A Rubric}'))
     criterionASubSubSection.append(NewLine())
     criterionASubSubSection.append(NoEscape(r'\begin{adjustbox}{max width=\textwidth}'))
-    criterionATable = Tabular(table_spec="|p{\criterionAEmptyCol}|p{\criterionACodeCol}|p{\criterionATitleCol}|p{\criterionACoordinatorCol}|p{\criterionAFileCol}|")
+    criterionATable = Tabular(table_spec="|p{\\criterionAEmptyCol}|p{\\criterionACodeCol}|p{\\criterionATitleCol}|p{\\criterionACoordinatorCol}|p{\\criterionAFileCol}|")
     criterionATable.add_hline()
     criterionATable.add_row((MultiColumn(5, align="|l|", data=NoEscape(r'\cellcolor{colorDarkBlue}')),))
     criterionATable.add_row((MultiColumn(5, align="|l|", data=NoEscape(r'\criterionAHeader{Program Details}')),))
@@ -122,9 +122,9 @@ def createCriterionBTable(dataDictionary):
     return criterionBList
 
 # Table 3. Criterion C
-def createCriterionCTable(programName, listOfCourse):
+def createCriterionCTable(programName, criterionC):
     criterionCList = []
-    criterionCSubSubSection = Subsubsection('Program Name\n')
+    criterionCSubSubSection = Subsubsection(f'{programName}\n')
     criterionCSubSubSection.append(NoEscape(r'\rubric{Criterion C Rubric}'))
     criterionCSubSubSection.append(NoEscape(r'\\[1em]'))
     criterionCSubSubSection.append(NewLine())
@@ -211,15 +211,50 @@ def createCriterionCTable(programName, listOfCourse):
     
     # Add the new table below
     criterionCSubSubSection.append(NoEscape(r'\\[1em]'))
-    criterionCSubSubSection.append(NoEscape(r'\begin{tabular}{|p{0.20\textwidth}|p{0.15\textwidth}|p{0.15\textwidth}|p{0.40\textwidth}|}'))
+    criterionCSubSubSection.append(NoEscape(r'\begin{longtable}{|p{0.20\textwidth}|p{0.15\textwidth}|p{0.15\textwidth}|p{0.40\textwidth}|}'))
     criterionCSubSubSection.append(NoEscape(r'\hline'))
-    criterionCSubSubSection.append(NoEscape(r'\multicolumn{4}{|c|}{\textbf{Criterion C: Lorem Ipsum}} \\'))
+    criterionCSubSubSection.append(NoEscape(r'\multicolumn{4}{|c|}{\textbf{Criterion C: Core Body of Knowledge (CBoK)}} \\'))
     criterionCSubSubSection.append(NoEscape(r'\hline'))
     criterionCSubSubSection.append(NoEscape(r'\textbf{CBoK outcome} & \textbf{Unit ID} & \textbf{Level ID} & \textbf{Justification} \\'))
     criterionCSubSubSection.append(NoEscape(r'\hline'))
-    criterionCSubSubSection.append(NoEscape(r'Lorem ipsum & CITS1001 & 3 & Lorem ipsum \\'))
-    criterionCSubSubSection.append(NoEscape(r'\hline'))
-    criterionCSubSubSection.append(NoEscape(r'\end{tabular}'))
+    criterionCSubSubSection.append(NoEscape(r'\endhead'))
+    
+# Create a dictionary to group related outcomes
+    outcome_groups = {}
+    for _, row in criterionC.table_1_df.iterrows():
+        key = (row['ICT Knowledge Types'], row['Outcome'])
+        if key not in outcome_groups:
+            outcome_groups[key] = []
+        outcome_groups[key].extend(row['Unit Code + Unit Name'].split(', '))
+
+    for (knowledge_type, outcome), units in outcome_groups.items():
+        cbok_outcome = f"{knowledge_type} - {outcome}"
+        
+        for unit in units:
+            unit_parts = unit.split()
+            if not unit_parts:
+                continue  # Skip empty units
+            unit_code = unit_parts[0]
+            
+            try:
+                level = criterionC.table_2_df.loc[unit, (knowledge_type, outcome)]
+                level = str(level) if not pd.isna(level) else 'N/A'
+            except KeyError:
+                level = 'N/A'
+            
+            justification_row = criterionC.table_3_df[
+                (criterionC.table_3_df['Unit Code + Unit Name'] == unit) & 
+                (criterionC.table_3_df['Outcome'] == outcome)
+            ]
+            justification = justification_row['Justification'].values[0] if not justification_row.empty else 'N/A'
+            
+            # Escape special characters for LaTeX
+            justification = justification.replace('&', r'\&').replace('%', r'\%').replace('#', r'\#').replace('_', r'\_')
+            
+            criterionCSubSubSection.append(NoEscape(f"{cbok_outcome} & {unit_code} & {level} & {justification} \\\\"))
+            criterionCSubSubSection.append(NoEscape(r'\hline'))
+
+    criterionCSubSubSection.append(NoEscape(r'\end{longtable}'))
     
     criterionCSubSubSection.generate_tex("criterionC-")
     criterionCList.append(f"criterionC-.tex")
@@ -403,7 +438,9 @@ def generateLatex(sortBy, clientInputFile, sfiaFile, caidiInput, generateCriteri
         criterionBFileNameList = createCriterionBTable(criterionBList)
 
     if(generateCriterionDictionary["generateCriterionC"]):
-        criterionCFileNameList = createCriterionCTable("MIT",["CITS4401"])
+        criterionCFileNameList = []
+    for course, criterionC in kb.criterionC.items():
+        criterionCFileNameList.extend(createCriterionCTable(course, criterionC))
         
     if(generateCriterionDictionary["generateCriterionD"]):
         criterionDList = populateCriterionDDictionary(kb.criterionD.items())
