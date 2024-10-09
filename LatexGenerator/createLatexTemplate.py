@@ -122,9 +122,9 @@ def createCriterionBTable(dataDictionary):
     return criterionBList
 
 # Table 3. Criterion C
-def createCriterionCTable(programName, criterionC):
+def createCriterionCTable(course, criterionC):
     criterionCList = []
-    criterionCSubSubSection = Subsubsection(f'{programName}\n')
+    criterionCSubSubSection = Subsubsection(f'{course}\n')
     criterionCSubSubSection.append(NoEscape(r'\rubric{Criterion C Rubric}'))
     criterionCSubSubSection.append(NoEscape(r'\\[1em]'))
     criterionCSubSubSection.append(NewLine())
@@ -138,7 +138,7 @@ def createCriterionCTable(programName, criterionC):
     ))
     criterionCTable.add_hline()
     criterionCTable.add_row((
-        MultiColumn(1, align="|c|", data=MultiRow(2, data=NoEscape(r"\begin{tabular}[c]{@{}c@{}}Master of\\Information\\Technology\\(Applied\\Computing)\\(2025) 62510\\SP-XXXX\end{tabular}"))), 
+        MultiColumn(1, align="|c|", data=MultiRow(2, data=NoEscape(r"\begin{tabular}[c]{@{}c@{}}" + course + r"\end{tabular}"))), 
         MultiColumn(2, align="|c|", data=MultiRow(2, data="Problem Solving")), 
         MultiColumn(6, align="|c|", data=NoEscape(r"\professionalKnowledgeCell ICT Professional Knowledge")), 
         MultiColumn(3, align="|c|", data=MultiRow(2, data="Technology Resources")), 
@@ -209,7 +209,7 @@ def createCriterionCTable(programName, criterionC):
     criterionCSubSubSection.append(NoEscape(r'\end{adjustbox}'))
     criterionCSubSubSection.append(NewLine())
     
-    # Add the new table below
+    # Second table
     criterionCSubSubSection.append(NoEscape(r'\begin{longtable}{|p{0.25\textwidth}|p{0.10\textwidth}|p{0.10\textwidth}|p{0.45\textwidth}|}'))
     criterionCSubSubSection.append(NoEscape(r'\hline'))
     criterionCSubSubSection.append(NoEscape(r'\multicolumn{4}{|c|}{\textbf{Criterion C: Core Body of Knowledge (CBoK)}} \\'))
@@ -218,7 +218,7 @@ def createCriterionCTable(programName, criterionC):
     criterionCSubSubSection.append(NoEscape(r'\hline'))
     criterionCSubSubSection.append(NoEscape(r'\endhead'))
     
-    # Group the data by Outcome Group and Outcome
+    # Use the entire table_3_df without filtering by course
     grouped = criterionC.table_3_df.groupby(['Outcome Group', 'Outcome'])
     
     for (outcome_group, outcome), group in grouped:
@@ -248,8 +248,8 @@ def createCriterionCTable(programName, criterionC):
 
     criterionCSubSubSection.append(NoEscape(r'\end{longtable}'))
     
-    criterionCSubSubSection.generate_tex("criterionC-")
-    criterionCList.append(f"criterionC-.tex")
+    criterionCSubSubSection.generate_tex(f"criterionC-{course.replace(' ', '_')}")
+    criterionCList.append(f"criterionC-{course.replace(' ', '_')}.tex")
     return criterionCList
 
 # Table 4. Criterion D
