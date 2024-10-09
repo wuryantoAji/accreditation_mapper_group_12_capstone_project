@@ -442,7 +442,7 @@ class KnowledgeBase:
                 filtered_df = df[df[column].notna()]
                 filtered_df[column] = filtered_df[column].astype(str).str.strip()
                 filtered_df = filtered_df[filtered_df[column]!= '']
-                filtered_df = filtered_df.drop(columns=columns_to_check)
+                filtered_df = filtered_df.drop([c for c in columns_to_check if c != column], axis=1)
 
                 # Store the filtered DataFrame in the dictionary with the column name as the key
                 dataframes_dict[column] = filtered_df

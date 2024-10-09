@@ -60,29 +60,40 @@ def createCriterionATable(dataDictionary):
             NoEscape(r'\cellcolor{colorLightBlue}\textbf{File \#}'),
         ))
         criterionATable.add_hline()
+        for level in dataDictionary[key]["dataFrameGroupByLevel"]:
+            groupByCourseType = {}
+            for unit in dataDictionary[key]["dataFrameGroupByLevel"][level]:
+                courseType = unit[key]
+                if(courseType in groupByCourseType.keys()):
+                    temp = groupByCourseType[courseType]
+                    temp.append(unit)
+                    groupByCourseType[courseType] = temp
+                else:
+                    groupByCourseType[courseType] = [unit]
+            sorted_dict = dict(sorted(groupByCourseType.items()))
+            for courseTypeIter in sorted_dict:
+                for eachRow in range(len(groupByCourseType[courseTypeIter])):
+                    unitCode = groupByCourseType[courseTypeIter][eachRow]['Unit Code']
+                    unitName = groupByCourseType[courseTypeIter][eachRow]['Unit Name']
+                    if(eachRow == 0):
+                        criterionATable.add_row(MultiRow(len(groupByCourseType[courseTypeIter]), data=NoEscape(str(level))), MultiColumn(4, align="|l|", data=NoEscape(courseTypeIter)))                        
+                        criterionATable.add_hline(2,5)
+                        criterionATable.add_row(NoEscape(''), NoEscape(unitCode), NoEscape(unitName), NoEscape(r''), NoEscape(r''))
+                    else:
+                        criterionATable.add_row(NoEscape(''), NoEscape(unitCode), NoEscape(unitName), NoEscape(r''), NoEscape(r''))
+                    if(eachRow == len(groupByCourseType[courseTypeIter])-1):
+                        criterionATable.add_hline()
+                    else:
+                        criterionATable.add_hline(2,5)
         criterionASubSubSection.append(criterionATable)
-        for unit in dataDictionary[key]["dataFrame"].groupby(['Level']).agg(lambda x: ';'.join(x.astype(str)) if not x.empty else '').iterrows():
-            level = unit[0]
-            unitCode = unit[1]['Unit Code'].split(";")
-            unitName = unit[1]['Unit Name'].split(";")
-            for eachRow in range(len(unitCode)):
-                if(eachRow == 0):
-                    criterionATable.add_row(MultiRow(len(unitCode), data=NoEscape(str(level))), NoEscape(unitCode[eachRow]), NoEscape(unitName[eachRow]), NoEscape(r''), NoEscape(r''))
-                else:
-                    criterionATable.add_row(NoEscape(''), NoEscape(unitCode[eachRow]), NoEscape(unitName[eachRow]), NoEscape(r''), NoEscape(r''))
-                if(eachRow == len(unitCode)-1):
-                    criterionATable.add_hline()
-                else:
-                    criterionATable.add_hline(2,5)
         # Start longtable using the new command
-        criterionASubSubSection.append(NoEscape(r'\begin{longtable}{|l|}%'))
-        # Table header
+        criterionASubSubSection.append(NoEscape(r'\begin{tabular}{|l|}%'))
         criterionASubSubSection.append(NoEscape(r'\hline%'))
         criterionASubSubSection.append(NoEscape(r'{\colorcelldarkbluebold Justification of Program Design} \\%'))
         criterionASubSubSection.append(NoEscape(r'\hline%'))
         criterionASubSubSection.append(NoEscape(r'{%s} \\' %dataDictionary[key]["justification"]))
         criterionASubSubSection.append(NoEscape(r'\hline%'))
-        criterionASubSubSection.append(NoEscape(r'\end{longtable}%'))
+        criterionASubSubSection.append(NoEscape(r'\end{tabular}%'))
         criterionASubSubSection.append(NoEscape(r'\rubric{Criterion A Rubric}\\\\'))
         criterionASubSubSection.generate_tex(f"criterionA-{key.strip()}")
         criterionAList.append(f"criterionA-{key.strip()}.tex")
@@ -100,7 +111,7 @@ def createCriterionBTable(dataDictionary):
         for sfiaComponent in dataDictionary[key][0].keys():
             sfiaSkills = sfiaSkills+"+"+sfiaComponent[0]
         criterionBSubSubSection.append(f"SFIA skills: {sfiaSkills[1:]}\n")
-        criterionBTable = LongTable(table_spec=NoEscape(r'|p{0.1\textwidth}|p{0.2\textwidth}|p{0.2\textwidth}|p{0.1\textwidth}|p{0.1\textwidth}|p{0.22\textwidth}|'))
+        criterionBTable = LongTable(table_spec=NoEscape(r'|p{0.2\textwidth}|p{0.2\textwidth}|p{0.2\textwidth}|p{0.05\textwidth}|p{0.05\textwidth}|p{0.22\textwidth}|'))
         criterionBTable.add_hline()
 
         # table header
@@ -141,7 +152,7 @@ def createCriterionBTable(dataDictionary):
 # Additional Table - Criterion B Justification Explanation
 def createCriterionBJustificationTable(justificationdf):
     justificationExlpanationSubSubSection = Subsubsection("Justification Explanation")
-    justificationExplanationTable = LongTable(table_spec=NoEscape(r'|p{0.5\textwidth}|p{0.5\textwidth}|'))
+    justificationExplanationTable = LongTable(table_spec=NoEscape(r'|p{0.3\textwidth}|p{0.7\textwidth}|'))
     justificationExplanationTable.add_hline()
     justificationExplanationTable.add_row(NoEscape(r'\criterionBHeaderCellColored{Justification Code}'),NoEscape(r'\criterionBHeaderCellColored{Justification Explanation}'))
     justificationExplanationTable.add_hline()
@@ -303,6 +314,25 @@ def populateCriterionADictionary(criterionA):
     for course, criterionA in criterionA:
         courseName = course
         criterionA_df = criterionA.criterion_df
+        # group by create a dictionary with level as first key the value is another dictionary with type as the key
+        groupByLevel = {}
+        for row in criterionA_df.iterrows():
+            if(row[1]["Level"] in groupByLevel.keys()):
+                temp = groupByLevel[row[1]["Level"]]
+                temp.append(row[1])
+                groupByLevel[row[1]["Level"]] = temp
+            else:
+                groupByLevel[row[1]["Level"]] = [row[1]]
+        # for key in groupByLevel:
+        #     groupByCourseType = {}
+        #     for row in groupByLevel[key]:
+        #         if(row[1][courseName] in groupByCourseType.keys()):
+        #             temp = groupByLevel[row[1][courseName]]
+        #             temp.append(row)
+        #             groupByLevel[row[1][courseName]] = temp
+        #         else:
+        #             groupByLevel[row[1][courseName]] = [row]
+        #     print(groupByCourseType)
         try:
             code = criterionA.code
             award_title = criterionA.award_title
@@ -325,6 +355,7 @@ def populateCriterionADictionary(criterionA):
             justification = "placeholderValue"
         criterionAList[courseName] = {
             "dataFrame":criterionA_df,
+            "dataFrameGroupByLevel":groupByLevel,
             "code":code,
             "award_title":award_title,
             "eft":eft,
@@ -335,8 +366,6 @@ def populateCriterionADictionary(criterionA):
             "outcomes":outcomes,
             "justification":justification
         }
-        # print(courseName)
-        # print(criterionA_df)
     return criterionAList
 
 def populateCriterionBDictionary(criterionBItems, sfia):
