@@ -96,6 +96,7 @@ def createCriterionATable(dataDictionary):
         criterionASubSubSection.append(NoEscape(r'{%s} \\' %dataDictionary[key]["justification"]))
         criterionASubSubSection.append(NoEscape(r'\hline%'))
         criterionASubSubSection.append(NoEscape(r'\end{tabular}%'))
+        criterionASubSubSection.append(NewLine())
         criterionASubSubSection.append(NoEscape(r'\rubric{Criterion A Rubric}\\\\'))
         criterionASubSubSection.generate_tex(f"criterionA-{key.strip()}")
         criterionAList.append(f"criterionA-{key.strip()}.tex")
@@ -145,6 +146,8 @@ def createCriterionBTable(dataDictionary):
                         NoEscape(r'{%s}' %unitsSupportingSFIASkill))
             criterionBTable.add_hline()
         criterionBSubSubSection.append(criterionBTable)
+        # Add some vertical space between tables
+        criterionBSubSubSection.append(NoEscape(r'\vspace{1em}'))
         criterionBSubSubSection.append(NoEscape(r'\rubric{Criterion B Rubric || SFIA Code ( ) || SFIA Level ( ) || Unit Supporting SFIA Skill ( ) || SFIA Skill ( ) || Skill Description ( ) || Level Description ( )}'))
         criterionBSubSubSection.append(NewLine())
         criterionBSubSubSection.generate_tex(f"criterionB-{key.strip()}")
@@ -262,6 +265,7 @@ def createCriterionDTable(dataDictionary):
                     criterionDSubSubSection.append(NoEscape(r'\hline'))
 
                 criterionDSubSubSection.append(NoEscape(r'\end{longtable}'))
+                criterionDSubSubSection.append(NoEscape(r'\vspace{1em}'))                
                 criterionDSubSubSection.append(NoEscape(r'\rubric{Criterion D Rubric} \\\\'))
                 
                 # Add some vertical space between tables
@@ -304,6 +308,7 @@ def createCriterionETable(dataDictionary):
                 criterionESubSubSection.append(NoEscape(r'\hline'))
             
             criterionESubSubSection.append(NoEscape(r'\end{tabular}'))
+            criterionESubSubSection.append(NewLine())
             criterionESubSubSection.append(NoEscape(r'\rubric{Criterion E Rubric} \\\\'))
             criterionESubSubSection.append(NoEscape(r'\\[1em]'))  # Add some space after each table
             criterionESubSubSection.generate_tex(f"criterionE-{course.strip()}")
