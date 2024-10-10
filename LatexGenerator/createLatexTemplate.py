@@ -1,6 +1,7 @@
 import argparse
 import os
 import zipfile
+import pandas as pd
 from pylatex import Package, NoEscape, Section, Subsection, Subsubsection, Tabular, MultiColumn, MultiRow, Document, NewLine, LongTable
 from sfia import SFIA
 from knowledgebase import KnowledgeBase
@@ -154,58 +155,177 @@ def createCriterionBTable(dataDictionary):
         criterionBList.append(f"criterionB-{key.strip()}.tex")
     return criterionBList
 
-# Additional Table - Criterion B Justification Explanation
-def createCriterionBJustificationTable(justificationdf):
-    justificationExlpanationSubSubSection = Subsubsection("Justification Explanation")
-    justificationExplanationTable = LongTable(table_spec=NoEscape(r'|p{0.3\textwidth}|p{0.7\textwidth}|'))
-    justificationExplanationTable.add_hline()
-    justificationExplanationTable.add_row(NoEscape(r'\criterionBHeaderCellColored{Justification Code}'),NoEscape(r'\criterionBHeaderCellColored{Justification Explanation}'))
-    justificationExplanationTable.add_hline()
-    justificationExplanationTable.end_table_header()
-    for justification in justificationdf:
-        justificationExplanationTable.add_row(justification, justificationdf[justification])
-        justificationExplanationTable.add_hline()
-    justificationExlpanationSubSubSection.append(justificationExplanationTable)
-    justificationExlpanationSubSubSection.generate_tex("criterionB-justification_explanation")
-    return "criterionB-justification_explanation.tex"
-
 # Table 3. Criterion C
-def createCriterionCTable(programName, listOfCourse):
+def createCriterionCTable(course, criterionC):
     criterionCList = []
-    ### Start loop for each program
-    criterionCSubSubSection = Subsubsection('Program Name\n')
+    criterionCSubSubSection = Subsubsection(f'{course}\n')
+    criterionCSubSubSection.append(NoEscape(r'\rubric{Criterion C Rubric}'))
+    criterionCSubSubSection.append(NoEscape(r'\\[1em]'))
+    criterionCSubSubSection.append(NewLine())
     criterionCSubSubSection.append(NoEscape(r'\begin{adjustbox}{max width=\textwidth}'))
-    criterionCTable = Tabular(table_spec="|l|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|")
+    criterionCTable = Tabular(table_spec=r"|p{7cm}|" + "p{1.1cm}|" * 19)
     criterionCTable.add_hline()
-    criterionCTable.add_row(
-        ("CBoK Knowledge Areas", (MultiColumn(8, align="|c|", data="ESSENTIAL CORE ICT KNOWLEDGE")),(MultiColumn(11, align="|c|", data="GENERAL ICT KNOWLEDGE")))
-    )
+    criterionCTable.add_row((
+        "CBoK Knowledge Areas", 
+        MultiColumn(8, align="|c|", data=NoEscape(r"\cellcolor{lightRed}")),
+        MultiColumn(11, align="|c|", data=NoEscape(r"\cellcolor{lightOrange}"))
+    ))
+    criterionCTable.add_row((
+        MultiColumn(1, align="|c|", data=""),
+        MultiColumn(8, align="|c|", data=NoEscape(r"\criterionCEssentialHeader{ESSENTIAL CORE ICT KNOWLEDGE}")),
+        MultiColumn(11, align="|c|", data=NoEscape(r"\criterionCGeneralHeader{GENERAL ICT KNOWLEDGE}"))
+    ))
     criterionCTable.add_hline()
-    criterionCTable.add_row(
-        (MultiColumn(1, align="|c|", data=MultiRow(2, data="Program Name")), (MultiColumn(2, align="|c|", data=MultiRow(2, data="Problem Solving"))), (MultiColumn(6, align="|c|", data=MultiRow(2, data="ICT Professional Knowledge"))), (MultiColumn(3, align="|c|", data=MultiRow(2, data="Technology Resources"))), (MultiColumn(4, align="|c|", data=MultiRow(2, data="Technology Building"))), (MultiColumn(4, align="|c|", data=MultiRow(2, data="ICT Management"))))
-    )
-    criterionCTable.add_row(
-        (MultiColumn(1, align="|c|", data=""), MultiColumn(2, align="|c|", data=""), MultiColumn(6, align="|c|", data=""), MultiColumn(3, align="|c|", data=""), MultiColumn(4, align="|c|", data=""), MultiColumn(4, align="|c|", data=""))
-    )
+    
+    # Format the course name to be multi-line and centered
+    formatted_course = course.replace(' ', r'\\')
+    criterionCTable.add_row((
+        MultiColumn(1, align="|c|", data=MultiRow(3, data=NoEscape(r"\raisebox{-10em}{\begin{tabular}[c]{@{}c@{}}" + formatted_course + r"\end{tabular}}"))), 
+        MultiColumn(2, align="|c|", data=NoEscape(r"\lightGrayCell{Problem Solving}")), 
+        MultiColumn(6, align="|c|", data=NoEscape(r"\professionalKnowledgeCell{ICT Professional Knowledge}")), 
+        MultiColumn(3, align="|c|", data=NoEscape(r"\lightGrayCell{Technology Resources}")), 
+        MultiColumn(4, align="|c|", data=NoEscape(r"\technologyBuildingCell{Technology Building}")), 
+        MultiColumn(4, align="|c|", data=NoEscape(r"\lightGrayCell{ICT Management}"))
+    ))
+
+    criterionCTable.add_row((
+        MultiColumn(1, align="|c|", data=""),
+        MultiColumn(2, align="|c|", data=""),
+        MultiColumn(6, align="|c|", data=""),
+        MultiColumn(3, align="|c|", data=""),
+        MultiColumn(4, align="|c|", data=""),
+        MultiColumn(4, align="|c|", data="")
+    ))
+    criterionCTable.add_row((
+        MultiColumn(1, align="|c|", data=""),
+        MultiColumn(2, align="|c|", data=""),
+        MultiColumn(6, align="|c|", data=""),
+        MultiColumn(3, align="|c|", data=""),
+        MultiColumn(4, align="|c|", data=""),
+        MultiColumn(4, align="|c|", data="")
+    ))
     criterionCTable.add_hline(2,20)
-    criterionCTable.add_row((NoEscape(r'\rule{0pt}{175pt}'),NoEscape(r'\myrotcell{Abstraction}'),NoEscape(r'\myrotcell{Design}'),NoEscape(r'\myrotcell{Ethics}'),NoEscape(r'\myrotcell{Professional expectations}'),NoEscape(r'\myrotcell{Teamwork concepts and issues}'),NoEscape(r'\myrotcell{Interpersonal communications}'),NoEscape(r'\myrotcell{Societal issues/legal issues/privacy}'),NoEscape(r'\myrotcell{Understanding the ICT profession}'),NoEscape(r'\myrotcell{Hardware \& software fundamentals}'),NoEscape(r'\myrotcell{Data \& information management}'),NoEscape(r'\myrotcell{Networking}'),NoEscape(r'\myrotcell{Programming}'),NoEscape(r'\myrotcell{Human factors}'),NoEscape(r'\myrotcell{Systems development}'),NoEscape(r'\myrotcell{Systems acquisition}'),NoEscape(r'\myrotcell{IT governance \& organisational issues}'),NoEscape(r'\myrotcell{IT project management}'),NoEscape(r'\myrotcell{Service management}'),NoEscape(r'\myrotcell{Cyber security}')))
+    
+    criterionCTable.add_row((
+        NoEscape(r'\rule{0pt}{175pt}'),
+        NoEscape(r'\lightGrayCell{\myrotcell{Abstraction}}'),
+        NoEscape(r'\lightGrayCell{\myrotcell{Design}}'),
+        NoEscape(r'\lightBlueCell{\myrotcell{Ethics}}'),
+        NoEscape(r'\lightBlueCell{\myrotcell{Professional expectations}}'),
+        NoEscape(r'\lightBlueCell{\myrotcell{Teamwork concepts and issues}}'),
+        NoEscape(r'\lightBlueCell{\myrotcell{Interpersonal communications}}'),
+        NoEscape(r'\lightBlueCell{\myrotcell{Societal issues/legal issues/privacy}}'),
+        NoEscape(r'\lightBlueCell{\myrotcell{Understanding the ICT profession}}'),
+        NoEscape(r'\lightGrayCell{\myrotcell{Hardware \& software fundamentals}}'),
+        NoEscape(r'\lightGrayCell{\myrotcell{Data \& information management}}'),
+        NoEscape(r'\lightGrayCell{\myrotcell{Networking}}'),
+        NoEscape(r'\lightBlueCell{\myrotcell{Programming}}'),
+        NoEscape(r'\lightBlueCell{\myrotcell{Human factors}}'),
+        NoEscape(r'\lightBlueCell{\myrotcell{Systems development}}'),
+        NoEscape(r'\lightBlueCell{\myrotcell{Systems acquisition}}'),
+        NoEscape(r'\lightGrayCell{\myrotcell{IT governance \& organisational issues}}'),
+        NoEscape(r'\lightGrayCell{\myrotcell{IT project management}}'),
+        NoEscape(r'\lightGrayCell{\myrotcell{Service management}}'),
+        NoEscape(r'\lightGrayCell{\myrotcell{Cyber security}}')
+    ))
     criterionCTable.add_hline()
-    criterionCTable.add_row((MultiColumn(20, align="|l|", data="CITS1001 Software Engineering with Java (Core)"),))
-    criterionCTable.add_hline()
-    criterionCTable.add_row(("Lectures","X","X","","","X","","","X","X","X","","X","","X","X","","","",""))
-    criterionCTable.add_hline()
-    criterionCTable.add_row(("Mid-semester test","X","X","","","X","","","X","X","X","","X","","X","X","","","",""))
-    criterionCTable.add_hline()
-    criterionCTable.add_row(("Programming Exercises","X","X","","","X","","","X","X","X","","X","","X","X","","","",""))
-    criterionCTable.add_hline()
-    criterionCTable.add_row(("Exam","X","X","","","X","","","X","X","X","","X","","X","X","","","",""))
-    criterionCTable.add_hline()
+
+    # Define the expected columns
+    expected_columns = [
+        ('Core', 'Abstraction'),
+        ('Core', 'Design'),
+        ('Professional', 'Ethics'),
+        ('Professional', 'Professional expectations'),
+        ('Professional', 'Teamwork concepts and issues'),
+        ('Professional', 'Interpersonal communications'),
+        ('Professional', 'Societal issues/legal issues/privacy'),
+        ('Professional', 'Understanding the ICT profession'),
+        ('Core', 'Hardware & software fundamentals'),
+        ('Core', 'Data & information management'),
+        ('Core', 'Networking'),
+        ('Core', 'Programming'),
+        ('Core', 'Human factors'),
+        ('Core', 'Systems development'),
+        ('Core', 'Systems acquisition'),
+        ('Core', 'IT governance & organisational issues'),
+        ('Core', 'IT project management'),
+        ('Core', 'Service management'),
+        ('Core', 'Cyber security')
+    ]
+
+    # Populate the table with data from criterionC.table_2_df
+    for index, row in criterionC.table_2_df.iterrows():
+        unit_name = index
+        
+        data_row = [NoEscape(r"\begin{tabular}[c]{@{}l@{}}" + unit_name + r"\end{tabular}")]
+        for column in expected_columns:
+            if column in criterionC.table_2_df.columns:
+                value = row[column]
+                if pd.notna(value):
+                    if column[0] == 'Professional' or column[0] == 'Core':
+                        data_row.append(NoEscape(r'\lightBlueCell{X}'))
+                    else:
+                        data_row.append("X")
+                else:
+                    if column[0] == 'Professional' or column[0] == 'Core':
+                        data_row.append(NoEscape(r'\lightBlueCell{}'))
+                    else:
+                        data_row.append("")
+            else:
+                # If the column is not in the DataFrame, add an empty cell
+                if column[0] == 'Professional' or column[0] == 'Core':
+                    data_row.append(NoEscape(r'\lightBlueCell{}'))
+                else:
+                    data_row.append("")
+
+        criterionCTable.add_row(tuple(data_row))
+        criterionCTable.add_hline()
+
     criterionCSubSubSection.append(criterionCTable)
     criterionCSubSubSection.append(NoEscape(r'\end{adjustbox}'))
     criterionCSubSubSection.append(NewLine())
-    criterionCSubSubSection.append(NoEscape(r'\rubric{Criterion C Rubric}'))
-    criterionCSubSubSection.generate_tex("criterionC-")
-    criterionCList.append(f"criterionC-.tex")
+    
+    # Second table
+    criterionCSubSubSection.append(NoEscape(r'\begin{longtable}{|p{0.25\textwidth}|p{0.10\textwidth}|p{0.10\textwidth}|p{0.45\textwidth}|}'))
+    criterionCSubSubSection.append(NoEscape(r'\hline'))
+    criterionCSubSubSection.append(NoEscape(r'\multicolumn{4}{|c|}{\textbf{Criterion C: Core Body of Knowledge (CBoK)}} \\'))
+    criterionCSubSubSection.append(NoEscape(r'\hline'))
+    criterionCSubSubSection.append(NoEscape(r'\textbf{CBoK outcome} & \textbf{Unit ID} & \textbf{Level ID} & \textbf{Justification} \\'))
+    criterionCSubSubSection.append(NoEscape(r'\hline'))
+    criterionCSubSubSection.append(NoEscape(r'\endhead'))
+    
+    # Use the entire table_3_df without filtering by course
+    grouped = criterionC.table_3_df.groupby(['Outcome Group', 'Outcome'])
+    
+    for (outcome_group, outcome), group in grouped:
+        cbok_outcome = f"{outcome_group} - {outcome}"
+        
+        for _, row in group.iterrows():
+            unit_code = row['Unit Code + Unit Name'].split()[0]  # Extract unit code
+            
+            # Get the level from the original DataFrame
+            level = criterionC.outcomes_mappings_df.loc[
+                (criterionC.outcomes_mappings_df['Unit Code'] == unit_code) &
+                (criterionC.outcomes_mappings_df['Outcome Group'] == outcome_group) &
+                (criterionC.outcomes_mappings_df['Outcome'] == outcome),
+                'Level (SFIA/Bloom/UnitOutcome)'
+            ].values
+            
+            level = str(level[0]) if len(level) > 0 else 'N/A'
+            
+            justification = row['Justification']
+            
+            # Escape special characters for LaTeX
+            cbok_outcome_escaped = cbok_outcome.replace('&', r'\&').replace('%', r'\%').replace('#', r'\#').replace('_', r'\_')
+            justification_escaped = justification.replace('&', r'\&').replace('%', r'\%').replace('#', r'\#').replace('_', r'\_')
+            
+            criterionCSubSubSection.append(NoEscape(f"{cbok_outcome_escaped} & {unit_code} & {level} & {justification_escaped} \\\\"))
+            criterionCSubSubSection.append(NoEscape(r'\hline'))
+
+    criterionCSubSubSection.append(NoEscape(r'\end{longtable}'))
+    
+    criterionCSubSubSection.generate_tex(f"criterionC-{course.replace(' ', '_')}")
+    criterionCList.append(f"criterionC-{course.replace(' ', '_')}.tex")
     return criterionCList
 
 # Table 4. Criterion D
@@ -236,7 +356,8 @@ def createCriterionDTable(dataDictionary):
                 table_content.append((unit_code_and_name, assessment_item, justification))
 
             if table_content:
-                criterionDSubSubSection = Subsubsection(NoEscape(r'\criterionDcoursetitle{' + course + r'}'))
+                criterionDSubSubSection = Subsubsection(NoEscape(r'\criterionDcoursetitle{' + course + r'} \\\\'))
+                criterionDSubSubSection.append(NoEscape(r'\rubric{Criterion D Rubric} \\\\'))
 
                 # Start longtable using the new command
                 criterionDSubSubSection.append(NoEscape(r'\criterionDtable'))
@@ -265,8 +386,6 @@ def createCriterionDTable(dataDictionary):
                     criterionDSubSubSection.append(NoEscape(r'\hline'))
 
                 criterionDSubSubSection.append(NoEscape(r'\end{longtable}'))
-                criterionDSubSubSection.append(NoEscape(r'\vspace{1em}'))                
-                criterionDSubSubSection.append(NoEscape(r'\rubric{Criterion D Rubric} \\\\'))
                 
                 # Add some vertical space between tables
                 criterionDSubSubSection.append(NoEscape(r'\vspace{1em}'))
@@ -282,7 +401,8 @@ def createCriterionETable(dataDictionary):
     for course, courseData in dataDictionary.items():
         if courseData:  # Only process courses with data
             # Add the course title using the command
-            criterionESubSubSection = Subsubsection(NoEscape(r'\coursetitle{' + course + '}'))
+            criterionESubSubSection = Subsubsection(NoEscape(r'\coursetitle{' + course + '} \\\\'))
+            criterionESubSubSection.append(NoEscape(r'\rubric{Criterion E Rubric} \\\\'))
             
             # Start the tabular environment using the command
             criterionESubSubSection.append(NoEscape(r'\criterionTable'))
@@ -308,8 +428,6 @@ def createCriterionETable(dataDictionary):
                 criterionESubSubSection.append(NoEscape(r'\hline'))
             
             criterionESubSubSection.append(NoEscape(r'\end{tabular}'))
-            criterionESubSubSection.append(NewLine())
-            criterionESubSubSection.append(NoEscape(r'\rubric{Criterion E Rubric} \\\\'))
             criterionESubSubSection.append(NoEscape(r'\\[1em]'))  # Add some space after each table
             criterionESubSubSection.generate_tex(f"criterionE-{course.strip()}")
             criterionEList.append(f"criterionE-{course.strip()}.tex")
@@ -444,16 +562,16 @@ def generateLatex(sortBy, clientInputFile, sfiaFile, caidiInput, generateCriteri
     
     # check for parameter dictionary, create table list, and add table name to the list
     if(generateCriterionDictionary["generateCriterionA"]):
-        criterionAList = populateCriterionADictionary(kb.criterionA.items())
-        criterionAFileNameList = createCriterionATable(criterionAList)
+        criterionAFileNameList = createCriterionATable("MIT",["CITS4401"])
     
     if(generateCriterionDictionary["generateCriterionB"]):
-        criterionBList, justificationExplanationList = populateCriterionBDictionary(kb.criterionB, sfia)
+        criterionBList = populateCriterionBDictionary(kb.criterionB, sfia)
         criterionBFileNameList = createCriterionBTable(criterionBList)
-        justificationExplanationTable = createCriterionBJustificationTable(justificationExplanationList)
 
     if(generateCriterionDictionary["generateCriterionC"]):
-        criterionCFileNameList = createCriterionCTable("MIT",["CITS4401"])
+        criterionCFileNameList = []
+    for course, criterionC in kb.criterionC.items():
+        criterionCFileNameList.extend(createCriterionCTable(course, criterionC))
         
     if(generateCriterionDictionary["generateCriterionD"]):
         criterionDList = populateCriterionDDictionary(kb.criterionD.items())
