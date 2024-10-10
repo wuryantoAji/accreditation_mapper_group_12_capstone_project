@@ -6,7 +6,6 @@ import argparse
 import pandas as pd
 from caidi import CAIDI
 
-
 # Create the parser
 parser = argparse.ArgumentParser(description="Program to create ACS criterion Excel file from input Excel file.")
 
@@ -53,8 +52,8 @@ with zipfile.ZipFile(output_zip_file, 'w') as output_zip:
             kb.criterionB[course].criterion_df.to_excel(writer, sheet_name='CriterionB', index=False)
             kb.criterionB[course].criterion_qa_df.to_excel(writer, sheet_name='CriterionB_QA', index=False)
             kb.criterionC[course].table_1_df.to_excel(writer, sheet_name='CriterionC', startrow=startrow, index=False)
-            startrow += len(kb.criterionC[course].table_1_df) + 2  
-            kb.criterionC[course].table_2_df.to_excel(writer, sheet_name='CriterionC', startrow=startrow)
+            startrow += len(kb.criterionC[course].table_1_df) + 2
+            kb.criterionC[course].table_2_df.to_excel(writer, sheet_name='CriterionC', startrow=startrow, index=True)
             startrow += len(kb.criterionC[course].table_2_df) + 4  
             kb.criterionC[course].table_3_df.to_excel(writer, sheet_name='CriterionC', startrow=startrow, index=False)
             kb.criterionC[course].criterion_qa_df.to_excel(writer, sheet_name='CriterionC_QA', index=False)
@@ -63,6 +62,11 @@ with zipfile.ZipFile(output_zip_file, 'w') as output_zip:
             kb.criterionE[course].criterion_df.to_excel(writer, sheet_name='CriterionE', index=False)
             kb.criterionE[course].criterion_qa_df.to_excel(writer, sheet_name='CriterionE_QA', index=False)
 
+            # Iterate through all worksheets and set the column width automatically
+            # Only applicable when using xlsxwriter as the engine
+            for sheet_name, worksheet in writer.sheets.items():
+                worksheet.autofit()
+                
         # Seek to the beginning of the BytesIO buffer
         excel_buffer.seek(0)
 
