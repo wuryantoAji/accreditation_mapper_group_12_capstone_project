@@ -155,6 +155,21 @@ def createCriterionBTable(dataDictionary):
         criterionBList.append(f"criterionB-{key.strip()}.tex")
     return criterionBList
 
+# Additional Table - Criterion B Justification Explanation
+def createCriterionBJustificationTable(justificationdf):
+    justificationExlpanationSubSubSection = Subsubsection("Justification Explanation")
+    justificationExplanationTable = LongTable(table_spec=NoEscape(r'|p{0.3\textwidth}|p{0.7\textwidth}|'))
+    justificationExplanationTable.add_hline()
+    justificationExplanationTable.add_row(NoEscape(r'\criterionBHeaderCellColored{Justification Code}'),NoEscape(r'\criterionBHeaderCellColored{Justification Explanation}'))
+    justificationExplanationTable.add_hline()
+    justificationExplanationTable.end_table_header()
+    for justification in justificationdf:
+        justificationExplanationTable.add_row(justification, justificationdf[justification])
+        justificationExplanationTable.add_hline()
+    justificationExlpanationSubSubSection.append(justificationExplanationTable)
+    justificationExlpanationSubSubSection.generate_tex("criterionB-justification_explanation")
+    return "criterionB-justification_explanation.tex"
+
 # Table 3. Criterion C
 def createCriterionCTable(course, criterionC):
     criterionCList = []
@@ -324,8 +339,8 @@ def createCriterionCTable(course, criterionC):
 
     criterionCSubSubSection.append(NoEscape(r'\end{longtable}'))
     
-    criterionCSubSubSection.generate_tex(f"criterionC-{course.replace(' ', '_')}")
-    criterionCList.append(f"criterionC-{course.replace(' ', '_')}.tex")
+    criterionCSubSubSection.generate_tex(f"criterionC-{course.strip()}")
+    criterionCList.append(f"criterionC-{course.strip()}.tex")
     return criterionCList
 
 # Table 4. Criterion D
@@ -562,16 +577,18 @@ def generateLatex(sortBy, clientInputFile, sfiaFile, caidiInput, generateCriteri
     
     # check for parameter dictionary, create table list, and add table name to the list
     if(generateCriterionDictionary["generateCriterionA"]):
-        criterionAFileNameList = createCriterionATable("MIT",["CITS4401"])
+        criterionAList = populateCriterionADictionary(kb.criterionA.items())
+        criterionAFileNameList = createCriterionATable(criterionAList)
     
     if(generateCriterionDictionary["generateCriterionB"]):
-        criterionBList = populateCriterionBDictionary(kb.criterionB, sfia)
+        criterionBList, justificationExplanationList = populateCriterionBDictionary(kb.criterionB, sfia)
         criterionBFileNameList = createCriterionBTable(criterionBList)
+        justificationExplanationTable = createCriterionBJustificationTable(justificationExplanationList)
 
     if(generateCriterionDictionary["generateCriterionC"]):
         criterionCFileNameList = []
-    for course, criterionC in kb.criterionC.items():
-        criterionCFileNameList.extend(createCriterionCTable(course, criterionC))
+        for course, criterionC in kb.criterionC.items():
+            criterionCFileNameList.extend(createCriterionCTable(course, criterionC))
         
     if(generateCriterionDictionary["generateCriterionD"]):
         criterionDList = populateCriterionDDictionary(kb.criterionD.items())
@@ -603,7 +620,7 @@ def generateLatex(sortBy, clientInputFile, sfiaFile, caidiInput, generateCriteri
             ## Add section for criterion C
             criterionCSection = Section("Criterion C: Program Design")
             criterionCSection.append("Mapping of Units to the Australian Computer Society’s Core Body of Knowledge (CBoK)\n")
-            criterionCSection.append("Lorem Ipsum 2\n")
+            # criterionCSection.append("Lorem Ipsum 2\n")
             for nameList in criterionCFileNameList:
                 criterionCSection.append(NoEscape(r'\input{%s}' %nameList))
             doc.append(criterionCSection)
@@ -641,6 +658,14 @@ def generateLatex(sortBy, clientInputFile, sfiaFile, caidiInput, generateCriteri
                 tempList = courseDictionary[fileName.replace(".tex", "").replace("criterionB-", "")]
                 tempList.append(fileName)
                 courseDictionary[fileName.replace(".tex", "").replace("criterionB-", "")] = tempList
+
+        for fileName in criterionCFileNameList:
+            if(fileName.replace(".tex", "").replace("criterionC-", "") not in courseDictionary):
+                courseDictionary[fileName.replace(".tex", "").replace("criterionC-", "")] = [fileName]
+            else:
+                tempList = courseDictionary[fileName.replace(".tex", "").replace("criterionC-", "")]
+                tempList.append(fileName)
+                courseDictionary[fileName.replace(".tex", "").replace("criterionC-", "")] = tempList
                 
         for fileName in criterionDFileNameList:
             if(fileName.replace(".tex", "").replace("criterionD-", "") not in courseDictionary):
@@ -657,7 +682,7 @@ def generateLatex(sortBy, clientInputFile, sfiaFile, caidiInput, generateCriteri
                 tempList = courseDictionary[fileName.replace(".tex", "").replace("criterionE-", "")]
                 tempList.append(fileName)
                 courseDictionary[fileName.replace(".tex", "").replace("criterionE-", "")] = tempList
-        
+        print(courseDictionary)
         for course in courseDictionary:
             criterionCourseSection = Section(f"{course}")
 
@@ -672,16 +697,16 @@ def generateLatex(sortBy, clientInputFile, sfiaFile, caidiInput, generateCriteri
             if(generateCriterionDictionary["generateCriterionC"]):
                 criterionCourseSection.append("Criterion C: Program Design\n")
                 criterionCourseSection.append("Mapping of Units to the Australian Computer Society’s Core Body of Knowledge (CBoK)\n")
-                criterionCourseSection.append("Lorem Ipsum 2\n")
-                # criterionASection.append(NoEscape(r'\input{%s}' %nameList))
+                # criterionCourseSection.append("Lorem Ipsum 2\n")
+                criterionCourseSection.append(NoEscape(r'\input{%s}' %courseDictionary[course][2]))
 
             if(generateCriterionDictionary["generateCriterionD"]):
                 criterionCourseSection.append("Criterion D: Program Design\n")
-                criterionCourseSection.append(NoEscape(r'\input{%s}' %courseDictionary[course][2]))
+                criterionCourseSection.append(NoEscape(r'\input{%s}' %courseDictionary[course][3]))
 
             if(generateCriterionDictionary["generateCriterionE"]):
                 criterionCourseSection.append("Criterion E: Program Design\n")
-                criterionCourseSection.append(NoEscape(r'\input{%s}' %courseDictionary[course][3]))
+                criterionCourseSection.append(NoEscape(r'\input{%s}' %courseDictionary[course][4]))
 
             doc.append(criterionCourseSection)   
         doc.append(NoEscape(r'\input{criterionB-justification_explanation}'))
