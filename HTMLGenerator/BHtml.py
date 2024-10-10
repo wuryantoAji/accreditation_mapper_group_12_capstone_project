@@ -1,6 +1,16 @@
 import pandas as pd
 from sfia import SFIA
 from knowledgebase import KnowledgeBase
+from caidi import CAIDI
+
+# Skills For the Information Age database
+sfia = SFIA('sfia_v8_custom.xlsx')
+ 
+# CAIDI dataset
+cd = CAIDI( 'caidi-data-for-ACS-A.zip')
+ 
+# KnowledgeBase - processes the input from the client
+kb = KnowledgeBase( 'CSSE-allprograms-outcome-mappings-20241007.xlsx', sfia, cd)
 
 # Load Skills For the Information Age (SFIA) database from Excel
 sfia_data = pd.read_excel('sfia_v8_custom.xlsx', usecols=['Skill', 'description', 'description22', 'code', 'level'])
@@ -10,7 +20,8 @@ sfia_data['description22'] = sfia_data['description22'].str.replace('_x000D_', '
 sfia_data_unique = sfia_data.drop_duplicates(subset=['code', 'level'], keep='first')
 
 # Load KnowledgeBase - this processes the input from the client
-kb = KnowledgeBase('CSSE-allprograms-outcome-mappings-20240913.xlsx', SFIA('sfia_v8_custom.xlsx'))
+#kb = KnowledgeBase('CSSE-allprograms-outcome-mappings-20240927.xlsx', SFIA('sfia_v8_custom.xlsx'))
+
 
 # Create a dictionary to map SFIA skills to their descriptions (Skill, Description, and Description2)
 sfia_skill_data = sfia_data_unique.set_index(['code', 'level']).to_dict(orient='index')
@@ -75,7 +86,7 @@ for course_index, (course, criterionB) in enumerate(kb.criterionB.items()):
     html_content += course_title
 
     # Drop duplicates from the criterion DataFrame (based on Outcome, Level, and Justification)
-    unique_df = criterionB.criterion_df.drop_duplicates(subset=['Outcome', 'Level (SFIA/Bloom)', 'Justification'])
+    unique_df = criterionB.criterion_df.drop_duplicates(subset=['Outcome', 'Level (SFIA/Bloom/UnitOutcome)', 'Justification'])
 
     # Start a table for outcomes, levels, and justifications with renamed headers
     html_content += f"""
@@ -97,7 +108,7 @@ for course_index, (course, criterionB) in enumerate(kb.criterionB.items()):
     for _, row in unique_df.iterrows():
 
         outcome = row['Outcome']  # Renamed as "Code" in the table
-        level = row['Level (SFIA/Bloom)']
+        level = row['Level (SFIA/Bloom/UnitOutcome)']
         justification = row['Justification']  # Renamed as "Units Supporting SFIA Skill"
 
         # Get the corresponding SFIA skill data based on the Outcome (code) and Level
@@ -205,7 +216,7 @@ function searchTable() {
 """
 
 # Write the HTML content to a new file
-output_html_path = 'course_outcomes_filtered_by_sfia_navi_1.html'
+output_html_path = 'course_outcomes_filtered_by_sfia_navi.html'
 with open(output_html_path, 'w') as f:
     f.write(html_content)
 
