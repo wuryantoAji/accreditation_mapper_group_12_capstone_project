@@ -130,7 +130,7 @@ def createCriterionCTable(course, criterionC):
     criterionCSubSubSection.append(NoEscape(r'\\[1em]'))
     criterionCSubSubSection.append(NewLine())
     criterionCSubSubSection.append(NoEscape(r'\begin{adjustbox}{max width=\textwidth}'))
-    criterionCTable = Tabular(table_spec=r"|p{3cm}|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|")
+    criterionCTable = Tabular(table_spec=r"|p{7cm}|" + "p{1.1cm}|" * 19)
     criterionCTable.add_hline()
     criterionCTable.add_row((
         "CBoK Knowledge Areas", 
@@ -144,16 +144,17 @@ def createCriterionCTable(course, criterionC):
     ))
     criterionCTable.add_hline()
     
-    # Format the course name to be multi-line
+    # Format the course name to be multi-line and centered
     formatted_course = course.replace(' ', r'\\')
     criterionCTable.add_row((
-        MultiColumn(1, align="|c|", data=MultiRow(3, data=NoEscape(r"\begin{tabular}[c]{@{}c@{}}" + formatted_course + r"\end{tabular}"))), 
+        MultiColumn(1, align="|c|", data=MultiRow(3, data=NoEscape(r"\raisebox{-10em}{\begin{tabular}[c]{@{}c@{}}" + formatted_course + r"\end{tabular}}"))), 
         MultiColumn(2, align="|c|", data=NoEscape(r"\lightGrayCell{Problem Solving}")), 
-        MultiColumn(6, align="|c|", data=NoEscape(r"\professionalKnowledgeCell ICT Professional Knowledge")), 
+        MultiColumn(6, align="|c|", data=NoEscape(r"\professionalKnowledgeCell{ICT Professional Knowledge}")), 
         MultiColumn(3, align="|c|", data=NoEscape(r"\lightGrayCell{Technology Resources}")), 
-        MultiColumn(4, align="|c|", data=NoEscape(r"\technologyBuildingCell Technology Building")), 
+        MultiColumn(4, align="|c|", data=NoEscape(r"\technologyBuildingCell{Technology Building}")), 
         MultiColumn(4, align="|c|", data=NoEscape(r"\lightGrayCell{ICT Management}"))
     ))
+
     criterionCTable.add_row((
         MultiColumn(1, align="|c|", data=""),
         MultiColumn(2, align="|c|", data=""),
@@ -171,6 +172,7 @@ def createCriterionCTable(course, criterionC):
         MultiColumn(4, align="|c|", data="")
     ))
     criterionCTable.add_hline(2,20)
+    
     criterionCTable.add_row((
         NoEscape(r'\rule{0pt}{175pt}'),
         NoEscape(r'\lightGrayCell{\myrotcell{Abstraction}}'),
@@ -221,10 +223,8 @@ def createCriterionCTable(course, criterionC):
     # Populate the table with data from criterionC.table_2_df
     for index, row in criterionC.table_2_df.iterrows():
         unit_name = index
-        criterionCTable.add_row((MultiColumn(20, align="|l|", data=NoEscape(r"\colorcellverydarkblue " + unit_name)),))
-        criterionCTable.add_hline()
-
-        data_row = [NoEscape(r"\begin{tabular}[c]{@{}l@{}}Lectures\end{tabular}")]
+        
+        data_row = [NoEscape(r"\begin{tabular}[c]{@{}l@{}}" + unit_name + r"\end{tabular}")]
         for column in expected_columns:
             if column in criterionC.table_2_df.columns:
                 value = row[column]
@@ -252,7 +252,7 @@ def createCriterionCTable(course, criterionC):
     criterionCSubSubSection.append(NoEscape(r'\end{adjustbox}'))
     criterionCSubSubSection.append(NewLine())
     
-    # Second table (unchanged)
+    # Second table
     criterionCSubSubSection.append(NoEscape(r'\begin{longtable}{|p{0.25\textwidth}|p{0.10\textwidth}|p{0.10\textwidth}|p{0.45\textwidth}|}'))
     criterionCSubSubSection.append(NoEscape(r'\hline'))
     criterionCSubSubSection.append(NoEscape(r'\multicolumn{4}{|c|}{\textbf{Criterion C: Core Body of Knowledge (CBoK)}} \\'))
