@@ -1,0 +1,20 @@
+{
+    "clientInputFile" : "CSSE-allprograms-outcome-mappings-20241007.xlsx",
+    "sfiaFile" : "sfia_v8_custom.xlsx",
+    "caidiFile" : "caidi-data-for-ACS-A.zip",
+    "latexConfig" : {
+        "sortBy": "criterion",
+        "generateAll": true,
+        "generateCriterionA": true,
+        "generateCriterionB": true,
+        "generateCriterionC": true,
+        "generateCriterionD": true,
+        "generateCriterionE": true
+    },
+    "excelConfig" : {
+
+    },
+    "htmlConfig":{
+
+    }
+}

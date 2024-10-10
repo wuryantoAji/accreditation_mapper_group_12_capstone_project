@@ -32,9 +32,9 @@ def create_criterionB(outcomes_mappings_df, unit_details_dict, outcomes_details_
     for course, unit_df in unit_details_dict.items():
         outcomes_mappings_df_copy = outcomes_mappings_df.copy()
 
-        #Remove N/A Level (SFIA/Bloom) and convert the rest to Ints
-        outcomes_mappings_df_copy.dropna(subset=['Level (SFIA/Bloom)'], inplace=True)
-        outcomes_mappings_df_copy['Level (SFIA/Bloom)'] = pd.to_numeric(outcomes_mappings_df_copy['Level (SFIA/Bloom)'], errors='coerce').fillna(0).astype(int)
+        #Remove N/A Level (SFIA/Bloom/UnitOutcome) and convert the rest to Ints
+        outcomes_mappings_df_copy.dropna(subset=['Level (SFIA/Bloom/UnitOutcome)'], inplace=True)
+        outcomes_mappings_df_copy['Level (SFIA/Bloom/UnitOutcome)'] = pd.to_numeric(outcomes_mappings_df_copy['Level (SFIA/Bloom/UnitOutcome)'], errors='coerce').fillna(0).astype(int)
 
         # Concatenate Unit Code and Unit Title
         outcomes_mappings_df_copy['Unit Code & Title'] = outcomes_mappings_df['Unit Code'].astype(str) + ' ' + outcomes_mappings_df['Unit Name'].astype(str)
@@ -46,7 +46,7 @@ def create_criterionB(outcomes_mappings_df, unit_details_dict, outcomes_details_
         sorted_df = merged_df.groupby('Outcome').apply(lambda x: x.sort_values(by='Outcome')).reset_index(drop=True)
 
         group_column = 'Outcome'
-        value_column = 'Level (SFIA/Bloom)'
+        value_column = 'Level (SFIA/Bloom/UnitOutcome)'
 
         # Group by the specified column and find the maximum value for each group
         max_values = sorted_df.groupby(group_column)[value_column].transform('max')
