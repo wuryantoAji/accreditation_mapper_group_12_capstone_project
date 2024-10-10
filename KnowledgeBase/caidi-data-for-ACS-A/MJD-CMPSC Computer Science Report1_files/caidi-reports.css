@@ -1,0 +1,524 @@
+/*CHG0016911 - changed font, color, as part of caidi enhancements*/
+@charset "UTF-8";
+html, body{
+    height: 100%;    
+     margin: 15px; 
+         font-size: 0.8em;
+        font: Helvetica;
+}
+
+.Subhead3
+{
+    color: #0864A5;
+    font-weight: bold;
+}
+
+/* Page header */
+.pageheader{
+    border: 0px;
+    font: Helvetica;
+}
+/* Page content (below page header) */
+.content{
+    margin-left: 0px;
+    margin-top: 2em;
+    clear: both;
+}
+
+.footer {
+ clear:both;
+}
+.surtitle{
+    color: #000000;
+    font: bold 100%/1.1 Arial, Helvetica, sans-serif;
+    margin: 0 0 0.4em 0;
+}
+.title{
+    color: #000000;
+    font: normal 22px Helvetica; 
+    margin-bottom: 10px;
+}
+
+.questionblock {
+    margin-left: 15px;
+
+}
+
+.borderless {
+    border: 0;
+}
+
+a {
+    color:#04385c;
+}
+
+.topright {
+text-align: right;
+vertical-align: top;
+}
+
+.importantbox{
+    background-image: url('../img/icons/exclamation.png');
+    background-repeat: no-repeat;
+    font-weight: bold;
+    font-size: small;
+    background-position: 5px;
+    padding: 5px;
+    padding-left: 25px;
+    border: 1px solid #FF3300;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    background-color: #FFEBE6;
+    -moz-box-shadow:1px 1px 2px rgba(160,160,160,1);
+      -webkit-box-shadow: 1px 1px 2px rgba(160,160,160,.4);
+     box-shadow: 1px 1px 2px rgba(160,160,160,.4);
+}
+.informationbox{
+
+background-image: url('../img/icons/information.png');
+    background-repeat: no-repeat;
+    font-weight: bold;
+    background-position: 5px;
+      padding: 5px;
+      padding-left: 25px;
+      border: 1px solid #CEE0ED;
+      margin-top: 5px;
+      margin-bottom: 5px;
+     background-color: #f0f3fc;
+         -moz-box-shadow:1px 1px 2px rgba(160,160,160,1);
+  -webkit-box-shadow: 1px 1px 2px rgba(160,160,160,.4);
+  box-shadow: 1px 1px 2px rgba(160,160,160,.4);
+}
+
+.errorbox{
+    background-image: url('../img/icons/error.png');
+    background-repeat: no-repeat;
+    font-weight: bold;
+    background-position: 5px;
+    padding: 5px;
+    padding-left: 25px;
+    border: 1px solid #FFCC00;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    background-color: #FFFAE6;
+    -moz-box-shadow:1px 1px 2px rgba(160,160,160,1);
+    -webkit-box-shadow: 1px 1px 2px rgba(160,160,160,.4);
+    box-shadow: 1px 1px 2px rgba(160,160,160,.4);
+}
+
+#footer{
+    font-size: x-small;
+    text-align: right;
+    margin-top: 5px;
+    color: #848484;
+}
+
+#watermark {
+    position: fixed;
+    top: 30%;
+    left: 85px;
+    transform: rotate(45deg);
+    transform-origin: 50% 50%;
+    opacity: .26;
+    font-size: 72px;
+    color: #CCCCCC;
+    width: 600px;
+    text-align: center;
+    background-color: none;
+}
+
+.rl, .rlsection {
+    padding: 3px;
+    border: 0px;
+    border-color: #FFFFFF;
+    border-style: none; 
+}
+
+.rlName {
+    font-weight: bold;
+    border: 0px;
+    width: 120px;
+    margin-right: 5px;
+    border-right:0px;
+    border-color: #FFFFFF;    
+    border-style: none;
+}
+
+.rlNameChanged {
+    color: #0000CC;
+}
+
+.rlNameRationale {
+    font-style: italic;
+    font-size: 90%;
+    color: #333333;
+    background-color: #F0F0FF;    
+    border-bottom: 1px solid #CCCCFF;
+    text-align: right;
+}
+
+.rlContent {
+    text-align: left;
+    border: 0px;
+    border-left:0px;
+    border-color: #FFFFFF;    
+    border-style: none;
+}
+
+.rlContentRationale {
+    font-size: 90%;
+    color: #333333;
+    background-color: #F0F0FF;
+    border-bottom: 1px solid #CCCCFF;
+}
+
+.bordertop {
+    border-top: 2px solid #edf0fc;
+}
+
+input,select {
+     vertical-align: middle;
+}
+
+.noprint{
+display:none;
+}
+
+.notfound{
+    color: #AAAAAA;
+}
+
+h1 {
+    padding: 5px;
+    margin-bottom: 6px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    color: #0864a5;
+    font: bold 1em arial, helvetica, sans-serif;
+    font-size: 1em;   
+    border: 1px solid #a2b4fa;
+    background-color: #edf0fc;
+}
+
+h2 {
+    width: 100%;
+    font: bold 1em/1.2 arial, helvetica, sans-serif;
+    font-size: 0.9em;  
+    color: #0864a5;  
+    padding: 5px;
+    margin-top: 5px;
+    border: 1px solid #6BA2C9;
+    border-top: 1px solid #6BA2C9;
+    background-color: #F8FBFD;
+}
+
+h3 {
+      width: 100%;
+    font: 1em/1.2 arial, helvetica, sans-serif;
+    font-size: 0.85em;  
+    color: #0864a5;  
+    padding: 5px;  
+    margin-top: 5px;
+    border: 1px solid #e6eff6;
+    background-color: #F8FBFD;
+}
+
+h4 {
+  font-size: 14px;
+}
+
+h5 {
+  font-size: 13px;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+
+b,
+strong {
+  font-weight: bold;
+}
+
+img {
+  color: transparent;
+  font-size: 0;
+  vertical-align: middle;
+  -ms-interpolation-mode: bicubic;
+}
+
+.toolbar {
+    padding: 2px;
+    margin-left: 0px;
+    background: #f7f8fc;
+    border: 1px solid #d2d9fa;
+    margin-bottom: 6px;
+    margin-top: 6px;
+    width: auto;
+    -moz-box-shadow:1px 1px 2px rgba(160,160,160,1);
+  -webkit-box-shadow: 1px 1px 2px rgba(160,160,160,.4);
+  box-shadow: 1px 1px 2px rgba(160,160,160,.4);
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+ul
+{
+    margin-top: 1em;
+    margin-bottom: 1em;
+   -webkit-margin-before: 0em;
+  -webkit-margin-after: 0em;
+  -webkit-margin-start: 0px;
+  -webkit-margin-end: 0px;
+}
+
+li {
+  display: list-item;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin-left: 0px;
+     margin:0px;
+     margin-bottom: 5px;
+      font-size: 0.8em;
+    width:100%;
+  border-width: 1px;
+  border-style: solid;
+border-color: #c1ccf5;
+}
+
+.nostretch {
+    width: auto;
+}
+
+td,
+caption {
+  font-weight: normal;
+  padding: 5px;
+  vertical-align:top;
+  border: 1px solid #c1ccf5;
+}
+
+table{
+
+}
+th {
+font-weight: bold;
+  vertical-align: top;
+  text-align: left;
+background-color: #f0f3fc;
+border: 1px solid #c1ccf5;
+padding: 5px;
+
+}
+tr {
+    padding: 10px;
+    border: 1px solid #c1ccf5;
+}
+
+q {
+  quotes: none;
+}
+
+q:before,
+q:after {
+  content: "";
+  content: none;
+}
+
+sub,
+sup,
+small {
+  font-size: 75%;
+}
+
+sub,
+sup {
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+sub {
+  bottom: -0.25em;
+}
+
+sup {
+  top: -0.5em;
+}
+
+svg {
+  overflow: hidden;
+}
+
+body {
+  font: 13px/1.5 "Helvetica Neue", Arial, "Liberation Sans", FreeSans, sans-serif;
+}
+
+pre,
+code {
+  font-family: "DejaVu Sans Mono", Monaco, Consolas, monospace;
+}
+
+hr {
+margin-top: 15px;
+  border: 0px solid #cccccc;
+  border-bottom-width: 1px;
+  height: 0;
+  margin-bottom: 0px;
+}
+
+p {
+
+}
+
+
+ol {
+  list-style: decimal;
+}
+
+ul {
+  list-style: disc;
+}
+
+li {
+  margin-left: 30px;
+}
+
+
+body {
+  background: white;
+  color: black;
+}
+
+
+
+label {
+padding:2px;
+padding-left:0px;
+  font-weight: bold;    
+    font-size: small;
+    margin-right: 5px;
+    font-style: none;
+        width: 500px;
+}
+label.error {
+    float: none;
+    display: block;
+  
+  color: #FF0000;
+  font-weight: bold;
+  padding: 3px;
+  font-size: x-small;
+    background-image: url('img/icon-error-16x16.gif');
+    background-repeat: no-repeat;
+    background-position: left;
+}
+
+.note{
+    font-size: small;
+    font-style: italic;
+    width: 600px;
+}
+
+.instruction{
+    font-size: 0.85em;
+    font-style: none;
+    width: 600px;
+}
+
+input.error,
+select.error,
+textarea.error {
+  background-color: #ffeeee;
+}
+
+select.error{
+  background-color: white\9;    
+}
+
+.horiz {
+  margin-top: -20px;
+  margin-left: -20px;
+}
+
+.horiz td {
+  padding: 20px 0 0 20px;
+}
+/*TRACKED CHANGES*/
+.changedel, .del, del{
+    background: #FFEEEE;
+    color: #FF0000;
+    text-decoration: line-through;
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+.changeins, .ins, ins{
+    background: #F2F2FF;
+color: #0000FF;
+text-decoration: none;
+padding-left: 2px;
+padding-right: 2px;
+}
+
+.column_quarter
+{
+    font-size: 0.7em;
+    width: 100%;
+}
+/* CHG0021633: Handbook report in CAIDi */
+.sidenav {
+  width: 250px;
+  position: fixed;
+  z-index: 1;
+  top: 10px;
+  left: 10px;
+  background: #eee; 
+  overflow-y: scroll;
+  height:900px;
+  padding: 8px 0;
+}
+
+/*.sidenav a {
+  padding: 6px 8px 6px 16px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #2196F3;
+  display: block;
+}*/
+
+.sidenav a:hover {
+  color: #064579;
+}
+
+.main {
+  margin-left: 260px; /* Same width as the sidebar + left position in px */
+ /* font-size: 28px; /* Increased text to enable scrolling */
+  padding: 0px 10px;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}

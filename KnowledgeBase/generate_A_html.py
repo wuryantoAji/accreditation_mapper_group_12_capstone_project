@@ -2,14 +2,18 @@ from sfia import SFIA
 from knowledgebase import KnowledgeBase
 import pandas as pd
 from jinja2 import Template
+from caidi import CAIDI
+
 
 # Step 1: Extract data and store it as a DataFrame
 
-# Skills For the Information Age database
-sfia = SFIA('KnowledgeBase/sfiaskills.6.3.en.1.xlsx')
+## Skills For the Information Age database
+sfia = SFIA('KnowledgeBase/sfia_v8_custom.xlsx')
 
+
+cd = CAIDI("caidi-data-for-ACS-A.zip")
 # KnowledgeBase - processes the input from the client
-kb = KnowledgeBase('KnowledgeBase/CSSE-allprograms-outcome-mappings-20240821.xlsx', sfia)
+kb = KnowledgeBase( 'KnowledgeBase/CSSE-allprograms-outcome-mappings-20241001.xlsx', sfia, cd)
 
 
 data_frames = []
