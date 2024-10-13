@@ -1,5 +1,5 @@
 {
-    "clientInputFile" : "CSSE-allprograms-outcome-mappings-20241007.xlsx",
+    "clientInputFile" : "CSSE-allprograms-outcome-mappings-20241011.xlsx",
     "sfiaFile" : "sfia_v8_custom.xlsx",
     "caidiFile" : "caidi-data-for-ACS-A.zip",
     "latexConfig" : {
@@ -10,11 +10,5 @@
         "generateCriterionC": true,
         "generateCriterionD": true,
         "generateCriterionE": true
-    },
-    "excelConfig" : {
-
-    },
-    "htmlConfig":{
-
     }
 }

@@ -303,7 +303,7 @@ class CriterionD(Criterion):
         if 'Justification' not in merged_df.columns:
             merged_df['Justification'] = ''
         
-        self.criterion_df = merged_df[['Unit Code', 'Unit Name', 'Justification']]
+        self.criterion_df = merged_df[['Unit Code', 'Unit Name', 'Justification', 'Assessment Item (for D: Advanced Algorithms and C: CBoK mapping)']]
 
     
 class CriterionE(Criterion):
