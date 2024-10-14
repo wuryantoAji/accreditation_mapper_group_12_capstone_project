@@ -2,6 +2,7 @@
 Repository for IT Capstone Project Group 12 - Accreditation Mapper
 
 ## How to use
+### Setup Virtual Environment
 1. Create virtual environment
     1. For Windows/Mac
         >   python3 -m venv venv
@@ -12,10 +13,6 @@ Repository for IT Capstone Project Group 12 - Accreditation Mapper
         >   .venv/bin/activate
 3. Install requirements
     >   pip install -r requirements.txt
-4. Run the code
-    > python3 build.py
+### Generate Latex
+1. To generate latex, user only needs to run `python3 build.py` after making sure that the config.json is correct. here is the detail for the config file
 
-In this state of development, the code will put all of the generated file in the root file of this project
-### Latex
-1. The program will generate a .tex file called criterionAtoFTable.tex and a .sty file called latexStyleSheet.sty
-2. Then, you can compile the .tex file using either a local compiler or an online compiler such as overleaf
