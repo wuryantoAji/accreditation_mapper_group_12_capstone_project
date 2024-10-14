@@ -1,0 +1,158 @@
+<!-- templates/base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Page with Sidebar</title>
+    <style>
+         /* Header Styling */
+         .header {
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            font-size: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            width: calc(100% - 200px); /* Sidebar width is 200px */
+            left: 200px; /* Start header after sidebar */
+            box-sizing: border-box;
+            z-index: 1000; /* Ensure header stays above content */
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+        .sidebar {
+            height: 100%;
+            width: 200px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #111;
+            padding-top: 20px;
+            overflow-y: auto;
+        }
+        .sidebar a {
+            padding: 15px;
+            text-decoration: none;
+            font-size: 18px;
+            color: white;
+            display: block;
+        }
+        .sidebar a:hover {
+            background-color: #575757;
+        }
+        .content {
+        margin-left: 200px; /* Ensure content starts after sidebar */
+        padding: 20px;
+        padding-top: 60px; /* Ensure content starts below header */
+        width: calc(100% - 200px); /* Occupy full width minus sidebar */
+        box-sizing: border-box;
+        background-color: #f4f4f4;
+        overflow-x: auto;
+    }
+        /* Toggle Switch Styling */
+        .toggle-switch {
+            position: absolute;
+            right: 20px; /* Distance from the right side */
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #4CAF50;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+    </style>
+</head>
+<body>
+<!-- Header Section -->
+<div class="header">
+    <div>Criteria View</div>
+    <label class="toggle-switch">
+        <input type="checkbox" id="darkModeToggle" checked>
+        <span class="slider"></span>
+    </label>
+</div>
+<div class="sidebar">
+        {% if sidebar_type == 'criteria' %}
+            <a href="/A">Criteria A</a>
+            <a href="/B">Criteria B</a>
+            <a href="/C">Criteria C</a>
+            <a href="/D">Criteria D</a>
+            <a href="/E">Criteria E</a>
+        {% elif sidebar_type == 'courses' %}
+            {% for course in courses %}
+                <a href="/coursebased/course/{{ course | replace(' ', '_') }}">{{ course }}</a>
+            {% endfor %}
+        {% endif %}
+</div>
+<div class="content">
+    {% block content %}
+    {% endblock %}
+</div>
+<script>
+    // Check if the toggle should be active
+    window.onload = function() {
+        const toggleSwitch = document.getElementById('darkModeToggle');
+        const isActive = "{{ sidebar_active|lower }}";  // Get the Python variable passed to the template
+
+        if (isActive === "true") {
+            toggleSwitch.checked = true;  // If active, set the toggle to 'checked'
+        } else {
+            toggleSwitch.checked = false;  // If not active, make sure it's unchecked
+        }
+
+        // Add event listener to handle the toggle switch
+        toggleSwitch.addEventListener('change', function() {
+            if (this.checked) {
+                // Navigate to the page that should have the sidebar active
+                window.location.href = "/coursebased";
+            } else {
+                // Navigate to the page that should not have the sidebar active
+                window.location.href = "/";
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

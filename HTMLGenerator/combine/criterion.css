@@ -1,0 +1,59 @@
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+table, th, td {
+    border: 1px solid black;
+}
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+.section-title {
+    background-color: #a2bde6;
+    font-weight: bold;
+    padding: 10px;
+    text-transform: uppercase;
+}
+ 
+
+ 
+.space {
+    width: 20%;
+}
+ 
+body {
+    margin: 0;
+}
+ 
+ 
+/* rotate text */
+.rotate-text {
+    transform: rotate(-90deg);
+    writing-mode: vertical-lr;
+    text-align: center;
+}
+ 
+ 
+/* level cells */
+.level-cell {
+    background-color: white;
+    padding: 10px;
+}
+ 
+.program-details {
+    margin-top: 60px;  
+}
+ 
+ 
+/* criterion D style */
+ 
+th {
+    background-color: white;
+}
+.title-row td {
+    text-align: center;
+    font-weight: bold;
+    background-color: #a2bde6
+}

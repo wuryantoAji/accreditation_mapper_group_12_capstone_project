@@ -1,0 +1,46 @@
+<!-- templates/criteria_B.html -->
+{% extends "base.html" %}
+
+{% block head_extra %}
+<!-- Temporarily remove external CSS references -->
+<!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/style4B.css') }}"> -->
+
+<!-- Add inline CSS -->
+<style>
+    /* Your inline CSS */
+    body {
+        background-color: #f14c4c;
+    }
+    h1 {
+        color: #333;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th, td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: left;
+    }
+    th {
+        background-color: #6aa0d3;
+    }
+    .collapsible {
+        background-color: #1f5998;
+        padding: 10px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+    .content {
+        display: none;
+    }
+    .active {
+        display: table;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    {{ script_output|safe }}
+{% endblock %}

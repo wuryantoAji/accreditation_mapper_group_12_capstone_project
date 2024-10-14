@@ -4,8 +4,6 @@ from io import BytesIO
 from openpyxl import load_workbook
 from bs4 import BeautifulSoup
 
-
-
 class CAIDI:
     def __read_first_sentence_from_html(self, content):
         # Parse the HTML content
@@ -89,4 +87,3 @@ class CAIDI:
             print(f"The file {caidi_zip_file} is not a valid ZIP file.")
 
         return
-    

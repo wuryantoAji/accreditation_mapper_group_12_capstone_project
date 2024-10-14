@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Page with Course Sidebar and Toggle Switch</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+
+        /* Watermark Styling using ::before */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("{{ url_for('static', filename='uwa-university-of-western-australia2857.png') }}");
+            background-position: 60% center;
+            background-repeat: no-repeat;
+            
+            opacity: 0.1; 
+            
+        }
+
+        /* Header Styling */
+        .header {
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            font-size: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            width: calc(100% - 200px); /* Sidebar width is 200px */
+            left: 200px; /* Start header after sidebar */
+            box-sizing: border-box;
+            z-index: 1000; /* Ensure header stays above content */
+        }
+
+        /* Toggle Switch Styling */
+        .toggle-switch {
+            position: absolute;
+            right: 20px; /* Distance from the right side */
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #4CAF50;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            height: 100%;
+            width: 200px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #111;
+            padding-top: 20px;
+            z-index: 500; /* Sidebar stays below the header */
+            overflow-y: auto; /* Enable vertical scrolling if the sidebar content exceeds the window height */
+        }
+
+        .sidebar a {
+            padding: 10px; /* Reduced padding to allow more courses to fit */
+            text-decoration: none;
+            font-size: 14px; /* Reduced font size for the courses */
+            color: white;
+            display: block;
+        }
+
+        .sidebar a:hover {
+            background-color: #575757;
+        }
+
+        /* Content Area Styling */
+        .content {
+            margin-left: 220px;
+            padding: 20px;
+            min-height: 100vh;
+            padding-top: 60px; /* Ensure content starts below header */
+            background-color: white;
+        }
+
+        /* Footer Styling */
+        .footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            margin-left: 220px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .sidebar a {
+                float: left;
+                padding: 10px;
+                font-size: 12px;
+            }
+
+            .sidebar a:hover {
+                background-color: #575757;
+            }
+
+            .content {
+                margin-left: 0;
+            }
+
+            .header {
+                width: 100%;
+                left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <div class="header">
+        <div>Course View</div>
+        <label class="toggle-switch">
+            <input type="checkbox" id="darkModeToggle" checked>
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <!-- Sidebar Section -->
+    <div class="sidebar">
+        {% for course in courses %}
+            <a href="{{ url_for('course_details', course_name=course|replace(' ', '_')|urlencode) }}">{{ course }}</a>
+        {% endfor %}
+    </div>
+
+    <!-- Main Content Section -->
+    <div class="content">
+        
+    </div>
+
+    
+    <script>
+        // JavaScript to redirect to the previous page or another page when toggle is switched off
+        const toggleSwitch = document.getElementById('darkModeToggle');
+        toggleSwitch.addEventListener('change', function() {
+            if (!this.checked) {
+                // Redirect to the previous page or main page when the switch is OFF
+                window.location.href = '/'; // Update this URL to your original page
+            }
+        });
+    </script>
+
+</body>
+</html>
