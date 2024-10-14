@@ -19,11 +19,23 @@ class CriterionA(Criterion):
     def __init__(self, course, unit_details_dict, outcomes_mappings_df, outcomes_details_df, cd):
         Criterion.__init__(self, course, unit_details_dict, outcomes_mappings_df)
         
+        self.code = None
+        self.award_title = None
+        self.eft = None
+        self.first_year_offered = None
+        self.program_chair = None
+        self.industry_liasion = [ 'UNKNOWN' ]
+        self.key_academic_staff = [ 'UNKNOWN' ]
+        self.outcomes = None
+        self.justification = None
+
         self.__create_criterion_a()
         self.__check_criterion_a()
 
         identifiers = __extract_identifiers__(course)
         if identifiers[0] not in cd.course:
+            row = ['Unable to find ' + str(identifiers) + ' in CAIDI, values left at default.', 'Fail']
+            self.criterion_qa_df.loc[self.criterion_qa_df.index.max() + 1] = row
             return
 
         filtered_df = outcomes_details_df[(outcomes_details_df['Outcome Group'] == 'Program Outcomes') & (outcomes_details_df['Outcome Subgroup or Level'] == identifiers[0])]
@@ -47,8 +59,13 @@ class CriterionA(Criterion):
         self.outcomes = merged_outcomes
         self.justification = merged_justification
 
-    def __check_criterion_a(self):
-        return None
+    def __check_criterion_a(self):  
+        num_of_criterionA_units = self.criterion_df['Unit Code'].nunique()  
+        data = {
+            'QA Item': [ 'Number of units ' +str(num_of_criterionA_units)],
+            'Pass/Fail': [ 'N/A' ]
+        }
+        self.criterion_qa_df = pd.DataFrame(data)
       
     def __create_criterion_a(self):
         self.criterion_df = self.unit_details_dict
@@ -68,10 +85,14 @@ class CriterionB(Criterion):
         num_of_outcomes = criterion_df['Outcome'].nunique()
         num_of_criterionB_units = criterion_df['Unit Code'].nunique()  
         num_of_units = self.unit_details_dict['Unit Code'].nunique()  
+        if num_of_outcomes >= 2:
+            passed = 'Passed'
+        else:
+            passed = 'Failed'
         data = {
             'QA Item': ['Number of outcomes ' +str(num_of_outcomes)+' outcomes (2 required)',
                         'Number of units ' +str(num_of_criterionB_units)+' units out of ' + str(num_of_units) ],
-            'Pass/Fail': [ str(num_of_outcomes >= 2), 'N/A']
+            'Pass/Fail': [ passed, 'N/A']
         }
         self.criterion_qa_df = pd.DataFrame(data)
 
@@ -193,7 +214,6 @@ class CriterionC(Criterion):
         merged_df.rename(columns={'Unit Name_x': 'Unit Name'}, inplace=True)
         
         # Create Table 1
-        # The outcome names here might be inconsistent with the 'Outcome' column from 'Outcomes Mappings'. Adjust the names if necessary. Same for Outcome Groups.
         knowledge_types_outcomes = [
             ('Professional', 'ICT Ethics'),
             ('Professional', 'Impacts of ICT'),
@@ -208,7 +228,7 @@ class CriterionC(Criterion):
             ('Core', 'Cyber Security'),
             ('Core', 'ICT Project Management'),
             ('Core', 'ICT management & governance'),
-            ('Depth', 'In-depth ICT Knowledge')
+            ('In-depth', '')
         ]
         
         # Create a list to append the data for Table 1
@@ -233,7 +253,6 @@ class CriterionC(Criterion):
         self.table_1_df = pd.DataFrame(table_1_data, columns=['ICT Knowledge Types', 'Outcome', 'Unit Code + Unit Name'])
         
         # Create Table 2
-        # The outcome names here might be inconsistent with the 'Outcome' column from 'Outcomes Mappings'. Adjust the names if necessary. Same for Outcome Groups.
         columns_table_2 = pd.MultiIndex.from_tuples([
             ('Professional', 'ICT Ethics'),
             ('Professional', 'Impacts of ICT'),
@@ -248,7 +267,7 @@ class CriterionC(Criterion):
             ('Core', 'Cyber Security'),
             ('Core', 'ICT Project Management'),
             ('Core', 'ICT management & governance'),
-            ('Depth', 'In-depth ICT Knowledge')
+            ('In-depth', '')
         ])
         
         # Create rows for the pivot table
@@ -288,7 +307,14 @@ class CriterionD(Criterion):
         self.__check_criterion_d()
 
     def __check_criterion_d(self):
-        return None
+        criterion_df = self.criterion_df
+        num_of_criterionD_units = criterion_df['Unit Code'].nunique()  
+        num_of_units = self.unit_details_dict['Unit Code'].nunique()  
+        data = {
+            'QA Item': [ 'Number of units ' +str(num_of_criterionD_units)+' units out of ' + str(num_of_units) ],
+            'Pass/Fail': [ 'N/A']
+        }
+        self.criterion_qa_df = pd.DataFrame(data)
 
     def __create_criterion_d(self):
         outcomes_mappings_df_copy = self.outcomes_mappings_df.copy()
@@ -316,9 +342,13 @@ class CriterionE(Criterion):
         if self.criterion_df is not None and not self.criterion_df.empty:
             num_of_criterion_units = self.criterion_df['Unit Code'].nunique()  
             num_of_units = self.unit_details_dict['Unit Code'].nunique()  
+            if num_of_criterion_units == 1:
+                passed = 'Passed'
+            else:
+                passed = 'Failed'
             data = {
                 'QA Item': ['Number of units ' + str(num_of_criterion_units) + ' in criterion, expecting 1.' ],
-                'Pass/Fail': [ str(num_of_criterion_units == 1), ]
+                'Pass/Fail': [ passed, ]
             }
             self.criterion_qa_df = pd.DataFrame(data)
         else:
@@ -328,11 +358,13 @@ class CriterionE(Criterion):
             })
 
     def __create_criterion_e(self):
+        identifiers = __extract_identifiers__(self.course)
+
         outcomes_mappings_df_copy = self.outcomes_mappings_df.copy()
         outcomes_mappings_df_copy = outcomes_mappings_df_copy[outcomes_mappings_df_copy['Outcome Group'] == 'Integrated Skills']
 
         merged_df = pd.merge(self.unit_details_dict, outcomes_mappings_df_copy, on='Unit Code', how='inner')
-        
+    
         if not merged_df.empty:
             if 'Unit Name' not in merged_df.columns:
                 # Add 'Unit Name' from unit_details_dict
@@ -370,6 +402,8 @@ class KnowledgeBase:
         outcomes_details_df = pd.read_excel(kb_excel_file, header=0, sheet_name='Outcomes Details')
         # Unit details
         self.unit_details_dict = self.__load_unit_details(kb_excel_file)
+        # Unit outcomes
+        self.unit_outcomes_df = pd.read_excel(kb_excel_file, header=0, sheet_name='Unit Outcomes')
 
         # Some necessary data cleaning
         outcomes_mappings_df.dropna(subset=['Unit Code'], inplace=True)
@@ -408,6 +442,8 @@ class KnowledgeBase:
         except ValueError as e:
             print(f"Column not found: {e}")
             raise
+
+
 
 ####
 #        data = {
