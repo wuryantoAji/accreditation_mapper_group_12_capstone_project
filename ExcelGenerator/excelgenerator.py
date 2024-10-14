@@ -57,7 +57,21 @@ with zipfile.ZipFile(output_zip_file, 'w') as output_zip:
         # Write the DataFrame to the Excel buffer
         with pd.ExcelWriter(excel_buffer, engine='xlsxwriter') as writer:
             startrow = 0
-            kb.unit_details_dict[course].to_excel(writer, sheet_name='Units', index=False)
+            #kb.unit_details_dict[course].to_excel(writer, sheet_name='Units', index=False)
+            criterionA_details = {
+                "Code": [ kb.criterionA[course].code ],
+                "Award Title": [ kb.criterionA[course].award_title ],
+                "EFT": [ kb.criterionA[course].eft ],
+                "First Year Offered": [ kb.criterionA[course].first_year_offered ],
+                "Program Chair": [ kb.criterionA[course].program_chair ],
+                "Industry Liaison": [ kb.criterionA[course].industry_liasion ],
+                "Key Academic Staff": [ kb.criterionA[course].key_academic_staff ],
+                "Outcomes": [ kb.criterionA[course].outcomes ],
+                "Justification": [ kb.criterionA[course].justification ]
+            }
+            # Convert dictionary to DataFrame
+            df = pd.DataFrame(list(criterionA_details.items()), columns=['Key', 'Value'])
+            df.to_excel(writer, sheet_name='CriterionA_details', index=False)
             kb.criterionA[course].criterion_df.to_excel(writer, sheet_name='CriterionA', index=False)
             kb.criterionA[course].criterion_qa_df.to_excel(writer, sheet_name='CriterionA_QA', index=False)
             kb.criterionB[course].criterion_df.to_excel(writer, sheet_name='CriterionB', index=False)
