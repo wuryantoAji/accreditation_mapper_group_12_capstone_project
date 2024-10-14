@@ -4,9 +4,9 @@
 ├── dataframe_D.py          # Dataframe generation for Criterion D
 ├── knowledgebase.py        # Knowledgebase script
 ├── SFIAReader.py           # SFIA reading and processing script
-├── sfia.py                 # sfia script
-├── .zip                    # caidi zip file
-├──  .xlsx                  # knowledgebase excel
+├── sfia.py                 # SFIA data extraction and processing script
+├── caidi-data-for-ACS-A.zip# CAIDI zip file that contains data required for processing
+├── CSSE-allprograms-outcome-mappings-20241011.xlsx # Knowledgebase Excel file containing mappings of outcomes and accreditation data, used for generating reports.
 
 Ensure they all in current directory and then run this ./run.sh in terminal.
 
