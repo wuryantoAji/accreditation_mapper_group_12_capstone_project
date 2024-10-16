@@ -4,6 +4,8 @@ from io import BytesIO
 from openpyxl import load_workbook
 from bs4 import BeautifulSoup
 
+
+
 class CAIDI:
     def __read_first_sentence_from_html(self, content):
         # Parse the HTML content
@@ -27,10 +29,15 @@ class CAIDI:
 
         try:
             with zipfile.ZipFile(caidi_zip_file, 'r') as zip_file:
-                # Print the list of file names in the ZIP file
+                # Search the list of file names in the ZIP file
                 for file_info in zip_file.infolist():
+                    # Code to deal with zip files created on Macs, need to ignore this dir.
+                    if '__MACOSX/' in file_info.filename:
+                        continue
+
                     # Check if the file is an Excel file
                     if file_info.filename.endswith(('.xls', '.xlsx')):
+                        print("Loading: " + file_info.filename)
                         with zip_file.open(file_info) as file:
                             # Read the file content into a BytesIO object
                             file_bytes = BytesIO(file.read())
@@ -39,7 +46,7 @@ class CAIDI:
                             workbook = load_workbook(file_bytes)
                             # Select the active worksheet
                             worksheet = workbook.active
-                            # Get the value from cell A1
+                            # Get the value from cell A2
                             course = str(worksheet['A2'].value)
                             course = course[course.index('units in '):]
 
@@ -47,7 +54,7 @@ class CAIDI:
                             self.units[course] = pd.read_excel(file_bytes, header=2)
                     # Check if the file is a HTML file
                     elif file_info.filename.endswith(('.htm', '.html')):
-                        print(file_info.filename)
+                        print("Loading: " + file_info.filename)
                         grand_table = pd.DataFrame()
                         with zip_file.open(file_info) as file:
                             # Read the file content into a BytesIO object
@@ -87,3 +94,4 @@ class CAIDI:
             print(f"The file {caidi_zip_file} is not a valid ZIP file.")
 
         return
+    
