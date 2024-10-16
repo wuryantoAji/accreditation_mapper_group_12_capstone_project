@@ -80,7 +80,7 @@ def generate_html_content():
             print("No data found")
             return "<p>No data found</p>"
 
-        # Now, generate HTML content
+        #  generate HTML content
         print("Generating HTML content")
 
         df = all_data
