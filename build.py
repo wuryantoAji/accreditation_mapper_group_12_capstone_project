@@ -12,7 +12,8 @@ config_path = os.path.join(os.path.dirname(__file__), 'config.json')
 
 def install_dependencies():
     # Install dependencies from requirements.txt using Poetry
-    subprocess.run(["poetry", "install"], check=True)
+    subprocess.run(["pip", "install", "poetry"], check=True)
+    subprocess.run(["pip", "install", "-r", "requirementsPoetry.txt"], check=True)
 
     print("Dependencies installed.")
 
@@ -51,9 +52,9 @@ def run_python_program(temp_dir, clientInputFile, sfiaInputFile, caidiInputFile,
     # Run the Python program in the temporary directory using Poetry's environment
     script_path = os.path.join(temp_dir, "createLatexTemplate.py")
     if(latexConfig['generateAll']):
-        result = subprocess.run(["poetry", "run", "python", script_path, '-s', latexConfig['sortBy'], '-i', clientInputFile, '-si', sfiaInputFile, '-ci', caidiInputFile], cwd=temp_dir)
+        result = subprocess.run(["python", script_path, '-s', latexConfig['sortBy'], '-i', clientInputFile, '-si', sfiaInputFile, '-ci', caidiInputFile], cwd=temp_dir)
     else:
-        result = subprocess.run(["poetry", "run", "python", script_path, '-s', latexConfig['sortBy'], '-i', clientInputFile, '-si', sfiaInputFile, '-ci', caidiInputFile, '-ca', latexConfig['generateCriterionA'], '-cb', latexConfig['generateCriterionB'], '-cc', latexConfig['generateCriterionC'], '-cd', latexConfig['generateCriterionD'], '-ce', latexConfig['generateCriterionE']], cwd=temp_dir)
+        result = subprocess.run(["python", script_path, '-s', latexConfig['sortBy'], '-i', clientInputFile, '-si', sfiaInputFile, '-ci', caidiInputFile, '-ca', latexConfig['generateCriterionA'], '-cb', latexConfig['generateCriterionB'], '-cc', latexConfig['generateCriterionC'], '-cd', latexConfig['generateCriterionD'], '-ce', latexConfig['generateCriterionE']], cwd=temp_dir)
     
     if result.returncode != 0:
         raise Exception(f"Python script failed with exit code {result.returncode}")
