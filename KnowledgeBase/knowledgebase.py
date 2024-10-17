@@ -116,6 +116,9 @@ class CriterionB(Criterion):
                 return justification_map[justification]  # Map the tag to its detailed justification
             else:
                 return justification  # Keep the existing justification if it's already there
+        
+        # Move the justification to a column called justificationCode
+        outcomes_mappings_df_copy['JustificationCode'] = outcomes_mappings_df_copy['Justification']
 
         # Apply the function to map specific justifications or leave them as is
         outcomes_mappings_df_copy['Justification'] = outcomes_mappings_df_copy['Justification'].apply(get_justification)
@@ -123,7 +126,7 @@ class CriterionB(Criterion):
         merged_df = pd.merge(self.unit_details_dict, outcomes_mappings_df_copy, on='Unit Code', how='inner')
         # Changed 07/10
         #merged_df = merged_df[['Unit Code', 'Outcome', 'Level (SFIA/Bloom)', 'Justification']]
-        merged_df = merged_df[['Unit Code', 'Outcome', 'Level (SFIA/Bloom/UnitOutcome)', 'Justification']]
+        merged_df = merged_df[['Unit Code', 'Outcome', 'Level (SFIA/Bloom/UnitOutcome)', 'Justification', 'JustificationCode']]
         sorted_df = merged_df.groupby('Outcome').apply(lambda x: x.sort_values(by='Outcome')).reset_index(drop=True)
 
         group_column = 'Outcome'
@@ -326,7 +329,11 @@ class CriterionD(Criterion):
         if 'Justification' not in merged_df.columns:
             merged_df['Justification'] = ''
         
-        self.criterion_df = merged_df[['Unit Code', 'Unit Name', 'Justification']]
+        # Rename the 'Assessment Item (for D: Advanced Algorithms and C: CBoK mapping)' column to 'Assessment Item'
+        if 'Assessment Item (for D: Advanced Algorithms and C: CBoK mapping)' in merged_df.columns:
+            merged_df.rename(columns={'Assessment Item (for D: Advanced Algorithms and C: CBoK mapping)': 'Assessment Item'}, inplace=True)
+        # Select relevant columns including the renamed 'Assessment Item' column
+        self.criterion_df = merged_df[['Unit Code', 'Unit Name', 'Justification', 'Assessment Item']]
 
     
 class CriterionE(Criterion):
@@ -477,7 +484,7 @@ class KnowledgeBase:
                 filtered_df = df[df[column].notna()]
                 filtered_df[column] = filtered_df[column].astype(str).str.strip()
                 filtered_df = filtered_df[filtered_df[column]!= '']
-                filtered_df = filtered_df.drop(columns=columns_to_check)
+                filtered_df = filtered_df.drop([c for c in columns_to_check if c != column], axis=1)
 
                 # Store the filtered DataFrame in the dictionary with the column name as the key
                 dataframes_dict[column] = filtered_df
