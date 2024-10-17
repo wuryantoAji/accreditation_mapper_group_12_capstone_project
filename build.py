@@ -10,13 +10,6 @@ latex_generator = "LatexGenerator"
 client_input = "ClientInput"
 config_path = os.path.join(os.path.dirname(__file__), 'config.json')
 
-def install_dependencies():
-    # Install dependencies from requirements.txt using Poetry
-    subprocess.run(["pip", "install", "poetry"], check=True)
-    subprocess.run(["pip", "install", "-r", "requirementsPoetry.txt"], check=True)
-
-    print("Dependencies installed.")
-
 def create_temp_folder():
     # Create a temporary directory
     temp_dir = tempfile.mkdtemp()
@@ -82,7 +75,6 @@ def main():
             print(f"Error: config.json file not found at {config_path}")
         except json.JSONDecodeError:
             print("Error: Failed to decode the config.json file")
-        install_dependencies()
         temp_dir = create_temp_folder()
         copy_constant_files(temp_dir, config["clientInputFile"], config["sfiaFile"], config["caidiFile"])
         copy_latex_program(temp_dir)

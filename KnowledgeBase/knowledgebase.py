@@ -19,15 +19,15 @@ class CriterionA(Criterion):
     def __init__(self, course, unit_details_dict, outcomes_mappings_df, outcomes_details_df, cd):
         Criterion.__init__(self, course, unit_details_dict, outcomes_mappings_df)
         
-        self.code = None
-        self.award_title = None
-        self.eft = None
-        self.first_year_offered = None
-        self.program_chair = None
+        self.code = ""
+        self.award_title = ""
+        self.eft = 0
+        self.first_year_offered = ""
+        self.program_chair = ""
         self.industry_liasion = [ 'UNKNOWN' ]
         self.key_academic_staff = [ 'UNKNOWN' ]
-        self.outcomes = None
-        self.justification = None
+        self.outcomes = ""
+        self.justification = ""
 
         self.__create_criterion_a()
         self.__check_criterion_a()

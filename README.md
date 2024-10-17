@@ -14,5 +14,5 @@ Repository for IT Capstone Project Group 12 - Accreditation Mapper
 3. Install requirements
     >   pip install -r requirements.txt
 ### Generate Latex
-1. To generate latex, user only needs to run `python3 build.py` after making sure that the config.json is correct. here is the detail for the config file
+1. To generate latex, user needs to run `python3 build.py` after making sure that the config.json is correct. here is the detail for the config file
 
